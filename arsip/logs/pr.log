@@ -1,0 +1,168 @@
+Loading memory card /root/.config/pcsx-redux/memcard1.mcd
+Loading memory card /root/.config/pcsx-redux/memcard2.mcd
+Audio: driver dummy, 44100 Hz, 441 frames per period
+Loaded CD Image: /home/claude/redux/game/naruto.cue[+cue].
+Track 01 (DATA) - Start 00:02:00, Length 30:48:01
+CD-ROM Label: SLPS-03553
+CD-ROM ID: SLPS03553
+CD-ROM EXE Name: SLPS_035.53;1
+PCSX-Redux Lua Console 
+LuaJIT 2.1.1785598229 
+JIT: ON SSE3 SSE4.1 BMI2 fold cse dce fwd dse narrow loop abc sink fuse 
+PCSX-Redux booting
+Copyright (C) 2019-2025 PCSX-Redux authors
+CPU type: Interpreted
+Could not open BIOS:"". Retrying with the OpenBIOS
+Loaded BIOS: /home/claude/redux/squashfs-root/usr/bin/../share/pcsx-redux/resources/openbios.bin
+OpenBIOS detected (0b0359a7)
+probe siap; input=113 MAXF=11050 
+
+
+================
+uC-sdk - booting
+================
+BIOS Trace1: 0x0f
+BIOS Trace1: 0x0e
+BIOS Trace1: 0x01
+BIOS Trace1: 0x02
+BIOS Trace1: 0x03
+BIOS Trace1: 0x04
+BIOS Trace1: 0x01
+BIOS Trace1: 0x03
+BIOS Trace1: 0x04
+BIOS Trace1: 0x05
+BIOS Trace1: 0x06
+BIOS Trace1: 0x02
+BIOS Trace1: 0x05
+PS-X Realtime Kernel OpenBios - build id unknown.
+Copyright (C) 2019-2026 PCSX-Redux authors.
+BIOS Trace1: 0x06
+KERNEL SETUP!
+
+Configuration : EvCB	0x10		TCB	0x04
+BIOS Trace1: 0x07
+BIOS Trace1: 0x08
+
+BOOTSTRAP LOADER
+BIOS Trace1: 0x09
+setup file    : cdrom:SYSTEM.CNF;1
+TCB	00000004
+EVENT	00000016
+STACK	801fff00
+BOOT =	cdrom:\SLPS_035.53;1
+argument =	
+KERNEL SETUP!
+
+Configuration : EvCB	0x16		TCB	0x04
+boot file     : cdrom:\SLPS_035.53;1
+EXEC:PC0(80011448)  T_ADDR(80010000)  T_SIZE(0005d800)
+boot address  : 80011448 801fff00
+Execute !
+
+                S_ADDR(801fff00)  S_SIZE(00000000)
+CD_init:addr=800672b4
+Found C0 patch hash 2a81bbef "_patch_card#2", issued from 0x80055314, executing...
+Found B0 patch hash c29df18f "_patch_card2#2", issued from 0x800553a8, executing...
+Found B0 patch hash 5123f82a "_patch_card_info#1", issued from 0x80055230, executing...
+Saving memory card /root/.config/pcsx-redux/memcard1.mcd
+Saving memory card /root/.config/pcsx-redux/memcard2.mcd
+Unknown command for pad: 43
+Unknown command for pad: 43
+Unknown command for pad: 43
+Unknown command for pad: 43
+Unknown command for pad: 43
+Unknown command for pad: 43
+Unknown command for pad: 43
+Unknown command for pad: 43
+Unknown command for pad: 43
+Unknown command for pad: 43
+Unknown command for pad: 43
+Unknown command for pad: 43
+Found C0 patch hash 61c914a1 "_patch_gte#1", issued from 0x8003e458, executing...
+ResetGraph:jtb=800687a4,env=800687ec
+Got an unknown GPU data word: 000687a4 (cmdType: 0, command: 0)
+Found C0 patch hash 61c914a1 "_patch_gte#1", issued from 0x8003e458, executing...
+CHG f=4168 S1: 10748072 -> 786444 
+CHG f=4168 S2: 11599988 -> 524296 
+CHG f=4236 S1: 786444 -> 18350384 
+CHG f=4238 S1: 18350384 -> 153025428 
+CHG f=4238 S2: 524296 -> 85916724 
+CHG f=4240 S1: 153025428 -> 1032969356 
+CHG f=4240 S2: 85916724 -> 18350384 
+CHG f=4244 S1: 1032969356 -> 1060909200 
+CHG f=4244 S2: 18350384 -> 1032969340 
+CHG f=4250 S1: 1060909200 -> 1032969340 
+CHG f=4250 S2: 1032969340 -> 20447352 
+CHG f=4256 S1: 1032969340 -> 20447352 
+CHG f=4256 S2: 20447352 -> 85916724 
+CHG f=4362 S1: 20447352 -> 85916580 
+CHG f=4364 S1: 85916580 -> 153025428 
+CHG f=4366 S1: 153025428 -> 1032969356 
+CHG f=4366 S2: 85916724 -> 18350384 
+CHG f=4368 S1: 1032969356 -> 1032969340 
+CHG f=4368 S2: 18350384 -> 20447352 
+CHG f=4372 S1: 1032969340 -> 1060906008 
+CHG f=4372 S2: 20447352 -> 1032967308 
+CHG f=4378 S1: 1060906008 -> 1032967308 
+CHG f=4378 S2: 1032967308 -> 18350192 
+CHG f=4384 S1: 1032967308 -> 18350192 
+CHG f=4384 S2: 18350192 -> 85881028 
+CHG f=4610 S1: 18350192 -> 85916580 
+CHG f=4612 S1: 85916580 -> 85916564 
+CHG f=4614 S1: 85916564 -> 20971640 
+CHG f=4614 S2: 85881028 -> 85916724 
+CHG f=4618 S1: 20971640 -> 153025428 
+CHG f=4622 S1: 153025428 -> 1060902936 
+CHG f=4622 S2: 85916724 -> 17826088 
+CHG f=4628 S1: 1060902936 -> 17826088 
+CHG f=4628 S2: 17826088 -> 85916708 
+CHG f=4634 S1: 17826088 -> 85916564 
+CHG f=4858 S1: 85916564 -> 1686143104 
+CHG f=4860 S1: 1686143104 -> 85916580 
+CHG f=4862 S1: 85916580 -> 20447352 
+CHG f=4862 S2: 85916708 -> 85916724 
+CHG f=4864 S1: 20447352 -> 1032969340 
+CHG f=4864 S2: 85916724 -> 20447352 
+CHG f=4868 S1: 1032969340 -> 1032967308 
+CHG f=4868 S2: 20447352 -> 18350192 
+CHG f=4872 S1: 1032967308 -> 1060903068 
+CHG f=4872 S2: 18350192 -> 1032967292 
+CHG f=4878 S1: 1060903068 -> 1032967292 
+CHG f=4878 S2: 1032967292 -> 20971640 
+CHG f=4884 S1: 1032967292 -> 20971640 
+CHG f=4884 S2: 20971640 -> 85916724 
+CHG f=5102 S1: 20971640 -> 18350384 
+CHG f=5358 S1: 18350384 -> 15728704 
+CHG f=5360 S1: 15728704 -> 6291560 
+CHG f=5364 S1: 6291560 -> 687405304 
+CHG f=5604 S1: 687405304 -> 4588119 
+CHG f=5604 S2: 85916724 -> 5767832 
+CHG f=5606 S1: 4588119 -> 4588045 
+CHG f=5606 S2: 5767832 -> 5767758 
+CHG f=5608 S1: 4588045 -> 4587973 
+CHG f=5608 S2: 5767758 -> 5767686 
+CHG f=5610 S1: 4587973 -> 4587906 
+CHG f=5610 S2: 5767686 -> 5767619 
+CHG f=5612 S1: 4587906 -> 4587845 
+CHG f=5612 S2: 5767619 -> 5767558 
+CHG f=5614 S1: 4587845 -> 4587792 
+CHG f=5614 S2: 5767558 -> 5767505 
+CHG f=5616 S1: 4587792 -> 4587748 
+CHG f=5616 S2: 5767505 -> 5767461 
+CHG f=5618 S1: 4587748 -> 4587713 
+CHG f=5618 S2: 5767461 -> 5767426 
+CHG f=5620 S1: 4587713 -> 4587690 
+CHG f=5620 S2: 5767426 -> 5767403 
+CHG f=5622 S1: 4587690 -> 4587678 
+CHG f=5622 S2: 5767403 -> 5767391 
+CHG f=6401 S1: 4587678 -> 1500 
+CHG f=6440 S2: 5767391 -> 1500 
+SHOT 10340 
+SHOT 10450 
+SHOT 10560 
+SHOT 10660 
+SHOT 10720 
+SHOT 10780 
+SHOT 10840 
+SHOT 10900 
+SHOT 10980 

@@ -1,1 +1,14 @@
 # riset-naruto
+
+Arsip hasil riset game PS1 *Naruto: Shinobi no Sato no Jintori Gassen* sebagai referensi untuk TileDuel, plus ringkasan seluruh percakapan.
+
+| Berkas / folder | Isi |
+|---|---|
+| `catatan_riset.md` | Catatan riset lengkap (aturan, papan, kartu, hal yang belum diketahui) |
+| `ringkasan_percakapan.md` | Ringkasan semua topik di chat (hybrid-casual, monetisasi, sosial, Facebook games, Monopoly GO, TileDuel) |
+| `redux/`, `inputs/`, `README.txt` | Skrip emulator PCSX-Redux dan jadwal input (cara pakai di `README.txt`) |
+| `analisis/analisis_data_bin.py` | Pemindai tabel petak dan gambar TIM di DATA.BIN |
+| `tileduel/` | Salinan kode TileDuel (FaseB_b8) milik pemilik repositori |
+| `arsip/` | Jadwal input dan log lama |
+
+Tidak berisi: file game, emulator, aset, screenshot, dump RAM.
