@@ -10,6 +10,7 @@ Arsip hasil riset game PS1 *Naruto: Shinobi no Sato no Jintori Gassen* sebagai r
 | `analisis/analisis_data_bin.py` | Pemindai tabel petak dan gambar TIM di DATA.BIN |
 | `data/tabel_papan.json` | Seluruh tabel papan (harga, sewa, koordinat petak) hasil pindaian DATA.BIN |
 | `tileduel/` | Salinan kode TileDuel (FaseB_b8) milik pemilik repositori |
+| `data/cara_buat_ulang_dump_ram.md` | Cara membuat ulang dump RAM secara deterministik (dump-nya sendiri tidak disimpan, berhak cipta) |
 | `arsip/` | Jadwal input dan log lama |
 
 Tidak berisi: file game, emulator, aset, screenshot, dump RAM.
