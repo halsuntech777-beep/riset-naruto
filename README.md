@@ -8,6 +8,7 @@ Arsip hasil riset game PS1 *Naruto: Shinobi no Sato no Jintori Gassen* sebagai r
 | `ringkasan_percakapan.md` | Ringkasan semua topik di chat (hybrid-casual, monetisasi, sosial, Facebook games, Monopoly GO, TileDuel) |
 | `redux/`, `inputs/`, `README.txt` | Skrip emulator PCSX-Redux dan jadwal input (cara pakai di `README.txt`) |
 | `analisis/analisis_data_bin.py` | Pemindai tabel petak dan gambar TIM di DATA.BIN |
+| `data/tabel_papan.json` | Seluruh tabel papan (harga, sewa, koordinat petak) hasil pindaian DATA.BIN |
 | `tileduel/` | Salinan kode TileDuel (FaseB_b8) milik pemilik repositori |
 | `arsip/` | Jadwal input dan log lama |
 
