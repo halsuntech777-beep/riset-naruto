@@ -3,6 +3,8 @@ Pakai: python3 buat_tabel_papan_json.py <path.bin> <keluaran.json>
 Record 30 byte (15 u16): [0]=harga [1]=sewa [2..5]=4 nilai [6..8]=3 nilai [9]=x [10]=y [11]=kode1 [12]=kode2 [13]=65535 [14]=255."""
 import mmap, struct, sys, json
 import numpy as np
+def dumps(o, **k):
+    return json.dumps(o, default=int, **k)  # angka numpy -> int Python
 P, OUT = sys.argv[1], sys.argv[2]
 f = open(P, 'rb'); mm = mmap.mmap(f.fileno(), 0, access=mmap.ACCESS_READ)
 LBA, LEN = 212, 66015232
@@ -31,7 +33,7 @@ for off, n in blok:
         v = struct.unpack_from('<15H', data, off + 30 * k)
         if 0 < v[9] < 2000 and 0 < v[10] < 2000:
             recs.append([k, v[0], v[1], v[9], v[10], list(v[2:6]), list(v[6:9]), v[11], v[12]])
-    key = json.dumps([[x[1], x[2], x[3], x[4]] for x in recs])
+    key = dumps([[x[1], x[2], x[3], x[4]] for x in recs])
     groups.setdefault(key, {'offs': [], 'recs': recs})['offs'].append(off)
 papan = sorted(groups.values(), key=lambda g: g['offs'][0])
 h2s = {}
@@ -41,14 +43,14 @@ for g in papan:
 meta = {"sumber": "DATA.BIN (LBA 212) disc SLPS-03553, Naruto: Shinobi no Sato no Jintori Gassen (PS1)",
         "format_petak": ["k_dalam_blok", "harga", "sewa", "x", "y", "empat_nilai(arti belum diketahui)", "tiga_nilai(arti belum diketahui)", "kode1", "kode2"],
         "catatan": "Harga=0 berarti petak tidak bisa dibeli (start/kartu/bola). Koordinat x,y berjarak 40 antar petak. Papan B1 terbukti identik dengan tabel di RAM saat stage Hutan Konoha (Party Mode dan tutorial). Pemetaan papan lain ke stage belum diketahui."}
-lines = ['{', '"meta": ' + json.dumps(meta, ensure_ascii=False) + ',',
-         '"harga_ke_sewa": ' + json.dumps({str(k): sorted(v) for k, v in sorted(h2s.items())}) + ',', '"papan": [']
+lines = ['{', '"meta": ' + dumps(meta, ensure_ascii=False) + ',',
+         '"harga_ke_sewa": ' + dumps({str(k): sorted(v) for k, v in sorted(h2s.items())}) + ',', '"papan": [']
 blocks = []
 for i, g in enumerate(papan, 1):
     recs = g['recs']; pr = [x[1] for x in recs if x[1] > 0]
     head = {"id": "B%d" % i, "offset_data_bin": g['offs'], "jumlah_petak": len(recs), "jumlah_petak_berharga": len(pr), "total_harga": sum(pr)}
     if i == 1: head["stage"] = "Hutan Konoha (ホノ葉の森), terbukti"
-    blocks.append(json.dumps(head, ensure_ascii=False)[:-1] + ',"petak":[\n' + ',\n'.join(json.dumps(x) for x in recs) + ']}')
+    blocks.append(dumps(head, ensure_ascii=False)[:-1] + ',"petak":[\n' + ',\n'.join(dumps(x) for x in recs) + ']}')
 lines.append(',\n'.join(blocks)); lines.append(']'); lines.append('}')
 open(OUT, 'w', encoding='utf-8').write('\n'.join(lines) + '\n')
 d = json.load(open(OUT, encoding='utf-8'))

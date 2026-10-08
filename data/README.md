@@ -1,3 +1,3 @@
 # data/
 
-`tabel_papan.json`: seluruh tabel petak (harga, sewa, koordinat) yang ditemukan di `DATA.BIN`: 16 blok, 11 tabel unik. Kolom dan tingkat keyakinan dijelaskan di dalam berkas. Dibuat ulang dengan `analisis/analisis_data_bin.py`. Hanya berisi angka aturan, bukan aset game.
+`tabel_papan.json`: tabel petak (harga, sewa, koordinat) hasil pemindaian `DATA.BIN`, dikelompokkan per papan unik (salinan identik digabung). Dibuat dengan `analisis/buat_tabel_papan_json.py <file.bin> data/tabel_papan.json`. Hanya angka aturan, bukan aset game. Arti kolom f2..f8 dan kode belum diketahui; tingkat keyakinan tiap kolom ada di catatan_riset.md.
