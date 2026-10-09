@@ -1,0 +1,7 @@
+# berkas besar / berhak cipta: jangan di-commit
+*.bin
+*.raw
+*.iso
+*.img
+*.AppImage
+*.mp4
