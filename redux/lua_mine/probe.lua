@@ -19,7 +19,9 @@ end
 local mem = PCSX.getMemPtr()
 local function u32(a) return ffi.cast('uint32_t*', mem + (a % 0x200000))[0] end
 local frame, last = 0, {}
-local polls = { {0x1EFBBC, 'S1'}, {0x1EFC4C, 'S2'} }
+local polls = {}
+for i, a in ipairs({ 0x1EFBBC, 0x1EFC4C, 0x1EFCDC, 0x1EFD6C }) do polls[#polls+1] = { a, 'A' .. i } end
+for i, a in ipairs({ 0x70EB8, 0x70F6C, 0x71020, 0x710D4 }) do polls[#polls+1] = { a, 'B' .. i } end
 listener = PCSX.Events.createEventListener('GPU::Vsync', function()
   frame = frame + 1
   for _, pk in ipairs(pokes) do

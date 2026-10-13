@@ -287,3 +287,67 @@ Catatan snowballing: kepemilikan petak membuat unggul awal membesar sendiri. Gam
 1. Unggah ulang: PCSX-Redux (AppImage atau zip), `.bin` dan `.cue` game, dan (bila perlu) zip TileDuel. File sandbox lama kemungkinan hilang.
 2. Tempel dokumen ini, lalu pilih satu target dari bagian 7 (disarankan: kartu di Party Mode, lalu bobot roulette).
 3. Minta saya tetap hemat token: jalankan di latar belakang, kurangi percobaan beruntun, dan kerjakan satu target per sesi.
+
+---
+
+## 11. Temuan lanjutan: bonus 結界源, struct pemain, dan tabel di executable
+
+### 11.1 Bonus di petak start (結界源)
+
+- **Pemicu [TERBUKTI dari memori]:** kata di struct pemain +4 memuat dua bit penanda kristal (0x1000 dan 0x2000). Saat bonus keluar, kedua bit terhapus (P2: 0x33000 → 0x30001; P1: 0x33400 → 0x30401) dan bit rendah naik 1 (penghitung bonus). Jadi bonus dibayar saat pemain yang sudah melewati **kedua** kristal kembali ke start.
+- **Tiga sampel besar bonus:**
+
+| Sampel | Total harga barrier milik pemain | Bonus |
+|---|---|---|
+| Tutorial, P1 | 260+140+100 = 500 | +525 |
+| Party Mode 2 pemain, P2 (frame 16741) | 120+140+260 = 520 | +530 |
+| Party Mode 2 pemain, P1 (frame 21541) | 900 (7 petak; dua petak harga 100 sudah level 1) | +635 |
+
+- **Dugaan rumus [DUGAAN KUAT]:** bonus = **400 + 25% × total nilai barrier**. Dua sampel tanpa level-up membentuk garis tepat (kemiringan 0,25, awal 400). Angka 400 sama dengan konstanta di tabel executable (11.3), sebagai bukti independen. Sampel ketiga cocok bila tiap petak 100 yang naik ke level 1 bernilai 20 lebih tinggi (jadi 120); itu asumsi yang belum diverifikasi.
+- Bonus dihitung bertahap 20 per 2 frame di layar (klaim dan sewa 10 per 2 frame).
+- **Uji ubah-memori [TERBUKTI, hasil negatif]:** sebelum bonus P1 (frame 21500), level dua petak P1 diubah ke 0 dan satu petak harga 220 dijadikan milik P1 pada **rekaman petak** (bidang pemilik dan level); ubahan bertahan, tetapi bonus tetap +635. Jadi bonus tidak membaca bidang itu secara langsung. Rekaman petak (292 byte) tampaknya objek tampilan; status logika kepemilikan, level, dan total nilai barrier ada di tempat lain yang **belum ditemukan**.
+- Bidang di rekaman petak (offset relatif ke pasangan harga/sewa, u16): −4 = level (256 = level 1), +44 = pemilik (242 kosong, 245 P1, 246 P2), −8 = 1 untuk petak P2.
+
+### 11.2 Struct pemain: `0x80070EB8`, jarak 180 byte, P1..P4 [TERBUKTI]
+
+- +0 chakra (sama dengan HUD). Set kedua di `0x801EFBBC` (jarak 144 byte) juga mencerminkan chakra, tetapi tertimpa overlay saat layar battle dimuat; pakai set `0x80070EB8`.
+- +4 bendera: slot pemain, penanda kristal (0x1000/0x2000), penghitung bonus. +112 mirip penghitung giliran (belum dipastikan).
+
+### 11.3 Tabel di executable: `0x8006491C`, entri 48 byte [TERBUKTI keberadaannya; arti kolom DUGAAN]
+
+Tiap entri: u32 `[chakra awal, chakra target, 400, 1027, ...]`, 12 byte angka (offset 30–41), lalu 4 byte `[id, a, b, 0]` (offset 44–47). Dua kelompok: entri berawalan 1500/3000 dan 2500/5000. Angka 400 sama di semua entri.
+**Dugaan kuat:** 12 byte itu adalah isi 12 segmen roda roulette (roda yang tampil memang 12 segmen, angka 1–6 dengan duplikat), satu roda per karakter. Belum dicocokkan dengan roda di layar tiap karakter.
+
+| Entri | Chakra awal | Chakra target | u32 #3 | u32 #4 | Angka 12 segmen (dugaan roda) | [id,a,b,0] |
+|---|---|---|---|---|---|---|
+| 0 | 1500 | 3000 | 400 | 1027 | [1, 2, 2, 3, 3, 3, 4, 4, 4, 5, 5, 6] | [1, 11, 1, 0] |
+| 1 | 1500 | 3000 | 400 | 1027 | [1, 2, 3, 3, 4, 4, 5, 5, 6, 6, 7, 8] | [2, 12, 2, 0] |
+| 2 | 1500 | 3000 | 400 | 1027 | [1, 2, 3, 3, 4, 4, 5, 5, 6, 6, 7, 8] | [3, 20, 3, 0] |
+| 3 | 1500 | 3000 | 400 | 1027 | [1, 2, 3, 3, 4, 4, 5, 5, 6, 6, 7, 8] | [4, 14, 4, 0] |
+| 4 | 1500 | 3000 | 400 | 1027 | [1, 2, 3, 4, 4, 5, 5, 6, 6, 7, 8, 9] | [5, 15, 5, 0] |
+| 5 | 1500 | 3000 | 400 | 1027 | [1, 2, 3, 4, 4, 5, 5, 6, 6, 7, 8, 9] | [6, 16, 6, 0] |
+| 6 | 1500 | 3000 | 400 | 1027 | [1, 2, 3, 4, 4, 5, 5, 6, 6, 7, 8, 9] | [7, 17, 7, 0] |
+| 7 | 1500 | 3000 | 400 | 1027 | [1, 2, 3, 4, 4, 5, 5, 6, 6, 7, 8, 9] | [8, 10, 4, 0] |
+| 8 | 1500 | 3000 | 400 | 1027 | [1, 2, 3, 3, 4, 4, 5, 5, 6, 6, 7, 8] | [9, 5, 4, 0] |
+| 9 | 1500 | 3000 | 400 | 1027 | [1, 2, 3, 4, 4, 5, 5, 6, 6, 7, 8, 9] | [10, 10, 4, 0] |
+| 10 | 1500 | 3000 | 400 | 1027 | [1, 2, 3, 4, 4, 5, 5, 6, 6, 7, 8, 9] | [11, 10, 4, 0] |
+| 11 | 1500 | 3000 | 400 | 1027 | [1, 2, 3, 4, 4, 5, 5, 6, 6, 7, 8, 9] | [12, 10, 4, 0] |
+| 12 | 1500 | 3000 | 400 | 1027 | [1, 2, 3, 4, 4, 5, 5, 6, 6, 7, 8, 9] | [13, 10, 4, 0] |
+| 13 | 1500 | 3000 | 400 | 1027 | [1, 2, 3, 4, 4, 5, 5, 6, 6, 7, 8, 9] | [14, 10, 4, 0] |
+| 14 | 1500 | 3000 | 400 | 1027 | [1, 2, 3, 4, 4, 5, 5, 6, 6, 7, 8, 9] | [15, 15, 5, 0] |
+| 15 | 2500 | 5000 | 400 | 1027 | [1, 2, 3, 4, 4, 5, 5, 6, 6, 7, 8, 9] | [16, 18, 8, 0] |
+
+### 11.4 Temuan lain dari run 2 pemain dan 4 pemain
+
+- **Sewa 85 terbukti dibayar sungguhan** (Kakashi → Naruto, petak 160/85, ±frame 23034, run 4 pemain).
+- **Battle:** saat dua pemain bertemu, muncul layar serang/bertahan dengan roulette "tambahan kekuatan serang"; kartu serangan menambah kekuatan (terlihat Naruto lawan Sakura dengan kartu +2). Chakra juga berubah akibat battle.
+- Satu kenaikan +250 pada P2 (frame 20621, langkah 10 per 2 frame) belum teridentifikasi.
+- Jalur Party Mode **2 pemain**: lihat `inputs/inputs_2p.txt` (sampai pertandingan, turun dua kali di layar jumlah pemain) dan `inputs/inputs_2lap.txt` (satu putaran penuh). `probe.lua` kini melacak 8 alamat chakra (set A dan B).
+- Uji poke dengan format `POKES="21500@13BA6A@2@0,21500@13BB8E@2@0,21500@13C74E@2@245"`.
+
+### 11.5 Masih terbuka
+
+1. Lokasi status logika kepemilikan/level/total nilai barrier, dan nilai barrier tiap level (apakah level 1 = harga + 20%).
+2. Konfirmasi rumus bonus dengan sampel bersih ketiga, atau lewat ubah-memori di lokasi logika.
+3. Verifikasi tabel roda (11.3) dengan membaca roda tiap karakter di layar.
+4. Biaya dan efek level-up, kenaikan +250, sistem battle.
