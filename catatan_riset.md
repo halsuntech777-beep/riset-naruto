@@ -351,3 +351,19 @@ Tiap entri: u32 `[chakra awal, chakra target, 400, 1027, ...]`, 12 byte angka (o
 2. Konfirmasi rumus bonus dengan sampel bersih ketiga, atau lewat ubah-memori di lokasi logika.
 3. Verifikasi tabel roda (11.3) dengan membaca roda tiap karakter di layar.
 4. Biaya dan efek level-up, kenaikan +250, sistem battle.
+
+---
+
+## 12. Pembuktian bonus 結界源 (sesi lanjutan)
+
+- **Layar laporan chakra (チャクラ報告書)** muncul saat pemain tiba di start dan merinci bonus: ごほうび (hadiah), 結界数 ×N (jumlah barrier) dengan angkanya, ついかチャクラ合計 (tambahan total), dan 合計チャクラ.
+- **Sampel P1 [TERBUKTI dari layar game]:** Party Mode 2 pemain, frame 21500-21700: hadiah **+400**; 結界数 **×7 -> +235**; tambahan total 635; chakra 600 -> 1235. Cocok dengan lonjakan +635 yang tercatat di memori.
+- **Bagian barrier 235 = 25% x 940 [DUGAAN KUAT]**, bila dua petak harga 100 yang sudah level 1 dihitung 120 (tujuh petak: 120+120+140+120+200+140+100 = 940). Dukungan: label sewa petak level 1 di layar = 60 (= 1,2 x 50). Nilai barrier level 1 belum dibaca langsung dari panel peta.
+- **Status rumus:** struktur "400 tetap + bagian dari nilai barrier" terbukti langsung dari game. Faktor 25% dan nilai level 1 = 120 masih dugaan kuat (cocok persis di sampel P1; sampel tutorial 500 -> 525 dan P2 520 -> 530 juga konsisten).
+- **Belum terbaca:** laporan bonus P2 (3 barrier, harapan +130; screenshot frame 16640-16960 belum sempat dibaca) dan panel peta untuk petak level 1.
+- **Kartu:** kenaikan +250 yang sebelumnya tak terjelaskan = kartu "kontrol chakra berhasil, pulihkan 250". Kartu lain yang tampil: "Ichiraku Ramen +150" (efek persis belum dibaca) dan satu kartu biru yang tidak terbaca.
+- **Menu giliran:** Roulette, Jurus, **Kartu Chance** (muncul hanya bila memegang kartu), Info, Lihat Peta.
+- **Struct pemain +112** = penghitung posisi di jalur (0-22; 22 = start). Bonus dibayar saat tiba tepat di start dengan kedua bit kristal; bit lalu terhapus.
+- **Logika kepemilikan** tidak ditemukan sebagai array per petak atau bitmask sederhana di RAM (hanya rekaman tampilan yang cocok); uji ubah-memori pada rekaman tampilan tidak memengaruhi bonus.
+- **Lingkungan:** proses latar belakang yang berjalan lebih dari ±10 menit beberapa kali mati saat sandbox dijeda. Pecah eksperimen menjadi run <= 9 menit.
+- **Langkah berikutnya:** (1) baca laporan P2; (2) baca panel peta untuk 結界価値 petak level 1; (3) satu sampel dengan semua barrier level 0 dan total berbeda.
