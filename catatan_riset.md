@@ -424,3 +424,14 @@ Saat pemain tiba di start dengan kedua kristal terlewati, game menampilkan lapor
 
 - Setara 25% x harga untuk petak tanpa upgrade. Untuk petak upgrade (idx0, idx1 milik P1 bersewa 60), rumus berbasis sewa tidak butuh asumsi pengali level; sampel ketiga mensyaratkan keduanya bernilai 60 (total 120).
 - **Celah kecil:** panel petak level 2 (idx0/idx1) belum terbaca (panel tidak muncul setelah kursor peta digeser); sewa idx6/8/14 diambil dari tabel (70/60/100), bukan dari label. Jadwal input pembaca peta: `inputs/inputs_peta.txt` (buka menu Lihat Peta dengan DOWN x4 + CIRCLE saat menu giliran tampil).
+
+---
+
+## 14. Rute membuka papan lain lewat progres Story Mode (percobaan 1)
+
+- **Jadwal:** `inputs/inputs_story.txt` (spam CIRCLE/START sampai Mode Select, `2800 CIRCLE` memilih Story Mode, lalu pola CIRCLE/RIGHT/CIRCLE tiap 160 frame).
+- **Percepatan:** chakra P1 diubah ke 5000 di frame 9000 dan 13000 lewat ubah-memori (`0x801EFBBC` dan `0x80070EB8` sama-sama diterima; HUD mengikuti nilai baru).
+- **Hasil:** sampai frame 30000 papan pertama belum selesai. Sekitar frame 21000 P1 tiba di petak tertentu tanpa laporan bonus, lalu macet di layar "pilih barrier untuk di-level-up" sampai akhir run. Kartu baru terbaca: "pengertian +500 chakra" (pulih 500) dan "serangan +1".
+- **Kartu memori kosong (0 blok terpakai)** sesudah run: belum ada progres tersimpan, dan papan lain belum terbuka.
+- **Yang belum diuji:** memaksa bendera kristal (struct pemain +4 |= 0x3000) agar kedatangan di start langsung memicu bonus dan syarat menang; menangani layar macet dengan CROSS lalu DOWN + CIRCLE ("Tidak").
+- **Perkiraan biaya:** tiap papan Story kira-kira 7–10 menit emulasi bila lancar dan butuh beberapa percobaan; jumlah papan Story belum diketahui (folder `STG01`–`STG13`).
