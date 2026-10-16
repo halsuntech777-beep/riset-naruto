@@ -407,3 +407,20 @@ Saat pemain tiba di start dengan kedua kristal terlewati, game menampilkan lapor
 3. Biaya dan efek level-up barrier; layar pilih-barrier yang macet bila memilih "Ya".
 4. Daftar lengkap kartu; fungsi 術ポイント dan menu Jurus; sistem battle.
 5. Apakah 400 berbeda per entri tabel executable atau papan lain; nama 8 papan dan 8 karakter yang terkunci.
+
+---
+
+## 13. Perumusan ulang bonus 結界源 (panel peta + laporan chakra)
+
+- **Laporan chakra** (layar saat tiba di start): `ごほうび +400` tetap, lalu `結界数 xN -> +X`. Total tambahan = 400 + X.
+- **Panel peta** untuk petak P1 yang sedang diinjak (harga 100, tanpa upgrade): `レベル 1`, `結界価値 50`, `耐久値 2/2`. Jadi 結界価値 petak MILIK = angka sewa di gem (50), bukan harga (100); petak kosong menampilkan 結界価値 = harga (tutorial: 100).
+- **Rumus yang cocok untuk tiga sampel:** bonus = 400 + 50% x jumlah 結界価値 (= sewa saat ini) semua barrier milik pemain.
+
+| Sampel | Sewa saat ini tiap barrier | Jumlah | 50% | Bonus |
+|---|---|---|---|---|
+| Tutorial P1 | 130, 70, 50 | 250 | 125 | 525 |
+| Party P2 (laporan x3, +130) | 60, 70, 130 | 260 | 130 | 530 |
+| Party P1 (laporan x7, +235) | 60, 60, 70, 60, 100, 70, 50 | 470 | 235 | 635 |
+
+- Setara 25% x harga untuk petak tanpa upgrade. Untuk petak upgrade (idx0, idx1 milik P1 bersewa 60), rumus berbasis sewa tidak butuh asumsi pengali level; sampel ketiga mensyaratkan keduanya bernilai 60 (total 120).
+- **Celah kecil:** panel petak level 2 (idx0/idx1) belum terbaca (panel tidak muncul setelah kursor peta digeser); sewa idx6/8/14 diambil dari tabel (70/60/100), bukan dari label. Jadwal input pembaca peta: `inputs/inputs_peta.txt` (buka menu Lihat Peta dengan DOWN x4 + CIRCLE saat menu giliran tampil).
