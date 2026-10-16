@@ -367,3 +367,43 @@ Tiap entri: u32 `[chakra awal, chakra target, 400, 1027, ...]`, 12 byte angka (o
 - **Logika kepemilikan** tidak ditemukan sebagai array per petak atau bitmask sederhana di RAM (hanya rekaman tampilan yang cocok); uji ubah-memori pada rekaman tampilan tidak memengaruhi bonus.
 - **Lingkungan:** proses latar belakang yang berjalan lebih dari ±10 menit beberapa kali mati saat sandbox dijeda. Pecah eksperimen menjadi run <= 9 menit.
 - **Langkah berikutnya:** (1) baca laporan P2; (2) baca panel peta untuk 結界価値 petak level 1; (3) satu sampel dengan semua barrier level 0 dan total berbeda.
+
+---
+
+## 12. Bukti rumus bonus dan temuan akhir
+
+### 12.1 Layar laporan chakra (チャクラ報告書) merinci bonus [TERBUKTI, dibaca langsung dari game]
+
+Saat pemain tiba di start dengan kedua kristal terlewati, game menampilkan laporan yang memecah bonus. Frame di bawah dari run Party Mode 2 pemain deterministik (`inputs/inputs_2lap.txt`).
+
+| Pemain | ごほうび (hadiah) | 結界数 (jumlah barrier) | Bagian barrier | Bonus total | Chakra |
+|---|---|---|---|---|---|
+| P2 Sasuke (frame ±16740) | +400 | ×3 (120+140+260 = 520, level 0) | **+130** | 530 | 980 → 1510 |
+| P1 Naruto (frame ±21540) | +400 | ×7 (total 940, dua petak 100 level 1) | **+235** | 635 | 600 → 1235 |
+
+- **Rumus: bonus = 400 + 25% × total nilai barrier milik pemain.** 130 = 0,25 × 520 persis. 235 = 0,25 × 940 persis bila petak level 1 dihitung 120.
+- Sampel tutorial (500 → +525) juga cocok: 400 + 125.
+- Bukti penuh (tanpa asumsi): kasus tanpa level-up (P2, 520 → 130; tutorial, 500 → 125). Kasus level-up cocok tetapi nilai level 1 = 120 masih kesimpulan: label sewa petak level 1 tampil 60 (= 1,2 × 50), dan 25% × 940 = 235 pas. **Belum dibaca langsung** dari panel peta (結界価値).
+- Angka 400 sama dengan konstanta di tabel executable `0x8006491C` (bagian 11.3).
+- Setelah laporan, muncul "術ポイントが4ポイント回復！": poin jurus (術ポイント, indikator di kiri bawah) pulih 4 saat kembali ke start.
+- Chakra bertambah bertahap: 20 per 2 frame (bonus), 10 per 2 frame (klaim/sewa/kartu).
+
+### 12.2 Pemicu dan struct pemain [TERBUKTI]
+
+- Struct `0x80070EB8` (180 byte): `+0` chakra; `+4` bendera (bit 0x1000 dan 0x2000 = kristal terlewati; terhapus saat bonus, bit rendah +1); `+112` penghitung posisi di jalur 0–22 (22 = tiba kembali di start; bonus keluar saat mendarat tepat di sana); `+16` penghitung giliran (belum dipastikan).
+- Uji ubah-memori sebelumnya (bagian 11.1) tidak mengubah bonus: status logika kepemilikan **tidak** ada di rekaman petak 292 byte. Pencarian array kepemilikan di RAM (nilai berjarak tetap 3 kelas, bitmask 32-bit) tidak menemukan apa pun selain rekaman petak itu.
+
+### 12.3 Kartu dan menu [TERAMATI]
+
+- Kenaikan +250 yang dulu misterius ternyata **kartu "調節成功 +250"** (teks: kontrol chakra berhasil, pulihkan 250 chakra). Kartu lain di layar pilih: **"一楽ラーメン +150"** dan satu kartu biru yang tidak terbaca.
+- Menu giliran menjadi lima pilihan saat pemain memegang kartu: **Roulette, Jurus, Kartu Chance (チャンス札), Info, Lihat Peta**.
+- Kartu yang sudah terbaca total: maju 7 petak; serangan +1, +2; pulih 400 chakra; pulih 250 chakra; ramen +150.
+- Mendarat di petak milik lawan dengan pemain lain di petak yang sama memicu battle (layar serang/bertahan dengan roulette tambahan kekuatan); sewa 85 untuk petak 160 terbukti dibayar sungguhan.
+
+### 12.4 Masih terbuka (urut prioritas)
+
+1. Baca 結界価値 petak level 1 (dan level 2–4) langsung dari panel peta untuk menutup satu-satunya asumsi di rumus bonus; atau satu sampel bersih lain dengan total sangat berbeda.
+2. Mencocokkan tabel roda di executable (bagian 11.3) dengan roda yang tampil untuk tiap karakter.
+3. Biaya dan efek level-up barrier; layar pilih-barrier yang macet bila memilih "Ya".
+4. Daftar lengkap kartu; fungsi 術ポイント dan menu Jurus; sistem battle.
+5. Apakah 400 berbeda per entri tabel executable atau papan lain; nama 8 papan dan 8 karakter yang terkunci.

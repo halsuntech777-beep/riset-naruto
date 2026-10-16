@@ -4,6 +4,9 @@ Arsip hasil riset game PS1 *Naruto: Shinobi no Sato no Jintori Gassen* sebagai r
 
 | Berkas / folder | Isi |
 |---|---|
+| `STATUS.md` | Keadaan terakhir dan langkah berikutnya (baca pertama) |
+| `riwayat/kronologi_chat.md` | Kronologi chat, keputusan, dan kendala |
+| `LANJUTKAN_DI_CHAT_BARU.md` | Prompt siap pakai untuk chat baru |
 | `catatan_riset.md` | Catatan riset lengkap (aturan, papan, kartu, hal yang belum diketahui) |
 | `ringkasan_percakapan.md` | Ringkasan semua topik di chat (hybrid-casual, monetisasi, sosial, Facebook games, Monopoly GO, TileDuel) |
 | `redux/`, `inputs/`, `README.txt` | Skrip emulator PCSX-Redux dan jadwal input (cara pakai di `README.txt`) |
