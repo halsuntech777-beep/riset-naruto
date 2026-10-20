@@ -29,6 +29,31 @@ local frame, last = 0, {}
 local polls = {}
 for i, a in ipairs({ 0x1EFBBC, 0x1EFC4C, 0x1EFCDC, 0x1EFD6C }) do polls[#polls+1] = { a, 'A' .. i } end
 for i, a in ipairs({ 0x70EB8, 0x70F6C, 0x71020, 0x710D4 }) do polls[#polls+1] = { a, 'B' .. i } end
+-- HASH (hanya angka keluar): tiap HSTEP frame sejak HFROM cetak "HSH f= ram=" (hash RAM penuh) dan "HSF f= fb= n=" (hash framebuffer).
+-- Berkas screenshot sementara ditulis di OUTDIR (runner), dibaca, di-hash, lalu dihapus; tidak pernah keluar dari runner.
+local HFROM = tonumber(os.getenv('HFROM') or '19000')
+local HSTEP = tonumber(os.getenv('HSTEP') or '20')
+local function hram()
+  local p = ffi.cast('uint32_t*', mem)
+  local h = 0
+  for i = 0, 0x80000 - 1 do h = bit.tobit(bit.rol(bit.bxor(h, p[i]), 5) + 40503) end
+  return h % 4294967296
+end
+local function hfb(fr)
+  PCSX.nextTick(function()
+    local ok, err = pcall(function()
+      local path = string.format('%s/h%05d.raw', OUT, fr)
+      local ss = PCSX.GPU.takeScreenShot()
+      local f = Support.File.open(path, 'TRUNCATE'); f:writeMoveSlice(ss.data); f:close()
+      local fh = io.open(path, 'rb'); local s = fh:read('*a'); fh:close(); os.remove(path)
+      local p = ffi.cast('const uint8_t*', s)
+      local h = 0
+      for i = 0, #s - 1 do h = bit.tobit(bit.rol(bit.bxor(h, p[i]), 5) + 40503) end
+      print(string.format('HSF f=%d fb=%d n=%d', fr, h % 4294967296, #s))
+    end)
+    if not ok then print('HSF f=' .. fr .. ' err=' .. tostring(err):gsub('[^%w%s_%.:]', ''):sub(1, 80)) end
+  end)
+end
 listener = PCSX.Events.createEventListener('GPU::Vsync', function()
   frame = frame + 1
   for _, pk in ipairs(pokes) do
@@ -56,6 +81,11 @@ listener = PCSX.Events.createEventListener('GPU::Vsync', function()
     local v = u32(p[1])
     if last[p[2]] ~= v and frame > 4000 then print(string.format('CHG f=%d %s: %s -> %d', frame, p[2], tostring(last[p[2]]), v)) end
     last[p[2]] = v
+  end
+  if frame >= HFROM and (frame - HFROM) % HSTEP == 0 then
+    local ok, h = pcall(hram)
+    print(string.format('HSH f=%d ram=%d', frame, ok and h or -1))
+    hfb(frame)
   end
   if dumpset[frame] then PCSX.nextTick(function()
     local fh = io.open(string.format('%s/r_%05d.bin', OUT, frame), 'wb'); fh:write(ffi.string(PCSX.getMemPtr(), 0x200000)); fh:close(); print('DUMP ' .. frame) end) end
