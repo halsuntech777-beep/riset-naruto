@@ -1,0 +1,30 @@
+HSF f=25740 fb=0 n=0 
+HSH f=25760 ram=1698147018 
+HSF f=25760 fb=0 n=0 
+HSH f=25780 ram=290709440 
+HSF f=25780 fb=0 n=0 
+HSH f=25800 ram=398858835 
+HSF f=25800 fb=0 n=0 
+HSH f=25820 ram=244462987 
+HSF f=25820 fb=0 n=0 
+HSH f=25840 ram=1687870365 
+HSF f=25840 fb=0 n=0 
+HSH f=25860 ram=621395314 
+HSF f=25860 fb=0 n=0 
+HSH f=25880 ram=2799473961 
+HSF f=25880 fb=0 n=0 
+HSH f=25900 ram=656254520 
+HSF f=25900 fb=0 n=0 
+HSH f=25920 ram=1405812233 
+HSF f=25920 fb=0 n=0 
+HSH f=25940 ram=1798010226 
+HSF f=25940 fb=0 n=0 
+HSH f=25960 ram=2975687488 
+HSF f=25960 fb=0 n=0 
+HSH f=25980 ram=554673574 
+HSF f=25980 fb=0 n=0 
+SVS p=1 f=26000 ram=291065347 p1=1220,33000,0,0,4,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,b,0,0,0 
+SVS muat mulai f=26000 modus=vs pause=function resume=function 
+SVE SVS muat mulai f=26000 modus=vs pause=function resume=function
+timeout: the monitored command dumped core
+Segmentation fault
