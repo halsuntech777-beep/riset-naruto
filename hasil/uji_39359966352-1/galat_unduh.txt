@@ -1,6 +1,0 @@
-secret PRIVATE_REPO: terisi; PRIVATE_TOKEN: terisi
-akses repo aset: HTTP 200; private=True
-release aset: HTTP 200
-aset: (nama lain) 326.0 MB uploaded
-aset: (nama lain) 0.0 MB uploaded
-aset: (nama lain) 91.5 MB uploaded
