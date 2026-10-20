@@ -30,12 +30,15 @@ unduh)
 import json,sys,re
 d=json.load(open(sys.argv[1]))
 for a in d.get("assets",[]):
-    n=a["name"]; print("aset:", n if re.fullmatch(r"game\.bin|redux\.[A-Za-z]+",n) else "(nama lain)", round(a["size"]/1e6,1),"MB", a["state"])
+    n=a["name"]; print("aset:", n if re.fullmatch(r"game\.bin|redux\.[A-Za-z]+",n) else "(ekstensi ." + n.rsplit(".",1)[-1].lower()[:8] + ")", round(a["size"]/1e6,1),"MB", a["state"])
 if not d.get("assets"): print("aset: tidak ada")
 PY
   mkdir -p "$W/dl"
-  gh release download "$TAG" -R "$SRC" -D "$W/dl" -p 'game.bin' -p 'redux.*' >/dev/null 2>&1 \
-    || gagal "unduh aset gagal (butuh release '$TAG' dengan game.bin dan redux.AppImage/redux.zip)."
+  gh release download "$TAG" -R "$SRC" -D "$W/dl" -p '*' >/dev/null 2>&1 || gagal "unduh aset gagal."
+  # Nama aset bebas: game = berkas .bin; emulator = .AppImage atau .zip; .cue diabaikan (sudah ada di repo).
+  GAME=$(ls "$W/dl" | grep -iE '\.bin$' | head -1); RED=$(ls "$W/dl" | grep -iE '\.(appimage|zip)$' | head -1)
+  [ -n "$GAME" ] && [ -n "$RED" ] || gagal "butuh satu berkas .bin (game) dan satu .AppImage/.zip (emulator) di release '$TAG'."
+  mv "$W/dl/$GAME" "$W/dl/game.bin"; mv "$W/dl/$RED" "$W/dl/redux.$(echo "${RED##*.}" | tr 'A-Z' 'a-z')"
   rm -f "$G"; ls "$W/dl" | sed 's/^game\.bin$/game.bin (ok)/'
   ;;
 bangun)
