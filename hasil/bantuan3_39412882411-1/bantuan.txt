@@ -1,0 +1,42 @@
+=== varian: -cli -noupdate -help ===
+The memory card /home/runner/.config/pcsx-redux/memcard1.mcd doesn't exist - creating it
+The memory card /home/runner/.config/pcsx-redux/memcard2.mcd doesn't exist - creating it
+Audio: driver dummy, 44100 Hz, 441 frames per period
+PCSX-Redux Lua Console 
+LuaJIT 2.1.1785598229 
+JIT: ON SSE3 SSE4.1 BMI2 fold cse dce fwd dse narrow loop abc sink fuse 
+PCSX-Redux booting
+Copyright (C) 2019-2025 PCSX-Redux authors
+CPU type: Dynarec (x86-64)
+Could not open BIOS:"". Retrying with the OpenBIOS
+Loaded BIOS: /home/runner/work/_temp/naruto/squashfs-root/usr/bin/../share/pcsx-redux/resources/openbios.bin
+OpenBIOS detected (0b0359a7)
+(rc_pipa=0)
+=== varian: -cli -noupdate --help ===
+Loading memory card /home/runner/.config/pcsx-redux/memcard1.mcd
+Loading memory card /home/runner/.config/pcsx-redux/memcard2.mcd
+Audio: driver dummy, 44100 Hz, 441 frames per period
+PCSX-Redux Lua Console 
+LuaJIT 2.1.1785598229 
+JIT: ON SSE3 SSE4.1 BMI2 fold cse dce fwd dse narrow loop abc sink fuse 
+PCSX-Redux booting
+Copyright (C) 2019-2025 PCSX-Redux authors
+CPU type: Dynarec (x86-64)
+Could not open BIOS:"". Retrying with the OpenBIOS
+Loaded BIOS: /home/runner/work/_temp/naruto/squashfs-root/usr/bin/../share/pcsx-redux/resources/openbios.bin
+OpenBIOS detected (0b0359a7)
+(rc_pipa=0)
+=== varian: -cli -noupdate -h ===
+Loading memory card /home/runner/.config/pcsx-redux/memcard1.mcd
+Loading memory card /home/runner/.config/pcsx-redux/memcard2.mcd
+Audio: driver dummy, 44100 Hz, 441 frames per period
+PCSX-Redux Lua Console 
+LuaJIT 2.1.1785598229 
+JIT: ON SSE3 SSE4.1 BMI2 fold cse dce fwd dse narrow loop abc sink fuse 
+PCSX-Redux booting
+Copyright (C) 2019-2025 PCSX-Redux authors
+CPU type: Dynarec (x86-64)
+Could not open BIOS:"". Retrying with the OpenBIOS
+Loaded BIOS: /home/runner/work/_temp/naruto/squashfs-root/usr/bin/../share/pcsx-redux/resources/openbios.bin
+OpenBIOS detected (0b0359a7)
+(rc_pipa=0)
