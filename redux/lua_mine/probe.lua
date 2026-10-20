@@ -86,10 +86,23 @@ local function doSave()
   print(string.format('SVS simpan ok=%s tipe=%s ukuran=%s f=%d ram=%d', tostring(ok), type(st), sz, frame, okh and h or -1))
   if not ok then print('SVS galat_simpan ' .. tostring(st):gsub('[^%w%s_%.:]', ''):sub(1, 100)) end
 end
+local HPSET = {[24000]=true,[24020]=true,[24100]=true,[24500]=true,[25000]=true,[26000]=true,[26300]=true}
+function hpages()
+  local p = ffi.cast('uint32_t*', mem)
+  local t = {}
+  for pg = 0, 511 do
+    local h = 0
+    for i = pg * 1024, pg * 1024 + 1023 do h = bit.tobit(bit.rol(bit.bxor(h, p[i]), 5) + 40503) end
+    t[#t+1] = string.format('%x', h % 4294967296)
+  end
+  print(string.format('SVS hsp p=%d f=%d %s', pass, frame, table.concat(t, ',')))
+end
 local function errtxt(e) return tostring(e):gsub('[^%w%s_%.:]', ''):sub(1, 80) end
 local function doLoad()
   if not saved then print('SVS muat dilewati: tidak ada state'); return end
-  local pc = (MODUS == 'pc')  -- pc = pause + lepas semua override pad sebelum muat, pasang ulang sesudah muat
+  local pc = (MODUS == 'pc' or MODUS == 'pd')
+  local np = (MODUS == 'pd') and (pass + 1) or 2
+  -- pc = pause + lepas semua override pad sebelum muat, pasang ulang sesudah muat
   say('SVS muat mulai f=' .. frame .. ' modus=' .. MODUS .. ' pause=' .. type(PCSX.pauseEmulator) .. ' resume=' .. type(PCSX.resumeEmulator))
   if MODUS == 'ps' then pcall(function() PCSX.pauseEmulator() end) end
   if pc then
@@ -108,7 +121,7 @@ local function doLoad()
   local ok, err = pcall(function() PCSX.loadSaveState(saved) end)
   say('SVS muat kembali ok=' .. tostring(ok))
   if pc and ok then
-    frame = fsave; last = copy(savedlast); pass = 2
+    frame = fsave; last = copy(savedlast); pass = np
     local n = 0
     for _, i in ipairs(inputs) do if i[1] <= frame and frame < i[2] then pad.setOverride(i[3]); n = n + 1 end end
     say('SVS pc override_pasang_ulang f=' .. frame .. ' aktif=' .. n)
@@ -118,11 +131,12 @@ local function doLoad()
   if MODUS == 'ps' then pcall(function() PCSX.resumeEmulator() end) end
   print(string.format('SVS muat selesai ok=%s', tostring(ok)))
   if not ok then print('SVS galat_muat ' .. tostring(err):gsub('[^%w%s_%.:]', ''):sub(1, 100)); return end
-  frame = fsave; last = copy(savedlast); pass = 2
+  frame = fsave; last = copy(savedlast); pass = np
   for _, i in ipairs(inputs) do pad.clearOverride(i[3]) end
   for _, i in ipairs(inputs) do if i[1] <= frame and frame < i[2] then pad.setOverride(i[3]) end end
   local okh, h = pcall(hram)
-  print(string.format('SVS sesudah_muat f=%d ram=%d', frame, okh and h or -1))
+  print(string.format('SVS sesudah_muat f=%d ram=%d p=%d', frame, okh and h or -1, pass))
+  if MODUS == 'pd' then hpages() end
 end
 listener = PCSX.Events.createEventListener('GPU::Vsync', function()
   frame = frame + 1
@@ -149,17 +163,18 @@ listener = PCSX.Events.createEventListener('GPU::Vsync', function()
   end
   for _, p in ipairs(polls) do
     local v = u32(p[1])
-    if last[p[2]] ~= v and frame > 4000 then print(string.format('CHG%s f=%d %s: %s -> %d', pass == 2 and '2' or '', frame, p[2], tostring(last[p[2]]), v)) end
+    if last[p[2]] ~= v and frame > 4000 then print(string.format('CHG%s f=%d %s: %s -> %d', pass >= 2 and tostring(pass) or '', frame, p[2], tostring(last[p[2]]), v)) end
     last[p[2]] = v
   end
   if SAVEF and LOADF and frame >= SAVEF and frame <= LOADF and (frame % 500 == 0) then
     local ok, h = pcall(hram)
     print(string.format('SVS p=%d f=%d ram=%d p1=%s', pass, frame, ok and h or -1, p1words()))
   end
+  if MODUS == 'pd' and SAVEF and frame >= SAVEF and HPSET[frame] then pcall(hpages) end
   if SAVEF and pass == 1 and not saved and frame == SAVEF then
     if MODUS == 'vs' then doSave() else PCSX.nextTick(doSave) end
   end
-  if LOADF and pass == 1 and saved and frame == LOADF then
+  if LOADF and (pass == 1 or (MODUS == 'pd' and pass == 2)) and saved and frame == LOADF then
     if MODUS == 'vs' then doLoad() else PCSX.nextTick(doLoad) end
   end
   if frame >= HFROM and (frame - HFROM) % HSTEP == 0 then
