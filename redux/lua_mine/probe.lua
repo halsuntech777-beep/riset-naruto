@@ -16,6 +16,13 @@ for item in (os.getenv('POKES') or ''):gmatch('[^,]+') do
   local f, a, w, v = item:match('^(%d+)@(%x+)@(%d)@(%d+)$')
   if f then table.insert(pokes, {tonumber(f), tonumber(a, 16), tonumber(w), tonumber(v)}) end
 end
+-- ORPOKES="frame[-frame2]@alamathex@lebar@mask,..." : OR-kan mask ke memori pada frame itu (atau tiap frame dalam rentang). Kosong = tak berpengaruh.
+local bit = require 'bit'
+local orpokes = {}
+for item in (os.getenv('ORPOKES') or ''):gmatch('[^,]+') do
+  local f1, f2, a, w, v = item:match('^(%d+)%-?(%d*)@(%x+)@(%d)@(%S+)$')
+  if f1 and tonumber(v) then table.insert(orpokes, {tonumber(f1), tonumber(f2) or tonumber(f1), tonumber(a, 16), tonumber(w), tonumber(v)}) end
+end
 local mem = PCSX.getMemPtr()
 local function u32(a) return ffi.cast('uint32_t*', mem + (a % 0x200000))[0] end
 local frame, last = 0, {}
@@ -29,6 +36,16 @@ listener = PCSX.Events.createEventListener('GPU::Vsync', function()
       local off = pk[2] % 0x200000
       if pk[3] == 2 then ffi.cast('uint16_t*', mem + off)[0] = pk[4] else ffi.cast('uint32_t*', mem + off)[0] = pk[4] end
       print(string.format('POKE f=%d addr=0x%X val=%d', frame, pk[2], pk[4]))
+    end
+  end
+  for _, op in ipairs(orpokes) do
+    if frame >= op[1] and frame <= op[2] then
+      local off = op[3] % 0x200000
+      local ptr = (op[4] == 2) and ffi.cast('uint16_t*', mem + off) or ffi.cast('uint32_t*', mem + off)
+      local old = ptr[0]
+      local new = bit.bor(old, op[5])
+      if op[4] == 2 then new = new % 65536 else new = new % 4294967296 end
+      if new ~= old then ptr[0] = new; if frame == op[1] then print(string.format('ORPOKE f=%d addr=0x%X old=%d new=%d', frame, op[3], old, new)) end end
     end
   end
   for _, i in ipairs(inputs) do

@@ -17,6 +17,17 @@ Keadaan terakhir riset game PS1 *Naruto: Shinobi no Sato no Jintori Gassen* untu
 3. Biaya/efek level-up, daftar kartu lengkap, jurus dan battle.
 4. Nama 8 papan dan 8 karakter terkunci; pemetaan 11 tabel papan ke stage.
 
+## Runner GitHub Actions (sesi ini: rancangan siap, BELUM pernah dijalankan)
+- [TERBUKTI] Repositori ini **publik** (API: private=false), padahal `LANJUTKAN_DI_CHAT_BARU.md` menyebut privat. Log Actions repositori publik terlihat semua orang.
+- [TERBUKTI] Token yang dipakai hanya Contents read/write: bisa push `ci/`, tapi **tidak** bisa menulis `.github/workflows/`. Karena itu workflow ada di `ci/emulator-run.yml` dan harus disalin pemilik ke `.github/workflows/emulator-run.yml` lewat web GitHub.
+- [TERBUKTI] Lolos uji lokal di sandbox: sintaks bash dan YAML, kompilasi `shim243.c` dengan gcc, sintaks dan logika `ORPOKES` di `probe.lua` (luajit), ekstraktor angka `ci/ekstrak_dump.py`, regex validasi input.
+- [BELUM] Emulator berjalan di runner; daftar paket apt (`xvfb libgl1 libegl1 ...`) adalah tebakan terbaik dan mungkin perlu ditambah setelah run pertama. Hasil run pendek (inputs_2p.txt, MAXF 7000) belum dibandingkan dengan sandbox; sandbox belum punya log acuan di repositori, jadi hasil run pertama jadi acuan dan cek kewarasan: modal awal 1500 muncul di empat alamat pantau.
+- Rancangan: `ci/run_remote.sh` (unduh, bangun, jalankan, hasil), `ci/ekstrak_dump.py`, `probe.lua` kini mendukung `ORPOKES="frame[-frame2]@alamat@lebar@mask"` (OR-kan bit; mask boleh 0x...). Input workflow: jadwal, maxf, pokes, orpokes, dumps, addrs, label.
+- Aman hak cipta: game dan emulator diunduh dari release `aset` di repositori **privat** (`game.bin`, `redux.AppImage`/`redux.zip`), hanya di folder sementara runner; skrip menolak bila sumber aset tidak privat. Tidak ada upload-artifact, tidak ada SHOTS. Yang di-commit hanya `hasil/<label>_<run>/` berisi `chg.log`, `ringkasan.txt`, `emu_tail.txt`, `dump_angka.csv` (angka), dengan penjaga ekstensi dan ukuran (maks 300 KB).
+- Dua mode: (a) jadikan repositori ini privat, taruh release `aset` di sini, tanpa secret; (b) tetap publik, secret `PRIVATE_REPO` dan `PRIVATE_TOKEN` (Contents: read pada repositori privat). Pilihan belum diputuskan.
+- Langkah berikutnya: pilih (a)/(b), buat release `aset`, salin workflow, jalankan "Run workflow" dengan nilai bawaan, lalu bandingkan `hasil/uji_*/ringkasan.txt`. Setelah itu baru riset terbuka nomor 1-3 di bawah (ORPOKES untuk bendera kristal: struct 0x80070EB8+4, mask 0x3000).
+- Token percobaan sesi ini kedaluwarsa 2026-11-07; hapus/revoke bila sudah tidak dipakai.
+
 ## Cara bekerja (pelajaran penting)
 - Sandbox dibersihkan antar sesi dan proses latar belakang bisa dimatikan saat jeda lama. Jaga tiap run <= ±9 menit, pantau dengan `sleep` <= 295 detik, dan push hasil sesering mungkin.
 - Run emulator deterministik: input yang sama = kejadian di frame yang sama. Jadwal input ada di `inputs/` (Party Mode 2 pemain: `inputs_2p.txt` dan `inputs_2lap.txt`).

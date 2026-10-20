@@ -1,0 +1,49 @@
+# SALIN berkas ini ke .github/workflows/emulator-run.yml (lewat web GitHub: Add file > Create new file).
+# Token Contents-saja tidak boleh menulis ke .github/workflows, jadi berkas ini disimpan di ci/ dulu.
+# Prasyarat: release bernama "aset" di repositori PRIVAT berisi game.bin dan redux.AppImage (atau redux.zip).
+#   Mode (a): repositori ini dijadikan privat -> tanpa secret apa pun.
+#   Mode (b): repositori ini publik -> secret PRIVATE_REPO (owner/nama) dan PRIVATE_TOKEN (fine-grained, Contents: read, hanya repo privat itu).
+# Log Actions di repositori publik terlihat semua orang: skrip hanya mencetak angka. Tidak ada upload-artifact.
+name: emulator-run
+on:
+  workflow_dispatch:
+    inputs:
+      jadwal: { description: "Berkas jadwal input (inputs/*.txt)", default: "inputs/inputs_2p.txt" }
+      maxf:   { description: "Frame terakhir (MAXF)", default: "7000" }
+      pokes:  { description: "POKES frame@alamathex@lebar@nilai,...", default: "" }
+      orpokes: { description: "ORPOKES frame[-frame2]@alamathex@lebar@mask,...", default: "" }
+      dumps:  { description: "DUMPS: frame dipisah spasi (hanya di runner; keluar = CSV angka)", default: "" }
+      addrs:  { description: "ADDRS untuk CSV: 0xALAMAT[+panjang]:lebar,... (kosong = 9 alamat pantau)", default: "" }
+      label:  { description: "Label hasil", default: "uji" }
+concurrency: { group: emulator-run, cancel-in-progress: false }
+permissions: { contents: read }
+jobs:
+  run:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 45
+    permissions: { contents: write }
+    env:
+      JADWAL: ${{ inputs.jadwal }}
+      MAXF: ${{ inputs.maxf }}
+      POKES: ${{ inputs.pokes }}
+      ORPOKES: ${{ inputs.orpokes }}
+      DUMPS: ${{ inputs.dumps }}
+      ADDRS: ${{ inputs.addrs }}
+      LABEL: ${{ inputs.label }}
+    steps:
+      - uses: actions/checkout@v4
+      - name: Paket sistem
+        run: sudo apt-get update -qq && sudo apt-get install -y -qq xvfb libgl1 libegl1 libgl1-mesa-dri libglx-mesa0 libfontconfig1 libxkbcommon0 libasound2t64 unzip
+      - name: Unduh aset privat
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+          PRIVATE_REPO: ${{ secrets.PRIVATE_REPO }}
+          PRIVATE_TOKEN: ${{ secrets.PRIVATE_TOKEN }}
+        run: bash ci/run_remote.sh unduh
+      - name: Siapkan emulator (tambalan glibc + shim)
+        run: bash ci/run_remote.sh bangun
+      - name: Jalankan emulator
+        run: bash ci/run_remote.sh jalankan
+      - name: Commit hasil angka
+        if: always()
+        run: bash ci/run_remote.sh hasil

@@ -9,6 +9,7 @@ Arsip hasil riset game PS1 *Naruto: Shinobi no Sato no Jintori Gassen* sebagai r
 | `LANJUTKAN_DI_CHAT_BARU.md` | Prompt siap pakai untuk chat baru |
 | `catatan_riset.md` | Catatan riset lengkap (aturan, papan, kartu, hal yang belum diketahui) |
 | `ringkasan_percakapan.md` | Ringkasan semua topik di chat (hybrid-casual, monetisasi, sosial, Facebook games, Monopoly GO, TileDuel) |
+| `ci/` | Workflow GitHub Actions (`emulator-run.yml`, salin ke `.github/workflows/`), `run_remote.sh`, `ekstrak_dump.py`: emulator berjalan di runner, hasil angka di-commit ke `hasil/` |
 | `redux/`, `inputs/`, `README.txt` | Skrip emulator PCSX-Redux dan jadwal input (cara pakai di `README.txt`) |
 | `analisis/analisis_data_bin.py` | Pemindai tabel petak dan gambar TIM di DATA.BIN |
 | `analisis/CARA_BUAT_ULANG_DUMP.md` | Cara membuat ulang dump RAM (dump asli tidak disimpan, berhak cipta) |
