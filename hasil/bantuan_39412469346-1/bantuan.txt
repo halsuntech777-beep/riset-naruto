@@ -1,0 +1,2 @@
+Unable to create main window: Couldn't find matching GLX visual
+Killed
