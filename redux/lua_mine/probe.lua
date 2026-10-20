@@ -86,12 +86,35 @@ local function doSave()
   print(string.format('SVS simpan ok=%s tipe=%s ukuran=%s f=%d ram=%d', tostring(ok), type(st), sz, frame, okh and h or -1))
   if not ok then print('SVS galat_simpan ' .. tostring(st):gsub('[^%w%s_%.:]', ''):sub(1, 100)) end
 end
+local function errtxt(e) return tostring(e):gsub('[^%w%s_%.:]', ''):sub(1, 80) end
 local function doLoad()
   if not saved then print('SVS muat dilewati: tidak ada state'); return end
+  local pc = (MODUS == 'pc')  -- pc = pause + lepas semua override pad sebelum muat, pasang ulang sesudah muat
   say('SVS muat mulai f=' .. frame .. ' modus=' .. MODUS .. ' pause=' .. type(PCSX.pauseEmulator) .. ' resume=' .. type(PCSX.resumeEmulator))
   if MODUS == 'ps' then pcall(function() PCSX.pauseEmulator() end) end
+  if pc then
+    local okp, ep = pcall(function() PCSX.pauseEmulator() end)
+    say('SVS pc pause ok=' .. tostring(okp) .. ' err=' .. (okp and '-' or errtxt(ep)))
+    local seen, n, nok = {}, 0, 0
+    for _, i in ipairs(inputs) do
+      if not seen[i[3]] then
+        seen[i[3]] = true; n = n + 1
+        local okc = pcall(function() pad.clearOverride(i[3]) end)
+        if okc then nok = nok + 1 end
+      end
+    end
+    say('SVS pc clearOverride tombol=' .. n .. ' ok=' .. nok)
+  end
   local ok, err = pcall(function() PCSX.loadSaveState(saved) end)
   say('SVS muat kembali ok=' .. tostring(ok))
+  if pc and ok then
+    frame = fsave; last = copy(savedlast); pass = 2
+    local n = 0
+    for _, i in ipairs(inputs) do if i[1] <= frame and frame < i[2] then pad.setOverride(i[3]); n = n + 1 end end
+    say('SVS pc override_pasang_ulang f=' .. frame .. ' aktif=' .. n)
+    local okr, er = pcall(function() PCSX.resumeEmulator() end)
+    say('SVS pc resume ok=' .. tostring(okr) .. ' err=' .. (okr and '-' or errtxt(er)))
+  end
   if MODUS == 'ps' then pcall(function() PCSX.resumeEmulator() end) end
   print(string.format('SVS muat selesai ok=%s', tostring(ok)))
   if not ok then print('SVS galat_muat ' .. tostring(err):gsub('[^%w%s_%.:]', ''):sub(1, 100)); return end
