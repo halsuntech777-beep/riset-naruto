@@ -72,3 +72,8 @@ Keadaan terakhir riset game PS1 *Naruto: Shinobi no Sato no Jintori Gassen* untu
 - [TERBUKTI] Repositori ini sekarang PRIVAT (API dengan token: private=true; clone tanpa token ditolak). Catatan lama yang menyebut "publik" di STATUS.md/README sudah tidak berlaku.
 - Akibat: syarat "repo privat" untuk menyimpan state lintas run terpenuhi; `actions/cache` boleh dicoba untuk save-state (tanpa secret). Larangan save-state/dump/screenshot di release/artefak publik tetap berlaku. Uji save-state dalam satu run (simpan di frame 24000, muat di 26000, bandingkan angka struct P1) tetap langkah pertama; bila segfault berlanjut, penyimpanan lintas run tidak perlu dikerjakan.
 - Minta pemilik mengurangi/revoke izin Administration pada token setelah sesi.
+
+## Visibilitas repositori (keputusan pemilik: kembali PUBLIK, sesi story3)
+- [TERBUKTI] Repositori ini PUBLIK lagi (API: private=false; clone tanpa token berhasil). Alasan pemilik: bebas dari batas 2000 menit Actions repo privat; risiko diterima pemilik. Catatan "privat" di bagian sebelumnya sudah tidak berlaku.
+- Konsekuensi: log Actions terlihat semua orang (skrip hanya cetak angka). Save-state lintas run hanya dengan enkripsi (`STATE_KEY` di secret, ditambah pemilik lewat web) atau tidak sama sekali; uji save-state satu run di dalam runner tetap boleh. Dilarang: save-state/dump/screenshot/.bin di repo, release, artefak, log.
+- Pemilik berencana revoke token lama dan membuat token baru (Contents, Workflows, Actions; tanpa Administration) di chat baru.
