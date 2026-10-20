@@ -1,5 +1,6 @@
 -- probe: input terjadwal + polling uang (2 pemain) + dump RAM + screenshot + poke memori
 local ffi = require 'ffi'
+pcall(function() io.stdout:setvbuf('line') end)  -- agar baris tidak hilang bila emulator crash
 local B = PCSX.CONSTS.PAD.BUTTON
 local pad = PCSX.SIO0.slots[1].pads[1]
 local MAXF = tonumber(os.getenv('MAXF') or '1000')
@@ -65,7 +66,7 @@ local pass, saved, savedlast, fsave = 1, nil, nil, nil
 local function say(msg) print(msg); pcall(function() io.stderr:write('SVE ' .. msg .. '\n'); io.stderr:flush() end) end
 local function p1words()
   local t = {}
-  for i = 0, 29 do t[#t+1] = string.format('%x', u32(0x70EB8 + 4 * i)) end
+  for i = 0, 31 do t[#t+1] = string.format('%x', u32(0x70EB8 + 4 * i)) end
   return table.concat(t, ',')
 end
 local function copy(t) local c = {} for k, v in pairs(t) do c[k] = v end return c end

@@ -70,11 +70,12 @@ jalankan)
   export INPUTS="$R/$JADWAL" MAXF OUTDIR="$OUT" DUMPS="${DUMPS:-}" POKES="${POKES:-}" ORPOKES="${ORPOKES:-}" SAVEF="${SAVEF:-}" LOADF="${LOADF:-}" MODUS="${MODUS:-}"
   export XDG_RUNTIME_DIR="$W/xdg" SDL_AUDIODRIVER=dummy
   cd "$W/squashfs-root"
-  if [ -n "${SAVEF:-}" ]; then  # teks bantuan emulator (bukan isi game) untuk mencari opsi CLI
-    xvfb-run -a timeout 30 env LD_PRELOAD="$W/shim243.so" LD_LIBRARY_PATH="$PWD/usr/lib" usr/bin/pcsx-redux -help 2>&1 | tr -cd '\11\12\40-\176' | cut -c1-200 | head -n 200 > "$D/bantuan.txt" || true
+  if [ "${MODUS:-}" = "bantuan" ]; then  # hanya teks bantuan emulator (bukan isi game); TIDAK menjalankan game
+    xvfb-run -a timeout -k 5 30 env LD_PRELOAD="$W/shim243.so" LD_LIBRARY_PATH="$PWD/usr/lib" usr/bin/pcsx-redux -help 2>&1 | tr -cd '\11\12\40-\176' | cut -c1-200 | head -n 200 > "$D/bantuan.txt" || true
+    echo "mode bantuan selesai"; exit 0
   fi
   t0=$(date +%s); set +e
-  xvfb-run -a -s "-screen 0 1280x720x24" timeout "${BATAS_DETIK:-1500}" \
+  xvfb-run -a -s "-screen 0 1280x720x24" timeout -k 20 "${BATAS_DETIK:-$([ -n "${SAVEF:-}" ] && echo 900 || echo 1500)}" \
     env LD_PRELOAD="$W/shim243.so" LD_LIBRARY_PATH="$PWD/usr/lib" \
     usr/bin/pcsx-redux -cli -noupdate -interpreter -softgpu -debugger -fastboot -loadiso "$W/game/naruto.cue" -run -dofile "$R/redux/lua_mine/probe.lua" > "$W/emu.log" 2>&1
   rc=$?; set -e; t1=$(date +%s)
