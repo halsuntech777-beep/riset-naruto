@@ -72,11 +72,12 @@ jalankan)
   cd "$W/squashfs-root"
   if [ "${MODUS:-}" = "apiuji" ]; then  # diagnostik save-state TANPA game: hanya nama/tipe/angka
     : > "$D/api_uji.txt"
-    for v in inspect a b; do
-      echo "=== varian $v ===" >> "$D/api_uji.txt"
+    for spec in "a|-debugger"; do
+      v=${spec%%|*}; ex=${spec#*|}
+      echo "=== varian $v extra=$ex ===" >> "$D/api_uji.txt"
       set +e
       APIV=$v APIPATH="$W/ss_apiuji.bin" xvfb-run -a -s "-screen 0 1280x720x24" timeout -k 5 60 env LD_PRELOAD="$W/shim243.so" LD_LIBRARY_PATH="$PWD/usr/lib" \
-        usr/bin/pcsx-redux -cli -noupdate -interpreter -softgpu -run -dofile "$R/redux/lua_mine/apiuji.lua" > "$W/api_$v.log" 2>&1
+        usr/bin/pcsx-redux -cli -noupdate -interpreter -softgpu $ex -run -dofile "$R/redux/lua_mine/apiuji.lua" > "$W/api_$v.log" 2>&1
       rc=$?; set -e
       grep -a '^API ' "$W/api_$v.log" | tr -cd '\11\12\40-\176' | cut -c1-400 | head -n 60 >> "$D/api_uji.txt" || true
       echo "(rc=$rc)" >> "$D/api_uji.txt"
