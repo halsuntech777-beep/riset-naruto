@@ -77,6 +77,19 @@ jalankan)
       xvfb-run -a -s "-screen 0 1280x720x24" timeout -k 5 30 env LD_PRELOAD="$W/shim243.so" LD_LIBRARY_PATH="$PWD/usr/lib" usr/bin/pcsx-redux $v 2>&1 | tr -cd '\11\12\40-\176' | cut -c1-200 | head -n 200 >> "$D/bantuan.txt" || true
       echo "(rc_pipa=${PIPESTATUS[0]})" >> "$D/bantuan.txt"
     done
+    { echo "=== string biner emulator (nama opsi/API; teks emulator saja) ==="; python3 - <<'PYEOF' >> "$D/bantuan.txt" || true
+import re
+d=open('usr/bin/pcsx-redux','rb').read()
+out=set()
+for m in re.finditer(rb'[\x21-\x7e]{3,40}', d):
+    t=m.group().decode()
+    l=t.lower()
+    if re.fullmatch(r'-{0,2}[a-z][a-z0-9_-]*', l) and re.search(r'state|sstate|savest|loadst|resume|restore|snapshot|^-?(load|run|cli|dofile|bios|stdout|lua_stdout|testmode|safe|portable|noupdate|fastboot|interpreter|dynarec|softgpu|debugger|no[a-z-]+)$', l):
+        out.add(t)
+key=lambda t:(not re.search(r'state|snapshot|restore|resume',t.lower()),t)
+for t in sorted(out,key=key)[:140]: print(t)
+PYEOF
+    }
     echo "mode bantuan selesai"; exit 0
   fi
   t0=$(date +%s); set +e
