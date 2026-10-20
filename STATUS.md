@@ -38,3 +38,13 @@ Keadaan terakhir riset game PS1 *Naruto: Shinobi no Sato no Jintori Gassen* untu
 
 ## Rute buka papan lewat Story (percobaan 1: macet)
 - Lihat `catatan_riset.md` bagian 14 dan `inputs/inputs_story.txt`. Papan pertama belum tamat; kartu memori masih kosong; belum ada papan lain terbuka. Langkah berikut: paksa bendera kristal P1 dan tangani layar macet (CROSS, DOWN + CIRCLE), lalu cek apakah tamat papan 1 membuka stage 2 di Party Mode.
+
+## Sesi story1 (riset terbuka no. 1, satu langkah)
+- Run `story1_39362950273-1`: jadwal `inputs/inputs_story2.txt` (= inputs_story sampai frame 21000, lalu tiap 160 frame: CIRCLE, RIGHT, CIRCLE, CROSS, DOWN, CIRCLE), MAXF 36000, POKES chakra P1=5000 di frame 9000 dan 13000, ORPOKES `14000-36000@70EBC@4@0x3000`. Selesai rc 0, 605 detik. Hasil di `hasil/story1_39362950273-1/`.
+- [TERAMATI] ORPOKES bekerja: bendera struct P1 +4 berubah 0x30000 -> 0x33000 di frame 14000 dan tetap 0x33000 sampai 36000.
+- [TERAMATI] Perubahan chakra terakhir di frame 19819 (P1 4640, P2 1680). Sesudahnya tidak ada CHG sama sekali sampai frame 36000.
+- [TERAMATI] Dump angka struct P1 (0x70EB8, 120 byte): penghitung posisi (+112, 0x70F28) 9 di frame 20000, 11 di 24000, lalu tetap 11 sampai 36000; 0x70EC8 3 -> 4 lalu tetap 4. Jadi dari frame 24000 keadaan membeku, bukan lanjut bermain.
+- [TERAMATI] Tidak ada bonus start atau akhir papan terlihat di angka (tidak ada lonjakan chakra).
+- [DUGAAN] Layar macet belum teratasi oleh pola buta CROSS lalu DOWN + CIRCLE; mungkin butuh tombol lain (misal LEFT/RIGHT untuk memilih barrier) atau waktu berbeda. Tanpa layar, urutan tombol ditebak.
+- [BELUM] Apakah tamat papan 1 membuka stage 2 di Party Mode; apakah progres tersimpan di kartu memori (tidak diukur di run ini; kartu memori tidak bisa dibaca tanpa mengubah skrip runner).
+- Langkah berikutnya (usulan, satu sesi): tambahkan ke `probe.lua` hash angka framebuffer/RAM tiap N frame (hanya angka keluar) agar bisa mendeteksi apakah layar berubah saat tombol ditekan, lalu coba variasi tombol di frame 21000-24000. Bisa juga cetak angka ukuran berkas kartu memori (hanya angka).
