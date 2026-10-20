@@ -16,12 +16,27 @@ fi
 
 case "$cmd" in
 unduh)
-  SRC="${PRIVATE_REPO:-$GITHUB_REPOSITORY}"; export GH_TOKEN="${PRIVATE_TOKEN:-$GITHUB_TOKEN}"
-  [ "$(gh api "repos/$SRC" --jq .private 2>/dev/null)" = "true" ] || gagal "sumber aset bukan repositori privat (atau tak terbaca)."
+  SRC="${PRIVATE_REPO:-$GITHUB_REPOSITORY}"; export GH_TOKEN="${PRIVATE_TOKEN:-$GITHUB_TOKEN}"; TAG="${ASET_TAG:-aset}"
+  mkdir -p "$D"; G="$D/galat_unduh.txt"; : > "$G"
+  # Diagnostik hanya berisi kode tetap/status HTTP/nama aset yang dikenal (tanpa nama repo atau token).
+  echo "secret PRIVATE_REPO: $([ -n "${PRIVATE_REPO:-}" ] && echo terisi || echo KOSONG-mode-a); PRIVATE_TOKEN: $([ -n "${PRIVATE_TOKEN:-}" ] && echo terisi || echo KOSONG)" >> "$G"
+  c=$(curl -s -o "$W/r.json" -w '%{http_code}' -H "Authorization: Bearer $GH_TOKEN" -H "Accept: application/vnd.github+json" "https://api.github.com/repos/$SRC" || true)
+  pv=$(python3 -c "import json;print(json.load(open('$W/r.json')).get('private'))" 2>/dev/null || echo ?)
+  echo "akses repo aset: HTTP $c; private=$pv" >> "$G"
+  [ "$c" = "200" ] && [ "$pv" = "True" ] || gagal "sumber aset tidak terbaca atau bukan repositori privat (lihat galat_unduh.txt)."
+  c=$(curl -s -o "$W/rel.json" -w '%{http_code}' -H "Authorization: Bearer $GH_TOKEN" -H "Accept: application/vnd.github+json" "https://api.github.com/repos/$SRC/releases/tags/$TAG" || true)
+  echo "release $TAG: HTTP $c" >> "$G"
+  python3 - "$W/rel.json" >> "$G" 2>/dev/null <<'PY' || true
+import json,sys,re
+d=json.load(open(sys.argv[1]))
+for a in d.get("assets",[]):
+    n=a["name"]; print("aset:", n if re.fullmatch(r"game\.bin|redux\.[A-Za-z]+",n) else "(nama lain)", round(a["size"]/1e6,1),"MB", a["state"])
+if not d.get("assets"): print("aset: tidak ada")
+PY
   mkdir -p "$W/dl"
-  gh release download "${ASET_TAG:-aset}" -R "$SRC" -D "$W/dl" -p 'game.bin' -p 'redux.*' >/dev/null 2>&1 \
-    || gagal "unduh aset gagal (butuh release '${ASET_TAG:-aset}' dengan game.bin dan redux.AppImage/redux.zip)."
-  ls "$W/dl" | sed 's/^game\.bin$/game.bin (ok)/'
+  gh release download "$TAG" -R "$SRC" -D "$W/dl" -p 'game.bin' -p 'redux.*' >/dev/null 2>&1 \
+    || gagal "unduh aset gagal (butuh release '$TAG' dengan game.bin dan redux.AppImage/redux.zip)."
+  rm -f "$G"; ls "$W/dl" | sed 's/^game\.bin$/game.bin (ok)/'
   ;;
 bangun)
   cd "$W"
