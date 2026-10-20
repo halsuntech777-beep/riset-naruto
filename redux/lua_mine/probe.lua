@@ -73,6 +73,7 @@ do
   local names = {}
   pcall(function() for k, v in pairs(PCSX) do local n = tostring(k):gsub('[^%w_]', ''); local l = n:lower()
     if l:find('state') or l:find('save') or l:find('load') then names[#names+1] = n .. ':' .. type(v) end end end)
+  do local all = {} pcall(function() for k, v in pairs(PCSX) do all[#all+1] = tostring(k):gsub('[^%w_]', '') end end) table.sort(all) print('SVS apiall ' .. table.concat(all, ' ')) end
   print('SVS api ' .. table.concat(names, ' ') .. ' createSaveState=' .. type(PCSX.createSaveState) .. ' loadSaveState=' .. type(PCSX.loadSaveState))
 end
 local function doSave()
@@ -86,8 +87,11 @@ local function doSave()
 end
 local function doLoad()
   if not saved then print('SVS muat dilewati: tidak ada state'); return end
-  say('SVS muat mulai f=' .. frame)
+  say('SVS muat mulai f=' .. frame .. ' modus=' .. MODUS .. ' pause=' .. type(PCSX.pauseEmulator) .. ' resume=' .. type(PCSX.resumeEmulator))
+  if MODUS == 'ps' then pcall(function() PCSX.pauseEmulator() end) end
   local ok, err = pcall(function() PCSX.loadSaveState(saved) end)
+  say('SVS muat kembali ok=' .. tostring(ok))
+  if MODUS == 'ps' then pcall(function() PCSX.resumeEmulator() end) end
   print(string.format('SVS muat selesai ok=%s', tostring(ok)))
   if not ok then print('SVS galat_muat ' .. tostring(err):gsub('[^%w%s_%.:]', ''):sub(1, 100)); return end
   frame = fsave; last = copy(savedlast); pass = 2
