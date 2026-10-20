@@ -14,6 +14,9 @@ on:
       orpokes: { description: "ORPOKES frame[-frame2]@alamathex@lebar@mask,...", default: "" }
       dumps:  { description: "DUMPS: frame dipisah spasi (hanya di runner; keluar = CSV angka)", default: "" }
       addrs:  { description: "ADDRS untuk CSV: 0xALAMAT[+panjang]:lebar,... (kosong = 9 alamat pantau)", default: "" }
+      savef:  { description: "SAVEF: frame simpan save-state (kosong = tidak)", default: "" }
+      loadf:  { description: "LOADF: frame muat kembali save-state", default: "" }
+      modus:  { description: "MODUS save-state: nt (nextTick) atau vs (di handler Vsync)", default: "" }
       label:  { description: "Label hasil", default: "uji" }
 concurrency: { group: emulator-run, cancel-in-progress: false }
 permissions: { contents: read }
@@ -29,6 +32,9 @@ jobs:
       ORPOKES: ${{ inputs.orpokes }}
       DUMPS: ${{ inputs.dumps }}
       ADDRS: ${{ inputs.addrs }}
+      SAVEF: ${{ inputs.savef }}
+      LOADF: ${{ inputs.loadf }}
+      MODUS: ${{ inputs.modus }}
       LABEL: ${{ inputs.label }}
     steps:
       - uses: actions/checkout@v4

@@ -62,16 +62,19 @@ jalankan)
   [[ -z "${POKES:-}" || "$POKES" =~ ^$P(,$P)*$ ]] || gagal "POKES tidak valid"
   [[ -z "${ORPOKES:-}" || "$ORPOKES" =~ ^$Q(,$Q)*$ ]] || gagal "ORPOKES tidak valid"
   [[ -z "${DUMPS:-}" || "$DUMPS" =~ ^[0-9]+( [0-9]+){0,19}$ ]] || gagal "DUMPS tidak valid (maks 20 frame, pisah spasi)"
+  [[ -z "${SAVEF:-}" || "$SAVEF" =~ ^[0-9]{1,6}$ ]] || gagal "SAVEF tidak valid"
+  [[ -z "${LOADF:-}" || "$LOADF" =~ ^[0-9]{1,6}$ ]] || gagal "LOADF tidak valid"
+  [[ -z "${MODUS:-}" || "$MODUS" =~ ^[a-z]{1,8}$ ]] || gagal "MODUS tidak valid"
   ADDRS="${ADDRS:-0x1EFBBC:4,0x1EFC4C:4,0x1EFCDC:4,0x1EFD6C:4,0x70EB8:4,0x70EBC:4,0x70F6C:4,0x71020:4,0x710D4:4}"
   OUT="$W/out"; rm -rf "$OUT"; mkdir -p "$OUT" "$W/xdg"; chmod 700 "$W/xdg"; mkdir -p "$D"
-  export INPUTS="$R/$JADWAL" MAXF OUTDIR="$OUT" DUMPS="${DUMPS:-}" POKES="${POKES:-}" ORPOKES="${ORPOKES:-}"
+  export INPUTS="$R/$JADWAL" MAXF OUTDIR="$OUT" DUMPS="${DUMPS:-}" POKES="${POKES:-}" ORPOKES="${ORPOKES:-}" SAVEF="${SAVEF:-}" LOADF="${LOADF:-}" MODUS="${MODUS:-}"
   export XDG_RUNTIME_DIR="$W/xdg" SDL_AUDIODRIVER=dummy
   cd "$W/squashfs-root"; t0=$(date +%s); set +e
   xvfb-run -a -s "-screen 0 1280x720x24" timeout "${BATAS_DETIK:-1500}" \
     env LD_PRELOAD="$W/shim243.so" LD_LIBRARY_PATH="$PWD/usr/lib" \
     usr/bin/pcsx-redux -cli -noupdate -interpreter -softgpu -debugger -fastboot -loadiso "$W/game/naruto.cue" -run -dofile "$R/redux/lua_mine/probe.lua" > "$W/emu.log" 2>&1
   rc=$?; set -e; t1=$(date +%s)
-  grep -aE '^(probe siap|POKE|ORPOKE|CHG|DUMP|HSH|HSF)' "$W/emu.log" | head -n 5000 > "$D/chg.log" || true
+  grep -aE '^(probe siap|POKE|ORPOKE|CHG|DUMP|HSH|HSF|SVS)' "$W/emu.log" | head -n 5000 > "$D/chg.log" || true
   tail -n 30 "$W/emu.log" | tr -cd '\11\12\40-\176' | cut -c1-200 > "$D/emu_tail.txt"
   if [ -n "${DUMPS:-}" ]; then python3 "$R/ci/ekstrak_dump.py" "$OUT" "$D/dump_angka.csv" "$ADDRS" || true; fi
   rm -rf "$OUT"/*   # dump/screenshot mentah tidak pernah keluar dari runner

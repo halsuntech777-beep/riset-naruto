@@ -54,6 +54,48 @@ local function hfb(fr)
     if not ok then print('HSF f=' .. fr .. ' err=' .. tostring(err):gsub('[^%w%s_%.:]', ''):sub(1, 80)) end
   end)
 end
+
+-- SAVE-STATE (uji satu run; state HANYA di memori Lua, tidak ditulis ke disk; yang dicetak hanya angka/nama API)
+-- SAVEF=frame simpan, LOADF=frame muat (kembali ke SAVEF), MODUS: "nt" (default, lewat nextTick) atau "vs" (langsung di handler Vsync)
+local SAVEF = tonumber(os.getenv('SAVEF') or '')
+local LOADF = tonumber(os.getenv('LOADF') or '')
+local MODUS = os.getenv('MODUS') or 'nt'
+if MODUS == '' then MODUS = 'nt' end
+local pass, saved, savedlast, fsave = 1, nil, nil, nil
+local function say(msg) print(msg); pcall(function() io.stderr:write('SVE ' .. msg .. '\n'); io.stderr:flush() end) end
+local function p1words()
+  local t = {}
+  for i = 0, 29 do t[#t+1] = string.format('%x', u32(0x70EB8 + 4 * i)) end
+  return table.concat(t, ',')
+end
+local function copy(t) local c = {} for k, v in pairs(t) do c[k] = v end return c end
+do
+  local names = {}
+  pcall(function() for k, v in pairs(PCSX) do local n = tostring(k):gsub('[^%w_]', ''); local l = n:lower()
+    if l:find('state') or l:find('save') or l:find('load') then names[#names+1] = n .. ':' .. type(v) end end end)
+  print('SVS api ' .. table.concat(names, ' ') .. ' createSaveState=' .. type(PCSX.createSaveState) .. ' loadSaveState=' .. type(PCSX.loadSaveState))
+end
+local function doSave()
+  local ok, st = pcall(function() return PCSX.createSaveState() end)
+  saved = ok and st or nil; savedlast = copy(last); fsave = frame
+  local sz = '?'; pcall(function() sz = tostring(#st) end)
+  if sz == '?' then pcall(function() sz = tostring(st:size()) end) end
+  local okh, h = pcall(hram)
+  print(string.format('SVS simpan ok=%s tipe=%s ukuran=%s f=%d ram=%d', tostring(ok), type(st), sz, frame, okh and h or -1))
+  if not ok then print('SVS galat_simpan ' .. tostring(st):gsub('[^%w%s_%.:]', ''):sub(1, 100)) end
+end
+local function doLoad()
+  if not saved then print('SVS muat dilewati: tidak ada state'); return end
+  say('SVS muat mulai f=' .. frame)
+  local ok, err = pcall(function() PCSX.loadSaveState(saved) end)
+  print(string.format('SVS muat selesai ok=%s', tostring(ok)))
+  if not ok then print('SVS galat_muat ' .. tostring(err):gsub('[^%w%s_%.:]', ''):sub(1, 100)); return end
+  frame = fsave; last = copy(savedlast); pass = 2
+  for _, i in ipairs(inputs) do pad.clearOverride(i[3]) end
+  for _, i in ipairs(inputs) do if i[1] <= frame and frame < i[2] then pad.setOverride(i[3]) end end
+  local okh, h = pcall(hram)
+  print(string.format('SVS sesudah_muat f=%d ram=%d', frame, okh and h or -1))
+end
 listener = PCSX.Events.createEventListener('GPU::Vsync', function()
   frame = frame + 1
   for _, pk in ipairs(pokes) do
@@ -79,8 +121,18 @@ listener = PCSX.Events.createEventListener('GPU::Vsync', function()
   end
   for _, p in ipairs(polls) do
     local v = u32(p[1])
-    if last[p[2]] ~= v and frame > 4000 then print(string.format('CHG f=%d %s: %s -> %d', frame, p[2], tostring(last[p[2]]), v)) end
+    if last[p[2]] ~= v and frame > 4000 then print(string.format('CHG%s f=%d %s: %s -> %d', pass == 2 and '2' or '', frame, p[2], tostring(last[p[2]]), v)) end
     last[p[2]] = v
+  end
+  if SAVEF and LOADF and frame >= SAVEF and frame <= LOADF and (frame % 500 == 0) then
+    local ok, h = pcall(hram)
+    print(string.format('SVS p=%d f=%d ram=%d p1=%s', pass, frame, ok and h or -1, p1words()))
+  end
+  if SAVEF and pass == 1 and not saved and frame == SAVEF then
+    if MODUS == 'vs' then doSave() else PCSX.nextTick(doSave) end
+  end
+  if LOADF and pass == 1 and saved and frame == LOADF then
+    if MODUS == 'vs' then doLoad() else PCSX.nextTick(doLoad) end
   end
   if frame >= HFROM and (frame - HFROM) % HSTEP == 0 then
     local ok, h = pcall(hram)
