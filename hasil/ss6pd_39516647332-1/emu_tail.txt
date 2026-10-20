@@ -1,0 +1,30 @@
+HSF f=25800 fb=0 n=0 
+HSH f=25820 ram=244462987 
+HSF f=25820 fb=0 n=0 
+HSH f=25840 ram=1687870365 
+HSF f=25840 fb=0 n=0 
+HSH f=25860 ram=621395314 
+HSF f=25860 fb=0 n=0 
+HSH f=25880 ram=2799473961 
+HSF f=25880 fb=0 n=0 
+HSH f=25900 ram=656254520 
+HSF f=25900 fb=0 n=0 
+HSH f=25920 ram=1405812233 
+HSF f=25920 fb=0 n=0 
+HSH f=25940 ram=1798010226 
+HSF f=25940 fb=0 n=0 
+HSH f=25960 ram=2975687488 
+HSF f=25960 fb=0 n=0 
+HSH f=25980 ram=554673574 
+HSF f=25980 fb=0 n=0 
+SVS p=1 f=26000 ram=291065347 p1=1220,33000,0,0,4,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,b,0,0,0 
+SVS hsp p=1 f=26000 3e26f0c6,b26a440f,6ed8c802,5b7fefeb,d3699916,77fefb59,1279da5e,7ffffff,65e486a4,73779c8c,dcb88828,7ffffff,7ffffff,2877b3b2,7ffffff,7ffffff,60bd2ca2,5ab9524b,9b37ac06,8a8555f7,ba995
+HSH f=26000 ram=291065347 
+SVS muat mulai f=26000 modus=pd pause=function resume=function 
+SVE SVS muat mulai f=26000 modus=pd pause=function resume=function
+SVS pc pause ok=true err=- 
+SVE SVS pc pause ok=true err=-
+SVS pc clearOverride tombol=14 ok=14 
+SVE SVS pc clearOverride tombol=14 ok=14
+timeout: the monitored command dumped core
+Segmentation fault
