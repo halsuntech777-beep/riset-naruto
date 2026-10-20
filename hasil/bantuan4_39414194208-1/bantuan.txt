@@ -1,0 +1,182 @@
+=== varian: -cli -noupdate -help ===
+The memory card /home/runner/.config/pcsx-redux/memcard1.mcd doesn't exist - creating it
+The memory card /home/runner/.config/pcsx-redux/memcard2.mcd doesn't exist - creating it
+Audio: driver dummy, 44100 Hz, 441 frames per period
+PCSX-Redux Lua Console 
+LuaJIT 2.1.1785598229 
+JIT: ON SSE3 SSE4.1 BMI2 fold cse dce fwd dse narrow loop abc sink fuse 
+PCSX-Redux booting
+Copyright (C) 2019-2025 PCSX-Redux authors
+CPU type: Dynarec (x86-64)
+Could not open BIOS:"". Retrying with the OpenBIOS
+Loaded BIOS: /home/runner/work/_temp/naruto/squashfs-root/usr/bin/../share/pcsx-redux/resources/openbios.bin
+OpenBIOS detected (0b0359a7)
+(rc_pipa=0)
+=== varian: -cli -noupdate --help ===
+Loading memory card /home/runner/.config/pcsx-redux/memcard1.mcd
+Loading memory card /home/runner/.config/pcsx-redux/memcard2.mcd
+Audio: driver dummy, 44100 Hz, 441 frames per period
+PCSX-Redux Lua Console 
+LuaJIT 2.1.1785598229 
+JIT: ON SSE3 SSE4.1 BMI2 fold cse dce fwd dse narrow loop abc sink fuse 
+PCSX-Redux booting
+Copyright (C) 2019-2025 PCSX-Redux authors
+CPU type: Dynarec (x86-64)
+Could not open BIOS:"". Retrying with the OpenBIOS
+Loaded BIOS: /home/runner/work/_temp/naruto/squashfs-root/usr/bin/../share/pcsx-redux/resources/openbios.bin
+OpenBIOS detected (0b0359a7)
+(rc_pipa=0)
+=== varian: -cli -noupdate -h ===
+Loading memory card /home/runner/.config/pcsx-redux/memcard1.mcd
+Loading memory card /home/runner/.config/pcsx-redux/memcard2.mcd
+Audio: driver dummy, 44100 Hz, 441 frames per period
+PCSX-Redux Lua Console 
+LuaJIT 2.1.1785598229 
+JIT: ON SSE3 SSE4.1 BMI2 fold cse dce fwd dse narrow loop abc sink fuse 
+PCSX-Redux booting
+Copyright (C) 2019-2025 PCSX-Redux authors
+CPU type: Dynarec (x86-64)
+Could not open BIOS:"". Retrying with the OpenBIOS
+Loaded BIOS: /home/runner/work/_temp/naruto/squashfs-root/usr/bin/../share/pcsx-redux/resources/openbios.bin
+OpenBIOS detected (0b0359a7)
+(rc_pipa=0)
+CTState
+DepthStencilState
+Flow15SaveStateLoadedEEE
+HPE_INVALID_EOF_STATE
+INS_13_State_baseV2EEEUlvE_S7_EE
+ImGuiTableFlags_SortTristate
+InterlockedCompareStore
+N4PCSX6Events13ExecutionFlow15SaveStateL
+NSt13__future_base13_State_baseV27_Sette
+NSt13__future_base13_State_baseV2E
+NSt13__future_base16_Task_state_baseIFSt
+NSt13__future_base16_Task_state_baseIFbv
+NSt6thread11_State_implINS_8_InvokerISt5
+RESTORE
+RasterizerState
+Restore
+RestoreNavWindow
+Resume
+SDL_GetGlobalMouseState
+SDL_ResumeAudioDevice
+STATE
+SamplerComparisonState
+SamplerState
+SaveState
+SaveStateInfo
+SaveStatesList
+ShowNamedSaveStates
+State
+States
+X6Events13ExecutionFlow15SaveStateLoaded
+arESt12_Ios_Iostate
+cEE7seekposESt4fposI11__mbstate_tESt13_I
+cache_state
+counter_state
+createEyieldFresume
+createSaveState
+drive_state
+e8_DeleterEEZNS_11_Task_stateISt5_BindIF
+e_base13_State_baseV2ESaIvELN9__gnu_cxx1
+getSaveStateProtoSchema
+glCreateStatesNV
+glDeleteStatesNV
+glDisableClientState
+glDisableClientStateIndexedEXT
+glDisableClientStateiEXT
+glDrawCommandsStatesAddressNV
+glDrawCommandsStatesNV
+glEnableClientState
+glEnableClientStateIndexedEXT
+glEnableClientStateiEXT
+glIsStateNV
+glListDrawCommandsStatesClientNV
+glResumeTransformFeedback
+glStateCaptureNV
+init_CTState
+irq_state
+loadSaveState
+loadSaveStateFromFile
+loadSaveStateFromSlice
+lt_base8_DeleterEEZNS_11_Task_stateISt5_
+nFlow15SaveStateLoadedEEE
+nts13ExecutionFlow15SaveStateLoadedEEE
+pad_state
+re_base11_Task_stateISt5_BindIFZN3Zep14Z
+re_base11_Task_stateISt5_BindIFZN3Zep7In
+restore
+resume
+resumeEmulator
+save_state_info
+state
+stateblock
+stateblock_state
+states
+trINS_13_State_baseV2EEEUlvE_bEE
+tty_get_vterm_state
+tty_set_vterm_state
+utionFlow15SaveStateLoadedEvE
+uv_tty_get_vterm_state
+uv_tty_set_vterm_state
+BIOS
+Bios
+Debugger
+DynaRec
+Dynarec
+FastBoot
+Load
+NOCHECK
+NONCLUSTERED
+NOOEQAS
+NOP
+NOR
+NORMf
+NOT
+NOTIFY
+NoA
+NoAlign
+NoAssumedClosure
+NoAutoClear
+NoAutoClearOnReselect
+NoAutoClosePopups
+NoAutoHint
+NoAutoMerge
+NoAutoOpenOnLog
+NoAutoSelect
+NoAuxAxes
+NoBordersInBodyUntilResize
+NoBoxSelect
+NoBringToFrontOnFocus
+NoButtons
+NoCloseButton
+NoCloseWithMiddleMouseButton
+NoColorMarkers
+NoComp
+NoCursors
+NoDecoration
+NoDecorations
+NoDocking
+NoDockingInCentralNode
+NoDockingOverCentralNode
+NoDockingOverEmpty
+NoDockingOverOther
+NoDockingSplit
+NoDockingSplitOther
+NoDragDrop
+NoFit
+NoFocusOnAppearing
+NoFocusOnClick
+NoFormat
+NoFrame
+NoGridLines
+NoHighlight
+NoHighlightAxis
+NoHighlightItem
+NoHinting
+NoHorizontalScroll
+NoHostExtendX
+NoHostExtendY
+NoInitialFit
+NoInputs
+NoKeepColumnsVisible
