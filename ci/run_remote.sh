@@ -71,7 +71,12 @@ jalankan)
   export XDG_RUNTIME_DIR="$W/xdg" SDL_AUDIODRIVER=dummy
   cd "$W/squashfs-root"
   if [ "${MODUS:-}" = "bantuan" ]; then  # hanya teks bantuan emulator (bukan isi game); TIDAK menjalankan game
-    xvfb-run -a -s "-screen 0 1280x720x24" timeout -k 5 60 env LD_PRELOAD="$W/shim243.so" LD_LIBRARY_PATH="$PWD/usr/lib" usr/bin/pcsx-redux -help 2>&1 | tr -cd '\11\12\40-\176' | cut -c1-200 | head -n 200 > "$D/bantuan.txt" || true
+    : > "$D/bantuan.txt"
+    for v in "-cli -noupdate -help" "-cli -noupdate --help" "-cli -noupdate -h"; do
+      echo "=== varian: $v ===" >> "$D/bantuan.txt"
+      xvfb-run -a -s "-screen 0 1280x720x24" timeout -k 5 30 env LD_PRELOAD="$W/shim243.so" LD_LIBRARY_PATH="$PWD/usr/lib" usr/bin/pcsx-redux $v 2>&1 | tr -cd '\11\12\40-\176' | cut -c1-200 | head -n 200 >> "$D/bantuan.txt" || true
+      echo "(rc_pipa=${PIPESTATUS[0]})" >> "$D/bantuan.txt"
+    done
     echo "mode bantuan selesai"; exit 0
   fi
   t0=$(date +%s); set +e
