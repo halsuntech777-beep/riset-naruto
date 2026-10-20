@@ -1,0 +1,56 @@
+=== varian inspect ===
+API varian=inspect 
+API varian=inspect
+API Support=table 6 [File:table NewLuaBuffer:function _internal:table extra:table isLuaBuffer:function sliceToPBSlice:function] 
+API Support=table 6 [File:table NewLuaBuffer:function _internal:table extra:table isLuaBuffer:function sliceToPBSlice:function]
+API Support.File=table 11 [_LuaBuffer:cdata _createFileWrapper:function _createSliceWrapper:function buffer:function createEmptySlice:function failedFile:function ffmpegAudioFile:function mem4g:function open:function uvFifo:function zReader:function] 
+API Support.File=table 11 [_LuaBuffer:cdata _createFileWrapper:function _createSliceWrapper:function buffer:function createEmptySlice:function failedFile:function ffmpegAudioFile:function mem4g:function open:function uvFifo:function zReader:function]
+API createSaveState ok=true tipe=table 
+API createSaveState ok=true tipe=table
+API state mt=4 [__index:function __len:function __newindex:function __tostring:function] index=function 
+API state mt=4 [__index:function __len:function __newindex:function __tostring:function] index=function
+API selesai 
+API selesai
+(rc=0)
+=== varian a ===
+API varian=a 
+API varian=a
+API Support=table 6 [File:table NewLuaBuffer:function _internal:table extra:table isLuaBuffer:function sliceToPBSlice:function] 
+API Support=table 6 [File:table NewLuaBuffer:function _internal:table extra:table isLuaBuffer:function sliceToPBSlice:function]
+API Support.File=table 11 [_LuaBuffer:cdata _createFileWrapper:function _createSliceWrapper:function buffer:function createEmptySlice:function failedFile:function ffmpegAudioFile:function mem4g:function open:function uvFifo:function zReader:function] 
+API Support.File=table 11 [_LuaBuffer:cdata _createFileWrapper:function _createSliceWrapper:function buffer:function createEmptySlice:function failedFile:function ffmpegAudioFile:function mem4g:function open:function uvFifo:function zReader:function]
+API createSaveState ok=true tipe=table 
+API createSaveState ok=true tipe=table
+API state mt=4 [__index:function __len:function __newindex:function __tostring:function] index=function 
+API state mt=4 [__index:function __len:function __newindex:function __tostring:function] index=function
+API muat(tabel) mulai 
+API muat(tabel) mulai
+API muat(tabel) selesai ok=true nil 
+API muat(tabel) selesai ok=true nil
+API selesai 
+API selesai
+(rc=0)
+=== varian b ===
+API varian=b 
+API varian=b
+API Support=table 6 [File:table NewLuaBuffer:function _internal:table extra:table isLuaBuffer:function sliceToPBSlice:function] 
+API Support=table 6 [File:table NewLuaBuffer:function _internal:table extra:table isLuaBuffer:function sliceToPBSlice:function]
+API Support.File=table 11 [_LuaBuffer:cdata _createFileWrapper:function _createSliceWrapper:function buffer:function createEmptySlice:function failedFile:function ffmpegAudioFile:function mem4g:function open:function uvFifo:function zReader:function] 
+API Support.File=table 11 [_LuaBuffer:cdata _createFileWrapper:function _createSliceWrapper:function buffer:function createEmptySlice:function failedFile:function ffmpegAudioFile:function mem4g:function open:function uvFifo:function zReader:function]
+API createSaveState ok=true tipe=table 
+API createSaveState ok=true tipe=table
+API state mt=4 [__index:function __len:function __newindex:function __tostring:function] index=function 
+API state mt=4 [__index:function __len:function __newindex:function __tostring:function] index=function
+API open TRUNCATE ok=true tipe=table 
+API open TRUNCATE ok=true tipe=table
+API file tanpa-metatable tipe=table 
+API file tanpa-metatable tipe=table
+API writeMoveSlice ok=true nil 
+API writeMoveSlice ok=true nil
+API open READ ok=true tipe=table 
+API open READ ok=true tipe=table
+API size ok=true n=0 
+API size ok=true n=0
+API muat(berkas) mulai 
+API muat(berkas) mulai
+(rc=139)
