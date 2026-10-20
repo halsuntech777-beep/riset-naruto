@@ -70,6 +70,20 @@ jalankan)
   export INPUTS="$R/$JADWAL" MAXF OUTDIR="$OUT" DUMPS="${DUMPS:-}" POKES="${POKES:-}" ORPOKES="${ORPOKES:-}" SAVEF="${SAVEF:-}" LOADF="${LOADF:-}" MODUS="${MODUS:-}"
   export XDG_RUNTIME_DIR="$W/xdg" SDL_AUDIODRIVER=dummy
   cd "$W/squashfs-root"
+  if [ "${MODUS:-}" = "apiuji" ]; then  # diagnostik save-state TANPA game: hanya nama/tipe/angka
+    : > "$D/api_uji.txt"
+    for v in inspect a b; do
+      echo "=== varian $v ===" >> "$D/api_uji.txt"
+      set +e
+      APIV=$v APIPATH="$W/ss_apiuji.bin" xvfb-run -a -s "-screen 0 1280x720x24" timeout -k 5 60 env LD_PRELOAD="$W/shim243.so" LD_LIBRARY_PATH="$PWD/usr/lib" \
+        usr/bin/pcsx-redux -cli -noupdate -interpreter -softgpu -run -dofile "$R/redux/lua_mine/apiuji.lua" > "$W/api_$v.log" 2>&1
+      rc=$?; set -e
+      grep -a '^API ' "$W/api_$v.log" | tr -cd '\11\12\40-\176' | cut -c1-400 | head -n 60 >> "$D/api_uji.txt" || true
+      echo "(rc=$rc)" >> "$D/api_uji.txt"
+      rm -f "$W/ss_apiuji.bin"
+    done
+    echo "mode apiuji selesai"; exit 0
+  fi
   if [ "${MODUS:-}" = "bantuan" ]; then  # hanya teks bantuan emulator (bukan isi game); TIDAK menjalankan game
     : > "$D/bantuan.txt"
     for v in "-cli -noupdate -help" "-cli -noupdate --help" "-cli -noupdate -h"; do
