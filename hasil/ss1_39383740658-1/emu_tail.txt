@@ -1,0 +1,30 @@
+HSF f=25120 fb=0 n=0 
+HSH f=25140 ram=460152870 
+HSF f=25140 fb=0 n=0 
+HSH f=25160 ram=3787568868 
+HSF f=25160 fb=0 n=0 
+HSH f=25180 ram=3939573065 
+HSF f=25180 fb=0 n=0 
+HSH f=25200 ram=955793110 
+HSF f=25200 fb=0 n=0 
+HSH f=25220 ram=3402010755 
+HSF f=25220 fb=0 n=0 
+HSH f=25240 ram=235402310 
+HSF f=25240 fb=0 n=0 
+HSH f=25260 ram=2326455137 
+HSF f=25260 fb=0 n=0 
+HSH f=25280 ram=2044085907 
+HSF f=25280 fb=0 n=0 
+HSH f=25300 ram=4043336477 
+HSF f=25300 fb=0 n=0 
+HSH f=25320 ram=3250591049 
+HSF f=25320 fb=0 n=0 
+HSH f=25340 ram=3510527462 
+HSF f=25340 fb=0 n=0 
+HSH f=25360 ram=966353805 
+HSF f=25360 fb=0 n=0 
+HSH f=25380 ram=3094225946 
+HSF f=25380 fb=0 n=0 
+HSVE SVS muat mulai f=26000
+timeout: the monitored command dumped core
+Segmentation fault
