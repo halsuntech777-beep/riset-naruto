@@ -1,0 +1,36 @@
+=== varian egl_x11 (SDL_VIDEO_FORCE_EGL=1) ===
+API mulai gui-mode
+API shot f120 bytes=0 nonzero=0 hash=0 width=640 height=478 bpp=cdata<enum 720>: 0
+API shot f180 bytes=0 nonzero=0 hash=0 width=640 height=478 bpp=cdata<enum 720>: 0
+API shot f60 bytes=0 nonzero=0 hash=0 width=640 height=478 bpp=cdata<enum 720>: 0
+(rc=124)
+[00001] While loading '/home/runner/work/_temp/naruto/squashfs-root/usr/bin/fonts/NotoSansCJKjp-Regular.otf'
+[00001] While loading '/home/runner/work/_temp/naruto/squashfs-root/usr/bin/NotoMono-Regular.ttf'
+[00001] While loading '/home/runner/work/_temp/naruto/squashfs-root/usr/bin/fonts/NotoMono-Regular.ttf'
+=== varian egl_x11_x11drv (SDL_VIDEO_FORCE_EGL=1 SDL_VIDEODRIVER=x11) ===
+API mulai gui-mode
+API shot f120 bytes=0 nonzero=0 hash=0 width=640 height=478 bpp=cdata<enum 720>: 0
+API shot f180 bytes=0 nonzero=0 hash=0 width=640 height=478 bpp=cdata<enum 720>: 0
+API shot f60 bytes=0 nonzero=0 hash=0 width=640 height=478 bpp=cdata<enum 720>: 0
+(rc=124)
+[00001] While loading '/home/runner/work/_temp/naruto/squashfs-root/usr/bin/fonts/NotoSansCJKjp-Regular.otf'
+[00001] While loading '/home/runner/work/_temp/naruto/squashfs-root/usr/bin/NotoMono-Regular.ttf'
+[00001] While loading '/home/runner/work/_temp/naruto/squashfs-root/usr/bin/fonts/NotoMono-Regular.ttf'
+=== varian offscreen (SDL_VIDEODRIVER=offscreen) ===
+API mulai gui-mode
+API shot f120 bytes=0 nonzero=0 hash=0 width=640 height=478 bpp=cdata<enum 720>: 0
+API shot f180 bytes=0 nonzero=0 hash=0 width=640 height=478 bpp=cdata<enum 720>: 0
+API shot f60 bytes=0 nonzero=0 hash=0 width=640 height=478 bpp=cdata<enum 720>: 0
+(rc=124)
+[00001] While loading '/home/runner/work/_temp/naruto/squashfs-root/usr/bin/fonts/NotoSansCJKjp-Regular.otf'
+[00001] While loading '/home/runner/work/_temp/naruto/squashfs-root/usr/bin/NotoMono-Regular.ttf'
+[00001] While loading '/home/runner/work/_temp/naruto/squashfs-root/usr/bin/fonts/NotoMono-Regular.ttf'
+=== varian offscreen_egl (SDL_VIDEODRIVER=offscreen SDL_VIDEO_FORCE_EGL=1) ===
+API mulai gui-mode
+API shot f120 bytes=0 nonzero=0 hash=0 width=640 height=478 bpp=cdata<enum 720>: 0
+API shot f180 bytes=0 nonzero=0 hash=0 width=640 height=478 bpp=cdata<enum 720>: 0
+API shot f60 bytes=0 nonzero=0 hash=0 width=640 height=478 bpp=cdata<enum 720>: 0
+(rc=124)
+[00001] While loading '/home/runner/work/_temp/naruto/squashfs-root/usr/bin/fonts/NotoSansCJKjp-Regular.otf'
+[00001] While loading '/home/runner/work/_temp/naruto/squashfs-root/usr/bin/NotoMono-Regular.ttf'
+[00001] While loading '/home/runner/work/_temp/naruto/squashfs-root/usr/bin/fonts/NotoMono-Regular.ttf'
