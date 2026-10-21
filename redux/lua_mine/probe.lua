@@ -207,7 +207,31 @@ local function svshot(fr)
   end)
   if not ok then print('SVS shot f=' .. fr .. ' galat=' .. tostring(err):gsub('[^%w%s_%.:]', ''):sub(1, 80)) end
 end
-listener = PCSX.Events.createEventListener('GPU::Vsync', function()
+local STATEOUT, STATEIN, LSITE = os.getenv('STATEOUT'), os.getenv('STATEIN'), os.getenv('LSITE') or 'top'
+if STATEOUT == '' then STATEOUT = nil end
+if STATEIN == '' then STATEIN = nil end
+local wall = function() return os.clock() end
+pcall(function()
+  ffi.cdef[[ typedef struct { long tv_sec; long tv_usec; } tvx_t; int gettimeofday(tvx_t*, void*); ]]
+  wall = function() local t = ffi.new('tvx_t'); ffi.C.gettimeofday(t, nil); return tonumber(t.tv_sec) + tonumber(t.tv_usec) / 1e6 end
+end)
+local WALL0 = wall()
+-- header opsional di jadwal: "# SPUSPEED n" (mengatur PCSX.settings.spu.Speed; hanya angka)
+for line in io.lines(os.getenv('INPUTS')) do
+  local sp = line:match('^#%s*SPUSPEED%s+(%d+)')
+  if sp then local ok = pcall(function() PCSX.settings.spu.Speed = tonumber(sp) end); print('SVS spu.Speed=' .. sp .. ' ok=' .. tostring(ok)) end
+end
+local function xsave()
+  local okc, st = pcall(function() return PCSX.createSaveState() end)
+  local oks, str = pcall(function() return tostring(st) end)
+  local okh, h = pcall(hram)
+  if not (okc and oks) then say('XS simpan GAGAL'); return end
+  local f = io.open(STATEOUT, 'wb'); f:write(str); f:close()
+  say(string.format('XS simpan f=%d ram=%d bytes=%d', frame, okh and h or -1, #str))
+  PCSX.nextTick(function() PCSX.quit(0) end)
+end
+local listener
+local function onVsync()
   frame = frame + 1
   for _, pk in ipairs(pokes) do
     if frame == pk[1] then
@@ -240,7 +264,7 @@ listener = PCSX.Events.createEventListener('GPU::Vsync', function()
     print(string.format('SVS p=%d f=%d ram=%d p1=%s', pass, frame, ok and h or -1, p1words()))
   end
   if MODUS == 'pd' and SAVEF and frame >= SAVEF and HPSET[frame] then pcall(hpages) end
-  if SAVEF and pass == 1 and not saved and frame == SAVEF then
+  if SAVEF and MODUS ~= 'xs' and pass == 1 and not saved and frame == SAVEF then
     if MODUS == 'vs' then doSave() else PCSX.nextTick(doSave) end
   end
   if LOADF and (pass == 1 or (MODUS == 'pd' and pass == 2)) and saved and frame == LOADF then
@@ -261,5 +285,32 @@ listener = PCSX.Events.createEventListener('GPU::Vsync', function()
     local ss = PCSX.GPU.takeScreenShot(); local f = Support.File.open(string.format('%s/f%05d.raw', OUT, frame), 'TRUNCATE')
     f:writeMoveSlice(ss.data); f:close(); print('SHOT ' .. frame) end) end
   if frame >= MAXF then PCSX.nextTick(function() PCSX.quit(0) end) end
-end)
+  if frame % 1000 == 0 then print(string.format('TIME f=%d t=%.1f', frame, wall() - WALL0)) end
+  if MODUS == 'xs' and STATEOUT and frame == SAVEF then PCSX.nextTick(xsave) end
+end
+function install() listener = PCSX.Events.createEventListener('GPU::Vsync', onVsync) end
 print('probe siap; input=' .. #inputs .. ' MAXF=' .. MAXF)
+-- MODUS=xs: proses penulis (STATEOUT) menyimpan state mentah ke berkas SEMENTARA di runner pada SAVEF lalu keluar; proses pembaca (STATEIN, LSITE=top|nt|vs1)
+-- memuat berkas itu di proses BARU dan melanjutkan dari SAVEF. Berkas state tidak pernah keluar dari runner (dihapus oleh run_remote.sh).
+if MODUS == 'xs' and STATEIN then
+  local function xload(tag)
+    say('XS muat mulai site=' .. LSITE .. ' tag=' .. tag)
+    local okf, fl = pcall(function() return Support.File.open(STATEIN) end)
+    local ok, e = pcall(function() PCSX.loadSaveState(fl) end)
+    say('XS muat selesai ok=' .. tostring(ok) .. ' ' .. tostring(e):gsub('[^%w%s_%.:]', ''):sub(1, 80))
+    if not ok then return end
+    frame = SAVEF; last = {}; pass = 2
+    local n = 0
+    for _, i in ipairs(inputs) do if i[1] <= frame and frame < i[2] then pad.setOverride(i[3]); n = n + 1 end end
+    local okh, h = pcall(hram)
+    say(string.format('XS sesudah_muat f=%d ram=%d override_aktif=%d', frame, okh and h or -1, n))
+    install()
+  end
+  if LSITE == 'top' then xload('top')
+  elseif LSITE == 'nt' then PCSX.nextTick(function() xload('nt') end)
+  else
+    local one; one = PCSX.Events.createEventListener('GPU::Vsync', function() one = nil; PCSX.nextTick(function() xload('vs1') end) end)
+  end
+else
+  install()
+end

@@ -141,6 +141,26 @@ PYEOF
     }
     echo "mode bantuan selesai"; exit 0
   fi
+  if [ "${MODUS:-}" = "xs" ]; then  # state lintas PROSES: penulis simpan state sementara -> pembaca (proses baru) memuat; state tidak keluar dari runner
+    run_emu(){ set +e; xvfb-run -a -s "-screen 0 1280x720x24" timeout -k 20 "$2" env LD_PRELOAD="$W/shim243.so" LD_LIBRARY_PATH="$PWD/usr/lib" \
+      usr/bin/pcsx-redux -cli -noupdate -interpreter -softgpu -debugger -fastboot -loadiso "$W/game/naruto.cue" -run -dofile "$R/redux/lua_mine/probe.lua" > "$1" 2>&1; XRC=$?; set -e; return 0; }
+    F='^(probe siap|POKE|ORPOKE|CHG|HSH|SVS|XS|TIME)'
+    export STATEOUT="$W/state.bin" STATEIN=""
+    t0=$(date +%s); run_emu "$W/emu_w.log" 900; t1=$(date +%s); rcw=$XRC
+    grep -aE "$F" "$W/emu_w.log" | head -n 3000 > "$D/chg_w.log" || true
+    echo "penulis rc=$rcw detik=$((t1-t0)) state_bytes=$(stat -c %s "$W/state.bin" 2>/dev/null || echo 0)" > "$D/ringkasan.txt"
+    export STATEOUT=""
+    if [ -s "$W/state.bin" ]; then
+      for site in top nt vs1; do
+        export STATEIN="$W/state.bin" LSITE=$site HFROM=24000 HSTEP=20
+        t0=$(date +%s); run_emu "$W/emu_r_$site.log" 400; t1=$(date +%s)
+        grep -aE "$F" "$W/emu_r_$site.log" | head -n 3000 > "$D/chg_r_$site.log" || true
+        tail -n 6 "$W/emu_r_$site.log" | tr -cd '\11\12\40-\176' | cut -c1-160 > "$D/ekor_r_$site.txt"
+        echo "pembaca site=$site rc=$XRC detik=$((t1-t0)) baris_HSH=$(grep -c '^HSH' "$D/chg_r_$site.log" || true)" >> "$D/ringkasan.txt"
+      done
+    fi
+    rm -f "$W/state.bin"; cat "$D/ringkasan.txt"; echo "mode xs selesai"; exit 0
+  fi
   t0=$(date +%s); set +e
   xvfb-run -a -s "-screen 0 1280x720x24" timeout -k 20 "${BATAS_DETIK:-$([ -n "${SAVEF:-}" ] && echo 900 || echo 1500)}" \
     env LD_PRELOAD="$W/shim243.so" LD_LIBRARY_PATH="$PWD/usr/lib" \
