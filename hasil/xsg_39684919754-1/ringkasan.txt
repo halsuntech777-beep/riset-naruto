@@ -1,0 +1,4 @@
+penulis rc=0 detik=88 state_bytes=21163466
+pembaca site=top rc=124 detik=400 baris_HSH=0
+pembaca site=nt rc=0 detik=3 baris_HSH=0
+pembaca site=vs1 rc=0 detik=1 baris_HSH=0

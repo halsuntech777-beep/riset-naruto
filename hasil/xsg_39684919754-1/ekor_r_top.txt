@@ -1,0 +1,6 @@
+probe siap; input=518 MAXF=20000 
+XS muat mulai site=top tag=top 
+XS muat selesai ok=true nil 
+XS sesudah_muat f=19500 ram=3791465401 override_aktif=0 
+Unknown instruction for dynarec - address 0000006c, instruction 000000ff
+First chance exception: ReservedInstruction from 0x00000068

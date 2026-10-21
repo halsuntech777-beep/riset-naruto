@@ -1,0 +1,7 @@
+SVS apiall Adpcm Assembler Binary CONSTS Events GPU GUI Misc SIO0 SPU addBreakpoint createSaveState execSlots getCPUCycles getCurrentIso getMemPtr getMemoryAsFile getParPtr getReadLUT getRegisters getRomPtr getSaveStateProtoSchema getScratchPtr getWriteLUT hardResetEmulator insertSymbol invalidateCache isoBuilder isoTools iterateSymbols loadSaveState log nextTick openIso pauseEmulator quit removeSymbol resumeEmulator settings softResetEmulator 
+SVS api getSaveStateProtoSchema:function loadSaveState:function createSaveState:function createSaveState=function loadSaveState=function 
+SVS spu.Speed=4 ok=true 
+probe siap; input=518 MAXF=20000 
+XS muat mulai site=top tag=top 
+XS muat selesai ok=true nil 
+XS sesudah_muat f=19500 ram=3791465401 override_aktif=0 

@@ -1,0 +1,6 @@
+CHG2 f=19501 P1: nil -> 9 
+CHG2 f=19501 P2: nil -> 0 
+CHG2 f=19501 P3: nil -> 4 
+CHG2 f=19501 P4: nil -> 0 
+CHG2 f=19901 P3: 4 -> 5 
+TIME f=20000 t=0.6 

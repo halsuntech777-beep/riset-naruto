@@ -1,0 +1,30 @@
+SVS apiall Adpcm Assembler Binary CONSTS Events GPU GUI Misc SIO0 SPU addBreakpoint createSaveState execSlots getCPUCycles getCurrentIso getMemPtr getMemoryAsFile getParPtr getReadLUT getRegisters getRomPtr getSaveStateProtoSchema getScratchPtr getWriteLUT hardResetEmulator insertSymbol invalidateCache isoBuilder isoTools iterateSymbols loadSaveState log nextTick openIso pauseEmulator quit removeSymbol resumeEmulator settings softResetEmulator 
+SVS api getSaveStateProtoSchema:function loadSaveState:function createSaveState:function createSaveState=function loadSaveState=function 
+SVS spu.Speed=4 ok=true 
+probe siap; input=518 MAXF=20000 
+XS muat mulai site=nt tag=nt 
+XS muat selesai ok=true nil 
+XS sesudah_muat f=19500 ram=3791465401 override_aktif=0 
+CHG2 f=19501 A1: nil -> 4640 
+CHG2 f=19501 A2: nil -> 1880 
+CHG2 f=19501 A3: nil -> 0 
+CHG2 f=19501 A4: nil -> 0 
+CHG2 f=19501 B1: nil -> 4640 
+CHG2 f=19501 B2: nil -> 1880 
+CHG2 f=19501 B3: nil -> 0 
+CHG2 f=19501 B4: nil -> 0 
+CHG2 f=19501 P1: nil -> 9 
+CHG2 f=19501 P2: nil -> 0 
+CHG2 f=19501 P3: nil -> 4 
+CHG2 f=19501 P4: nil -> 0 
+CHG2 f=19551 P3: 4 -> 5 
+CHG2 f=19717 P3: 5 -> 6 
+CHG2 f=19729 P3: 6 -> 7 
+CHG2 f=19741 P3: 7 -> 8 
+CHG2 f=19753 P3: 8 -> 9 
+CHG2 f=19765 P3: 9 -> 10 
+CHG2 f=19817 A2: 1880 -> 1780 
+CHG2 f=19817 B2: 1880 -> 1780 
+CHG2 f=19819 A2: 1780 -> 1680 
+CHG2 f=19819 B2: 1780 -> 1680 
+TIME f=20000 t=2.2 
