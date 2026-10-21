@@ -1,0 +1,6 @@
+BIOS Trace1: 0x01
+BIOS Trace1: 0x02
+XS muat mulai site=vs1 tag=vs1 
+SVE XS muat mulai site=vs1 tag=vs1
+timeout: the monitored command dumped core
+Segmentation fault
