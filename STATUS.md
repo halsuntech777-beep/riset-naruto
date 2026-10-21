@@ -188,3 +188,11 @@ Target: simpan state di frame 24000 (jadwal inputs/inputs_story3.txt), muat kemb
   - 27500-28300: giliran Mizuki: 「なにもかも手にいれてやる！」, layar pilih kartu 「ゲットする札をえらべ！」 (3 kartu menghadap bawah), lalu 「チャクラが２５０回復」; Mizuki 1530 -> 1780.
 - [TERBUKTI, replay ini] Biaya pasang barrier di petak kosong yang dimaksud = 260 chakra (hanya satu sampel; petak ke-? belum dipastikan, harga petaknya perlu dicocokkan ke data/tabel_papan.json). Biaya level-up barrier sebelumnya = 150 (Mizuki, 1680 -> 1530; gem 100 -> 220).
 - [BELUM] Kondisi menang papan 1 dan apakah stage 2 terbuka; posisi petak Naruto/Mizuki sekarang.
+
+## Sesi s5 (chat baru): kunci baru + sapuan frame roulette (7 run paralel)
+- Kunci RSA baru dibuat (privat HANYA di sandbox, TIDAK di repo); `ci/shot_pub.pem` diganti dan di-commit. Gambar lama tidak terbaca dengan kunci ini. Catatan: sandbox hari yang sama masih memuat `priv.pem` lama yang cocok dengan pub lama; tidak dipakai.
+- Run `s5_26660 .. s5_26780` (jadwal `inputs/s5_*.txt` = prefix story3 + CROSS@24800 + CIRCLE@26300 + CIRCLE satu kali di frame berhenti roulette; MAXF 27100; SHOT 26800/26900/27000). Semua rc sukses; gambar terdekripsi di sandbox.
+- [TERAMATI] Frame CIRCLE penghenti roulette -> angka roulette Naruto (= langkah penghitung posisi P1 `0x70F28`, mulai 11, +1 tiap 20 frame): 26660 -> 1, 26680 -> 3, 26700 -> 3, 26720 -> 4, 26740 -> 2, 26760 -> 5, 26780 -> 6. Tidak monoton terhadap frame (roda berputar cepat). Angka terlihat di roda (26760: 5, 26780: 6) dan sebagai hitungan mundur di atas pion saat bergerak. 26700 -> 3 cocok dengan run s4F.
+- [TERAMATI] Run 26660 (1 langkah): di frame 26900 muncul dialog Iruka 「ナルト、相手の結界は「攻撃」することでダメージをあ…」 (barrier lawan bisa diserang untuk memberi damage). [DUGAAN] pemicunya pendaratan di/dekat petak barrier P2; belum dipastikan.
+- [BELUM] Pemetaan frame -> angka sebagai fungsi (butuh sampel lebih rapat atau tabel roda di `0x8006491C`); hasil serangan barrier (damage/biaya); kondisi menang papan 1; stage 2 Party Mode.
+- Langkah berikut (satu sesi): lanjutkan dari run 26660 (dialog Iruka) dengan CIRCLE/CROSS terpisah dan SHOT tiap ~200 frame untuk melihat aturan serangan barrier dan angka chakra sesudahnya.
