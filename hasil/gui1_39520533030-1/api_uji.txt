@@ -1,0 +1,4 @@
+(rc=137)
+--- ekor log emulator ---
+Unable to create main window: Couldn't find matching GLX visual
+Killed
