@@ -1,0 +1,82 @@
+=== varian egl ===
+API C createSaveState ok=true tipe=table
+API C sebelum createSaveState f=100
+API K PCSX.GPU (9)=DumpPlayer:table,getDumpFrames:function,getGuestFPS:function,getVRAM:function,isDumpArmed:function,isDumping:function,startDump:function,stopDump:function,takeScreenShot:function
+API K PCSX.GUI (6)=OffscreenShader:table,OutputShader:table,jumpToMemory:function,jumpToPC:function,useMainFont:cdata,useMonoFont:cdata
+API K PCSX.Misc (4)=uclGetOverlapMargin:function,uclPack:function,uclUnpack:function,writeUclDecomp:function
+API K ss (4)=bpp:cdata,data:table,height:number,width:number
+API P 01 message GPU 
+API P 02 bytes vram = 3
+API P 03 GPU gpu = 5
+API P schema ok=true tipe=string len=7222
+API R C #state ok=true -> 21123954
+API R C state:size() ok=false -> ...work/riset-naruto/riset-naruto/redux/lua_mine/guiuji.lua:60: attempt to call 
+API R S #data ok=true -> 611840
+API R S buffer+writeMoveSlice ok=true -> 611840
+API R S data:size() ok=false -> ...work/riset-naruto/riset-naruto/redux/lua_mine/guiuji.lua:34: attempt to call 
+API R S meta.__index keys ok=false -> ...work/riset-naruto/riset-naruto/redux/lua_mine/guiuji.lua:38: bad argument 1 t
+API S data tipe=table tostring=------------------------------------------------------------
+API S takeScreenShot ok=true tipe=table
+API T f=00020 t=0.52
+API T f=00040 t=0.82
+API T f=00060 t=1.15
+API T f=00080 t=1.45
+API T f=00100 t=1.74
+API T f=00120 t=2.09
+API T f=00140 t=2.43
+API X selesai t=2.43
+(rc=0)
+=== varian cli ===
+API C createSaveState ok=true tipe=table
+API C createSaveState ok=true tipe=table 
+API C sebelum createSaveState f=100
+API C sebelum createSaveState f=100 
+API K PCSX.GPU (9)=DumpPlayer:table,getDumpFrames:function,getGuestFPS:function,getVRAM:function,isDumpArmed:function,isDumping:function,startDump:function,stopDump:function,takeScreenShot:function
+API K PCSX.GPU (9)=DumpPlayer:table,getDumpFrames:function,getGuestFPS:function,getVRAM:function,isDumpArmed:function,isDumping:function,startDump:function,stopDump:function,takeScreenShot:function 
+API K PCSX.GUI (2)=jumpToMemory:function,jumpToPC:function
+API K PCSX.GUI (2)=jumpToMemory:function,jumpToPC:function 
+API K PCSX.Misc (4)=uclGetOverlapMargin:function,uclPack:function,uclUnpack:function,writeUclDecomp:function
+API K PCSX.Misc (4)=uclGetOverlapMargin:function,uclPack:function,uclUnpack:function,writeUclDecomp:function 
+API K ss (4)=bpp:cdata,data:table,height:number,width:number
+API K ss (4)=bpp:cdata,data:table,height:number,width:number 
+API P 01 message GPU 
+API P 01 message GPU  
+API P 02 bytes vram = 3
+API P 02 bytes vram = 3 
+API P 03 GPU gpu = 5
+API P 03 GPU gpu = 5 
+API P schema ok=true tipe=string len=7222
+API P schema ok=true tipe=string len=7222 
+API R C #state ok=true -> 21124132
+API R C #state ok=true -> 21124132 
+API R C state:size() ok=false -> ...work/riset-naruto/riset-naruto/redux/lua_mine/guiuji.lua:60: attempt to call 
+API R C state:size() ok=false -> ...work/riset-naruto/riset-naruto/redux/lua_mine/guiuji.lua:60: attempt to call  
+API R S #data ok=true -> 611840
+API R S #data ok=true -> 611840 
+API R S buffer+writeMoveSlice ok=true -> 611840
+API R S buffer+writeMoveSlice ok=true -> 611840 
+API R S data:size() ok=false -> ...work/riset-naruto/riset-naruto/redux/lua_mine/guiuji.lua:34: attempt to call 
+API R S data:size() ok=false -> ...work/riset-naruto/riset-naruto/redux/lua_mine/guiuji.lua:34: attempt to call  
+API R S meta.__index keys ok=false -> ...work/riset-naruto/riset-naruto/redux/lua_mine/guiuji.lua:38: bad argument 1 t
+API R S meta.__index keys ok=false -> ...work/riset-naruto/riset-naruto/redux/lua_mine/guiuji.lua:38: bad argument 1 t 
+API S data tipe=table tostring=------------------------------------------------------------
+API S data tipe=table tostring=------------------------------------------------------------ 
+API S takeScreenShot ok=true tipe=table
+API S takeScreenShot ok=true tipe=table 
+API T f=00020 t=0.35
+API T f=00020 t=0.35 
+API T f=00040 t=0.69
+API T f=00040 t=0.69 
+API T f=00060 t=1.03
+API T f=00060 t=1.03 
+API T f=00080 t=1.36
+API T f=00080 t=1.36 
+API T f=00100 t=1.70
+API T f=00100 t=1.70 
+API T f=00120 t=2.03
+API T f=00120 t=2.03 
+API T f=00140 t=2.38
+API T f=00140 t=2.38 
+API X selesai t=2.38
+API X selesai t=2.38 
+(rc=0)
