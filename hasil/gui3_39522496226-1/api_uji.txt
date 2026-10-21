@@ -1,0 +1,25 @@
+=== tabel visual GLX Xvfb (tanpa game) ===
+name of display: :99
+display: :99  screen: 0
+direct rendering: Yes
+server glx vendor string: SGI
+server glx version string: 1.4
+server glx extensions:
+    GLX_ARB_context_flush_control, GLX_ARB_create_context, 
+    GLX_ARB_create_context_no_error, GLX_ARB_create_context_profile, 
+    GLX_ARB_fbconfig_float, GLX_ARB_framebuffer_sRGB, GLX_ARB_multisample, 
+    GLX_EXT_create_context_es2_profile, GLX_EXT_create_context_es_profile, 
+    GLX_EXT_fbconfig_packed_float, GLX_EXT_framebuffer_sRGB, 
+    GLX_EXT_get_drawable_type, GLX_EXT_libglvnd, GLX_EXT_no_config_context, 
+    GLX_EXT_texture_from_pixmap, GLX_EXT_visual_info, GLX_EXT_visual_rating, 
+    GLX_MESA_copy_sub_buffer, GLX_OML_swap_method, GLX_SGIS_multisample, 
+=== varian Xorg dummy ===
+direct rendering: Yes
+    Max core profile version: 4.5
+OpenGL renderer string: llvmpipe (LLVM 20.1.2, 256 bits)
+OpenGL core profile version string: 4.5 (Core Profile) Mesa 25.2.8-0ubuntu0.24.04.4
+(rc=137)
+Unable to create main window: Couldn't find matching GLX visual
+> Warning:          Could not resolve keysym XF86SidevuSonar
+> Warning:          Could not resolve keysym XF86NavInfo
+Errors from xkbcomp are not fatal to the X server
