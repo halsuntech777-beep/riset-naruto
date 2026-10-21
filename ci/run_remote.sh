@@ -85,6 +85,18 @@ jalankan)
     done
     echo "mode apiuji selesai"; exit 0
   fi
+  if [ "${MODUS:-}" = "guiuji" ]; then  # mode GUI (tanpa -cli) + Mesa llvmpipe, TANPA game: hanya angka/tipe + ekor log emulator
+    : > "$D/api_uji.txt"
+    set +e
+    xvfb-run -a -s "-screen 0 1280x720x24 +extension GLX +render -noreset" timeout -k 5 150 env LD_PRELOAD="$W/shim243.so" LD_LIBRARY_PATH="$PWD/usr/lib" \
+      LIBGL_ALWAYS_SOFTWARE=1 GALLIUM_DRIVER=llvmpipe MESA_GL_VERSION_OVERRIDE=4.5 MESA_GLSL_VERSION_OVERRIDE=450 \
+      usr/bin/pcsx-redux -noupdate -interpreter -softgpu -run -dofile "$R/redux/lua_mine/guiuji.lua" > "$W/gui.log" 2>&1
+    rc=$?; set -e
+    grep -a '^API ' "$W/gui.log" | sort -u | tr -cd '\11\12\40-\176' | cut -c1-300 | head -n 60 >> "$D/api_uji.txt" || true
+    echo "(rc=$rc)" >> "$D/api_uji.txt"
+    { echo "--- ekor log emulator ---"; tail -n 25 "$W/gui.log" | tr -cd '\11\12\40-\176' | cut -c1-200; } >> "$D/api_uji.txt"
+    echo "mode guiuji selesai"; exit 0
+  fi
   if [ "${MODUS:-}" = "bantuan" ]; then  # hanya teks bantuan emulator (bukan isi game); TIDAK menjalankan game
     : > "$D/bantuan.txt"
     for v in "-cli -noupdate -help" "-cli -noupdate --help" "-cli -noupdate -h"; do
