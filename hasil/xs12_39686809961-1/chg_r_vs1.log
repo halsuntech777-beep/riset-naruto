@@ -1,0 +1,256 @@
+SVS apiall Adpcm Assembler Binary CONSTS Events GPU GUI Misc SIO0 SPU addBreakpoint createSaveState execSlots getCPUCycles getCurrentIso getMemPtr getMemoryAsFile getParPtr getReadLUT getRegisters getRomPtr getSaveStateProtoSchema getScratchPtr getWriteLUT hardResetEmulator insertSymbol invalidateCache isoBuilder isoTools iterateSymbols loadSaveState log nextTick openIso pauseEmulator quit removeSymbol resumeEmulator settings softResetEmulator 
+SVS api getSaveStateProtoSchema:function loadSaveState:function createSaveState:function createSaveState=function loadSaveState=function 
+SVS spu.Speed=4 ok=true 
+probe siap; input=518 MAXF=26300 
+XS muat mulai site=vs1 tag=vs1 
+XS muat selesai ok=true nil 
+XS sesudah_muat f=24000 ram=4075571002 override_aktif=1 
+CHG2 f=24001 A1: nil -> 0 
+CHG2 f=24001 A2: nil -> 0 
+CHG2 f=24001 A3: nil -> 0 
+CHG2 f=24001 A4: nil -> 0 
+CHG2 f=24001 B1: nil -> 0 
+CHG2 f=24001 B2: nil -> 0 
+CHG2 f=24001 B3: nil -> 0 
+CHG2 f=24001 B4: nil -> 0 
+CHG2 f=24001 P1: nil -> 0 
+CHG2 f=24001 P2: nil -> 0 
+CHG2 f=24001 P3: nil -> 0 
+CHG2 f=24001 P4: nil -> 0 
+XS muat mulai site=vs1 tag=vs1 
+XS muat selesai ok=true nil 
+XS sesudah_muat f=24000 ram=1181960737 override_aktif=1 
+CHG2 f=24001 A1: nil -> 0 
+CHG2 f=24001 A2: nil -> 0 
+CHG2 f=24001 A3: nil -> 0 
+CHG2 f=24001 A4: nil -> 0 
+CHG2 f=24001 B1: nil -> 0 
+CHG2 f=24001 B2: nil -> 0 
+CHG2 f=24001 B3: nil -> 0 
+CHG2 f=24001 B4: nil -> 0 
+CHG2 f=24001 P1: nil -> 0 
+CHG2 f=24001 P2: nil -> 0 
+CHG2 f=24001 P3: nil -> 0 
+CHG2 f=24001 P4: nil -> 0 
+XS muat mulai site=vs1 tag=vs1 
+XS muat selesai ok=true nil 
+XS sesudah_muat f=24000 ram=2405271881 override_aktif=1 
+CHG2 f=24001 A1: nil -> 0 
+CHG2 f=24001 A2: nil -> 0 
+CHG2 f=24001 A3: nil -> 0 
+CHG2 f=24001 A4: nil -> 0 
+CHG2 f=24001 B1: nil -> 0 
+CHG2 f=24001 B2: nil -> 0 
+CHG2 f=24001 B3: nil -> 0 
+CHG2 f=24001 B4: nil -> 0 
+CHG2 f=24001 P1: nil -> 0 
+CHG2 f=24001 P2: nil -> 0 
+CHG2 f=24001 P3: nil -> 0 
+CHG2 f=24001 P4: nil -> 0 
+XS muat mulai site=vs1 tag=vs1 
+XS muat selesai ok=true nil 
+XS sesudah_muat f=24000 ram=114636555 override_aktif=1 
+CHG2 f=24001 A1: nil -> 0 
+CHG2 f=24001 A2: nil -> 0 
+CHG2 f=24001 A3: nil -> 0 
+CHG2 f=24001 A4: nil -> 0 
+CHG2 f=24001 B1: nil -> 0 
+CHG2 f=24001 B2: nil -> 0 
+CHG2 f=24001 B3: nil -> 0 
+CHG2 f=24001 B4: nil -> 0 
+CHG2 f=24001 P1: nil -> 0 
+CHG2 f=24001 P2: nil -> 0 
+CHG2 f=24001 P3: nil -> 0 
+CHG2 f=24001 P4: nil -> 0 
+XS muat mulai site=vs1 tag=vs1 
+XS muat selesai ok=true nil 
+XS sesudah_muat f=24000 ram=2486186099 override_aktif=1 
+CHG2 f=24001 A1: nil -> 0 
+CHG2 f=24001 A2: nil -> 0 
+CHG2 f=24001 A3: nil -> 0 
+CHG2 f=24001 A4: nil -> 0 
+CHG2 f=24001 B1: nil -> 0 
+CHG2 f=24001 B2: nil -> 0 
+CHG2 f=24001 B3: nil -> 0 
+CHG2 f=24001 B4: nil -> 0 
+CHG2 f=24001 P1: nil -> 0 
+CHG2 f=24001 P2: nil -> 0 
+CHG2 f=24001 P3: nil -> 0 
+CHG2 f=24001 P4: nil -> 0 
+XS muat mulai site=vs1 tag=vs1 
+XS muat selesai ok=true nil 
+XS sesudah_muat f=24000 ram=1032247524 override_aktif=1 
+CHG2 f=24001 A1: nil -> 0 
+CHG2 f=24001 A2: nil -> 0 
+CHG2 f=24001 A3: nil -> 0 
+CHG2 f=24001 A4: nil -> 0 
+CHG2 f=24001 B1: nil -> 0 
+CHG2 f=24001 B2: nil -> 0 
+CHG2 f=24001 B3: nil -> 0 
+CHG2 f=24001 B4: nil -> 0 
+CHG2 f=24001 P1: nil -> 0 
+CHG2 f=24001 P2: nil -> 0 
+CHG2 f=24001 P3: nil -> 0 
+CHG2 f=24001 P4: nil -> 0 
+XS muat mulai site=vs1 tag=vs1 
+XS muat selesai ok=true nil 
+XS sesudah_muat f=24000 ram=1032247524 override_aktif=1 
+CHG2 f=24001 A1: nil -> 0 
+CHG2 f=24001 A2: nil -> 0 
+CHG2 f=24001 A3: nil -> 0 
+CHG2 f=24001 A4: nil -> 0 
+CHG2 f=24001 B1: nil -> 0 
+CHG2 f=24001 B2: nil -> 0 
+CHG2 f=24001 B3: nil -> 0 
+CHG2 f=24001 B4: nil -> 0 
+CHG2 f=24001 P1: nil -> 0 
+CHG2 f=24001 P2: nil -> 0 
+CHG2 f=24001 P3: nil -> 0 
+CHG2 f=24001 P4: nil -> 0 
+XS muat mulai site=vs1 tag=vs1 
+XS muat selesai ok=true nil 
+XS sesudah_muat f=24000 ram=1032247524 override_aktif=1 
+CHG2 f=24001 A1: nil -> 0 
+CHG2 f=24001 A2: nil -> 0 
+CHG2 f=24001 A3: nil -> 0 
+CHG2 f=24001 A4: nil -> 0 
+CHG2 f=24001 B1: nil -> 0 
+CHG2 f=24001 B2: nil -> 0 
+CHG2 f=24001 B3: nil -> 0 
+CHG2 f=24001 B4: nil -> 0 
+CHG2 f=24001 P1: nil -> 0 
+CHG2 f=24001 P2: nil -> 0 
+CHG2 f=24001 P3: nil -> 0 
+CHG2 f=24001 P4: nil -> 0 
+XS muat mulai site=vs1 tag=vs1 
+XS muat selesai ok=true nil 
+XS sesudah_muat f=24000 ram=1867678277 override_aktif=1 
+CHG2 f=24001 A1: nil -> 0 
+CHG2 f=24001 A2: nil -> 0 
+CHG2 f=24001 A3: nil -> 0 
+CHG2 f=24001 A4: nil -> 0 
+CHG2 f=24001 B1: nil -> 0 
+CHG2 f=24001 B2: nil -> 0 
+CHG2 f=24001 B3: nil -> 0 
+CHG2 f=24001 B4: nil -> 0 
+CHG2 f=24001 P1: nil -> 0 
+CHG2 f=24001 P2: nil -> 0 
+CHG2 f=24001 P3: nil -> 0 
+CHG2 f=24001 P4: nil -> 0 
+HSH f=24020 ram=1407718352 
+HSH f=24040 ram=944593651 
+HSH f=24060 ram=1079612376 
+HSH f=24080 ram=3363094045 
+HSH f=24100 ram=853609256 
+HSH f=24120 ram=2550703061 
+HSH f=24140 ram=1367153590 
+HSH f=24160 ram=1367153590 
+HSH f=24180 ram=1367153590 
+HSH f=24200 ram=1367153590 
+HSH f=24220 ram=3868416303 
+HSH f=24240 ram=4276859531 
+HSH f=24260 ram=3779483888 
+HSH f=24280 ram=2145772124 
+HSH f=24300 ram=427541203 
+HSH f=24320 ram=2479097954 
+HSH f=24340 ram=55879801 
+HSH f=24360 ram=2899448768 
+HSH f=24380 ram=2736586197 
+HSH f=24400 ram=1652024628 
+HSH f=24420 ram=1877267718 
+HSH f=24440 ram=1081245971 
+HSH f=24460 ram=858495530 
+HSH f=24480 ram=3502895957 
+HSH f=24500 ram=1372069054 
+HSH f=24520 ram=1578167825 
+HSH f=24540 ram=1954661639 
+HSH f=24560 ram=3531300073 
+HSH f=24580 ram=195173655 
+HSH f=24600 ram=2221594927 
+HSH f=24620 ram=4033444468 
+HSH f=24640 ram=297928122 
+HSH f=24660 ram=3973397967 
+HSH f=24680 ram=3315368000 
+HSH f=24700 ram=103189932 
+HSH f=24720 ram=1593771063 
+HSH f=24740 ram=1481992206 
+HSH f=24760 ram=573468069 
+HSH f=24780 ram=2192628078 
+HSH f=24800 ram=2739452224 
+HSH f=24820 ram=2302679547 
+HSH f=24840 ram=4697893 
+HSH f=24860 ram=4261276202 
+HSH f=24880 ram=3519264588 
+HSH f=24900 ram=3120064656 
+HSH f=24920 ram=2416196377 
+HSH f=24940 ram=2720501829 
+HSH f=24960 ram=1463065515 
+HSH f=24980 ram=3257001552 
+HSH f=25000 ram=4105848963 
+TIME f=25000 t=0.6 
+HSH f=25020 ram=4023551325 
+HSH f=25040 ram=3071836204 
+HSH f=25060 ram=857934514 
+HSH f=25080 ram=735325815 
+HSH f=25100 ram=2745643610 
+HSH f=25120 ram=1606190270 
+HSH f=25140 ram=1329945351 
+HSH f=25160 ram=1433474033 
+HSH f=25180 ram=4212999900 
+HSH f=25200 ram=2066581511 
+HSH f=25220 ram=2677620295 
+HSH f=25240 ram=1406876992 
+HSH f=25260 ram=1240932030 
+HSH f=25280 ram=646551020 
+HSH f=25300 ram=2580366851 
+HSH f=25320 ram=27330103 
+HSH f=25340 ram=1583856450 
+HSH f=25360 ram=1591803945 
+HSH f=25380 ram=3185492140 
+HSH f=25400 ram=3612840104 
+HSH f=25420 ram=3422961934 
+HSH f=25440 ram=1312115409 
+HSH f=25460 ram=849374899 
+HSH f=25480 ram=1731905974 
+HSH f=25500 ram=2788511878 
+HSH f=25520 ram=2748646713 
+HSH f=25540 ram=518024241 
+HSH f=25560 ram=4112001978 
+HSH f=25580 ram=4109238003 
+HSH f=25600 ram=3540760873 
+HSH f=25620 ram=861164452 
+HSH f=25640 ram=407716526 
+HSH f=25660 ram=3375377630 
+HSH f=25680 ram=1180988450 
+HSH f=25700 ram=2648264238 
+HSH f=25720 ram=3116274954 
+HSH f=25740 ram=444709199 
+HSH f=25760 ram=366424074 
+HSH f=25780 ram=1195893831 
+HSH f=25800 ram=3385244777 
+HSH f=25820 ram=3816427206 
+HSH f=25840 ram=2853115437 
+HSH f=25860 ram=4120488301 
+HSH f=25880 ram=995088183 
+HSH f=25900 ram=1946347523 
+HSH f=25920 ram=236326822 
+HSH f=25940 ram=3765913820 
+HSH f=25960 ram=1722359827 
+HSH f=25980 ram=304880407 
+HSH f=26000 ram=971709635 
+TIME f=26000 t=1.1 
+HSH f=26020 ram=1917175210 
+HSH f=26040 ram=1741397165 
+HSH f=26060 ram=2923596911 
+HSH f=26080 ram=1632711823 
+HSH f=26100 ram=1159867894 
+HSH f=26120 ram=3810892334 
+HSH f=26140 ram=3394191074 
+HSH f=26160 ram=1415570309 
+HSH f=26180 ram=3535326914 
+HSH f=26200 ram=1487774707 
+HSH f=26220 ram=1532069172 
+HSH f=26240 ram=1538133917 
+HSH f=26260 ram=2783898328 
+HSH f=26280 ram=1764493530 
+HSH f=26300 ram=1027555399 
