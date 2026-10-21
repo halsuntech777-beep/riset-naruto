@@ -142,13 +142,16 @@ PYEOF
     echo "mode bantuan selesai"; exit 0
   fi
   if [ "${MODUS:-}" = "xs" ] || [ "${MODUS:-}" = "xb" ]; then  # state lintas PROSES: penulis simpan state sementara -> pembaca (proses baru) memuat; state tidak keluar dari runner
+    EMU_DBG="-debugger"; EMU_CPU="-interpreter"
+    grep -q '^# NODEBUG' "$R/$JADWAL" && EMU_DBG=""
+    grep -q '^# DYNAREC' "$R/$JADWAL" && EMU_CPU="-dynarec"
     run_emu(){ set +e; xvfb-run -a -s "-screen 0 1280x720x24" timeout -k 20 "$2" env LD_PRELOAD="$W/shim243.so" LD_LIBRARY_PATH="$PWD/usr/lib" \
-      usr/bin/pcsx-redux -cli -noupdate -interpreter -softgpu -debugger -fastboot -loadiso "$W/game/naruto.cue" -run -dofile "$R/redux/lua_mine/probe.lua" > "$1" 2>&1; XRC=$?; set -e; return 0; }
+      usr/bin/pcsx-redux -cli -noupdate $EMU_CPU -softgpu $EMU_DBG -fastboot -loadiso "$W/game/naruto.cue" -run -dofile "$R/redux/lua_mine/probe.lua" > "$1" 2>&1; XRC=$?; set -e; return 0; }
     F='^(probe siap|POKE|ORPOKE|CHG|HSH|SVS|XS|TIME)'
     export STATEOUT="$W/state.bin" STATEIN=""
     t0=$(date +%s); run_emu "$W/emu_w.log" 900; t1=$(date +%s); rcw=$XRC
     grep -aE "$F" "$W/emu_w.log" | head -n 3000 > "$D/chg_w.log" || true
-    echo "penulis rc=$rcw detik=$((t1-t0)) state_bytes=$(stat -c %s "$W/state.bin" 2>/dev/null || echo 0)" > "$D/ringkasan.txt"
+    echo "flags cpu=$EMU_CPU debug=${EMU_DBG:-tidak}"; echo "penulis rc=$rcw detik=$((t1-t0)) state_bytes=$(stat -c %s "$W/state.bin" 2>/dev/null || echo 0)" > "$D/ringkasan.txt"
     export STATEOUT=""
     if [ -s "$W/state.bin" ] && [ "$MODUS" = "xb" ]; then
       python3 "$R/ci/pbsplit.py" struct "$W/state.bin" | head -n 400 > "$D/pb_struct.txt" || true
