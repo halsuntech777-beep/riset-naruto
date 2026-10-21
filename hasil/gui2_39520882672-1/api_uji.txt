@@ -1,0 +1,31 @@
+=== varian 1 xvfb: -screen 0 1280x720x24 +extension GLX +render -noreset ===
+direct rendering: Yes
+Extended renderer info (GLX_MESA_query_renderer):
+OpenGL renderer string: llvmpipe (LLVM 20.1.2, 256 bits)
+OpenGL core profile version string: 4.5 (Core Profile) Mesa 25.2.8-0ubuntu0.24.04.4
+visual_glx=320
+(rc=137)
+Unable to create main window: Couldn't find matching GLX visual
+Killed
+=== varian 2 xvfb: -screen 0 1280x720x24 +extension GLX +iglx +render -noreset ===
+direct rendering: Yes
+Extended renderer info (GLX_MESA_query_renderer):
+OpenGL renderer string: llvmpipe (LLVM 20.1.2, 256 bits)
+OpenGL core profile version string: 4.5 (Core Profile) Mesa 25.2.8-0ubuntu0.24.04.4
+visual_glx=0
+(rc=137)
+Unable to create main window: Couldn't find matching GLX visual
+Killed
+=== varian 3 xvfb: -screen 0 1280x720x32 +extension GLX +render -noreset ===
+visual_glx=0
+(rc=1)
+Failed to initialize SDL: No available video device
+=== varian 4 xvfb: -screen 0 1280x720x24 +extension GLX -ac -nolisten tcp ===
+direct rendering: Yes
+Extended renderer info (GLX_MESA_query_renderer):
+OpenGL renderer string: llvmpipe (LLVM 20.1.2, 256 bits)
+OpenGL core profile version string: 4.5 (Core Profile) Mesa 25.2.8-0ubuntu0.24.04.4
+visual_glx=320
+(rc=137)
+Unable to create main window: Couldn't find matching GLX visual
+Killed
