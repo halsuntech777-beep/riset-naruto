@@ -1,0 +1,88 @@
+=== varian spd8 ===
+API set spu.Speed=8 ok=true sekarang=8 
+API set spu.Speed=8 ok=true sekarang=8
+API fps=99.2 (300 frame dalam 3.03 dtk) 
+API fps=99.2 (300 frame dalam 3.03 dtk)
+API selesai 
+API selesai
+(rc=0)
+=== varian spd16 ===
+API set spu.Speed=16 ok=true sekarang=16 
+API set spu.Speed=16 ok=true sekarang=16
+API fps=99.3 (300 frame dalam 3.02 dtk) 
+API fps=99.3 (300 frame dalam 3.02 dtk)
+API selesai 
+API selesai
+(rc=0)
+=== varian spd64 ===
+API set spu.Speed=64 ok=true sekarang=64 
+API set spu.Speed=64 ok=true sekarang=64
+API fps=99.5 (300 frame dalam 3.01 dtk) 
+API fps=99.5 (300 frame dalam 3.01 dtk)
+API selesai 
+API selesai
+(rc=0)
+=== varian f_sl ===
+API varian=ser sub=file 
+API varian=ser sub=file
+API createSaveState ok=true tipe=table 
+API createSaveState ok=true tipe=table
+API len ok=true n=21123376 
+API len ok=true n=21123376
+API tostring ok=true panjang=21123376 
+API tostring ok=true panjang=21123376
+API byte_awal=10,27,10,23,80,67,83,88 
+API byte_awal=10,27,10,23,80,67,83,88
+API ram_simpan=4253777119 
+API ram_simpan=4253777119
+API berkas_ukuran=21123376 
+API berkas_ukuran=21123376
+API ram_sebelum_muat=3833408575 beda_dari_simpan=true 
+API ram_sebelum_muat=3833408575 beda_dari_simpan=true
+API open READ ok=true mode=sl 
+API open READ ok=true mode=sl
+API read tipe=cdata ok=true len=21123376 
+API read tipe=cdata ok=true len=21123376
+API muat(berkas) mulai 
+API muat(berkas) mulai
+API muat selesai ok=false string src:corepcsxffi.lua:255: loadSaveState: requires an object as input 
+API muat selesai ok=false string src:corepcsxffi.lua:255: loadSaveState: requires an object as input
+API ram_sesudah_muat=3833408575 sama_dengan_simpan=false 
+API ram_sesudah_muat=3833408575 sama_dengan_simpan=false
+(rc=139)
+=== varian f_hb ===
+API varian=ser sub=file 
+API varian=ser sub=file
+API createSaveState ok=true tipe=table 
+API createSaveState ok=true tipe=table
+API len ok=true n=21123376 
+API len ok=true n=21123376
+API tostring ok=true panjang=21123376 
+API tostring ok=true panjang=21123376
+API byte_awal=10,27,10,23,80,67,83,88 
+API byte_awal=10,27,10,23,80,67,83,88
+API ram_simpan=4253777119 
+API ram_simpan=4253777119
+API berkas_ukuran=21123376 
+API berkas_ukuran=21123376
+API ram_sebelum_muat=3833408575 beda_dari_simpan=true 
+API ram_sebelum_muat=3833408575 beda_dari_simpan=true
+API open READ ok=true mode=hb 
+API open READ ok=true mode=hb
+API muat(berkas) mulai 
+API muat(berkas) mulai
+API muat selesai ok=true nil 
+API muat selesai ok=true nil
+API ram_sesudah_muat=4253777119 sama_dengan_simpan=true 
+API ram_sesudah_muat=4253777119 sama_dengan_simpan=true
+API beat n=1 ram=4253777119 cyc=16889028ULL 
+API beat n=1 ram=4253777119 cyc=16889028ULL
+API vsync2 n=1 
+API vsync2 n=1
+API vsync2 n=2 
+API vsync2 n=2
+API vsync2 n=3 
+API vsync2 n=3
+API selesai2 
+API selesai2
+(rc=134)
