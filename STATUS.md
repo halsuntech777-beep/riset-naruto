@@ -164,3 +164,16 @@ Target: simpan state di frame 24000 (jadwal inputs/inputs_story3.txt), muat kemb
 - [TERAMATI] Dari gambar (run s1shot, jadwal `inputs/s1_shot.txt`, frame 24100/24790/25000/25400/25700/26000): layar yang "macet" adalah dialog ya/tidak berteks Jepang "結界をレベルアップしますか？" (naikkan level barrier?) dengan pilihan はい/いいえ; HUD: P1 Naruto 4640, P2 Mizuki 1680. Setelah CROSS di 24800: animasi efek, P2 jadi 1530, angka pada gem petak 100 (24790/25400) -> 70 berkedip (25700) -> 220 (26000). [DUGAAN] CROSS memilih はい; P2 membayar 150 untuk naik level barrier (nilai gem 100 -> 220); pemain mana yang giliran belum dipastikan.
 - [BELUM] Analisis ronde 3 (`hasil/r3*_*`: dasar prefix+CROSS@24800, kandidat tombol di 25700; bandingkan dengan r3NONE: frame divergensi pertama, besar sd, CHG). Papan 1 tamat, stage 2 Party Mode, aturan angka baru, dan biaya/efek level-up lengkap masih belum.
 - Batas uji muat-state tetap 6/6 (tidak dipakai). Ingatkan pemilik merevoke token di akhir sesi.
+
+## Sesi s2 (chat baru): analisis ronde 3 + tangkapan layar dengan kunci baru
+- Kunci RSA baru dibuat (privat hanya di sandbox, TIDAK di repo); `ci/shot_pub.pem` diganti. Gambar lama tak terbaca.
+- [TERAMATI] Ronde 3 (`hasil/r3*_*`, 14 tombol tunggal di 25700 vs r3NONE): hash layar identik dengan kontrol di SEMUA sampel (25600-26600), CHG sama, maxsd sama (35490). Tombol di frame 25700 tidak berpengaruh pada satu kandidat pun. Penjelasan dari gambar: 25700 masih di tengah animasi/pesan, bukan di dialog yang menunggu tombol.
+- [TERAMATI] Run s2shot (jadwal `inputs/s2_shot.txt`, prefix + CROSS@24800, SHOT 25500..26600; gambar didekripsi di sandbox):
+  - 25500: gem petak 100, chakra P2 1680 (HUD: Naruto 4640, Mizuki 1680).
+  - 25650/25700: efek partikel, chakra Mizuki 1530, angka kecil 70.
+  - 25800: kotak pesan 「結界レベルが2になりました。」 (level barrier jadi 2), gem 220.
+  - 25950: dialog Mizuki 「オレさまに勝てるか？ ククククク・・・」.
+  - 26200-26600: dialog Naruto 「いくぞ、いくぞ、いくぞぉ」 menunggu tombol (indikator merah di kotak); layar statis, sd ~1000-2000 (derau animasi idle).
+- [TERAMATI -> lebih kuat dari DUGAAN lama] CROSS@24800 memilih はい; P2 (Mizuki) membayar 150 chakra (1680 -> 1530); barrier petaknya naik ke level 2; nilai gem 100 -> 220.
+- [BELUM] Apa yang terjadi sesudah dialog Naruto dibuang (roulette giliran Naruto?).
+- Langkah: run paralel s3A/s3B/s3C (CROSS@26300 sekali / +26500 / +26700), SHOT tiap ~300 frame sampai 28200.
