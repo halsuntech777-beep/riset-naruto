@@ -141,7 +141,7 @@ PYEOF
     }
     echo "mode bantuan selesai"; exit 0
   fi
-  if [ "${MODUS:-}" = "xs" ]; then  # state lintas PROSES: penulis simpan state sementara -> pembaca (proses baru) memuat; state tidak keluar dari runner
+  if [ "${MODUS:-}" = "xs" ] || [ "${MODUS:-}" = "xb" ]; then  # state lintas PROSES: penulis simpan state sementara -> pembaca (proses baru) memuat; state tidak keluar dari runner
     run_emu(){ set +e; xvfb-run -a -s "-screen 0 1280x720x24" timeout -k 20 "$2" env LD_PRELOAD="$W/shim243.so" LD_LIBRARY_PATH="$PWD/usr/lib" \
       usr/bin/pcsx-redux -cli -noupdate -interpreter -softgpu -debugger -fastboot -loadiso "$W/game/naruto.cue" -run -dofile "$R/redux/lua_mine/probe.lua" > "$1" 2>&1; XRC=$?; set -e; return 0; }
     F='^(probe siap|POKE|ORPOKE|CHG|HSH|SVS|XS|TIME)'
@@ -150,7 +150,18 @@ PYEOF
     grep -aE "$F" "$W/emu_w.log" | head -n 3000 > "$D/chg_w.log" || true
     echo "penulis rc=$rcw detik=$((t1-t0)) state_bytes=$(stat -c %s "$W/state.bin" 2>/dev/null || echo 0)" > "$D/ringkasan.txt"
     export STATEOUT=""
-    if [ -s "$W/state.bin" ]; then
+    if [ -s "$W/state.bin" ] && [ "$MODUS" = "xb" ]; then
+      python3 "$R/ci/pbsplit.py" struct "$W/state.bin" | head -n 400 > "$D/pb_struct.txt" || true
+      PATHS=$(python3 "$R/ci/pbsplit.py" list "$W/state.bin" 150); echo "jalur: $PATHS" >> "$D/ringkasan.txt"
+      : > "$D/bisect.txt"
+      for p in 0 $PATHS; do
+        python3 "$R/ci/pbsplit.py" drop "$W/state.bin" "$W/var.bin" "$p" || { echo "$p gagal_drop" >> "$D/bisect.txt"; continue; }
+        export STATEIN="$W/var.bin" LSITE=top HFROM=24000 HSTEP=20 MAXF=24100
+        run_emu "$W/emu_v.log" 60
+        echo "drop=$p ukuran=$(stat -c %s "$W/var.bin") rc=$XRC muat_selesai=$(grep -ac 'XS muat selesai ok=true' "$W/emu_v.log") sesudah_muat=$(grep -ac '^XS sesudah_muat' "$W/emu_v.log") HSH=$(grep -ac '^HSH' "$W/emu_v.log")" >> "$D/bisect.txt"
+        rm -f "$W/var.bin"
+      done
+    elif [ -s "$W/state.bin" ]; then
       for site in top nt vs1; do
         export STATEIN="$W/state.bin" LSITE=$site HFROM=24000 HSTEP=20
         t0=$(date +%s); run_emu "$W/emu_r_$site.log" 400; t1=$(date +%s)
