@@ -88,15 +88,10 @@ jalankan)
   if [ "${MODUS:-}" = "guiuji" ]; then  # mode GUI (tanpa -cli) + Mesa llvmpipe, TANPA game: hanya angka/tipe + ekor log emulator
     : > "$D/api_uji.txt"
     export LIBGL_ALWAYS_SOFTWARE=1 GALLIUM_DRIVER=llvmpipe MESA_GL_VERSION_OVERRIDE=4.5 MESA_GLSL_VERSION_OVERRIDE=450
-    echo "=== pustaka GL/SDL bawaan AppImage (nama saja) ===" >> "$D/api_uji.txt"
-    ls usr/lib 2>/dev/null | grep -aiE "^lib(GL|GLX|EGL|OpenGL|GLdispatch|glfw|SDL|X11|xcb)[A-Za-z_0-9-]*\.so" | head -n 40 >> "$D/api_uji.txt" || true
-    ls usr/lib/dri usr/lib/x86_64-linux-gnu/dri 2>/dev/null | head -n 5 >> "$D/api_uji.txt" || true
-    H=/usr/lib/x86_64-linux-gnu
-    for v in "tanpa_preload|" "preload_GL_host|$H/libGL.so.1:$H/libGLX.so.0:$H/libGLdispatch.so.0:$H/libGLX_mesa.so.0:$H/libEGL.so.1" "gl_host_dulu|HOSTFIRST"; do
-      n=${v%%|*}; pl=${v#*|}; echo "=== varian $n ===" >> "$D/api_uji.txt"
-      if [ "$pl" = "HOSTFIRST" ]; then LP="$H:$PWD/usr/lib"; PRE="$W/shim243.so"; else LP="$PWD/usr/lib"; PRE="$W/shim243.so${pl:+:$pl}"; fi
+    for v in "egl_x11|SDL_VIDEO_FORCE_EGL=1" "egl_x11_x11drv|SDL_VIDEO_FORCE_EGL=1 SDL_VIDEODRIVER=x11" "offscreen|SDL_VIDEODRIVER=offscreen" "offscreen_egl|SDL_VIDEODRIVER=offscreen SDL_VIDEO_FORCE_EGL=1"; do
+      n=${v%%|*}; ev=${v#*|}; echo "=== varian $n ($ev) ===" >> "$D/api_uji.txt"
       set +e
-      xvfb-run -a -s "-screen 0 1280x720x24 +extension GLX +render -noreset" timeout -k 5 100 env LD_PRELOAD="$PRE" LD_LIBRARY_PATH="$LP" \
+      xvfb-run -a -s "-screen 0 1280x720x24 +extension GLX +render -noreset" timeout -k 5 100 env $ev LD_PRELOAD="$W/shim243.so" LD_LIBRARY_PATH="$PWD/usr/lib" \
         usr/bin/pcsx-redux -noupdate -interpreter -softgpu -run -dofile "$R/redux/lua_mine/guiuji.lua" > "$W/gui_$n.log" 2>&1
       rc=$?; set -e
       grep -a '^API ' "$W/gui_$n.log" | sort -u | tr -cd '\11\12\40-\176' | cut -c1-300 | head -n 30 >> "$D/api_uji.txt" || true
