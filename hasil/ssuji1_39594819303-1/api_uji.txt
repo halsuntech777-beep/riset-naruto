@@ -1,0 +1,137 @@
+=== varian cfg ===
+API varian=cfg 
+API varian=cfg
+API == PCSX.settings tipe=table 
+API == PCSX.settings tipe=table
+API PCSX.settings.emulator.Debug Debug=true DemangledSymbols=true FirstChanceException=7408 GdbLog:string GdbManifest=true GdbServer=false GdbServerPort=3333 GdbServerTrace=false KernelCallA0_00_1f=4294967295 KernelCallA0_20_3f=4294967295 KernelCallA0_40_5f=4294967295 KernelCallA0_60_7f=4294967295 KernelCallA0_80_9f=4294967295 KernelCallA0_a0_bf=4294967295 KernelCallB0_00_1f=4294967295 KernelCallB0_20_3f=42949 
+API PCSX.settings.emulator.Debug Debug=true DemangledSymbols=true FirstChanceException=7408 GdbLog:string GdbManifest=true GdbServer=false GdbServerPort=3333 GdbServerTrace=false KernelCallA0_00_1f=4294967295 KernelCallA0_20_3f=4294967295 KernelCallA0_40_5f=4294967295 KernelCallA0_60_7f=4294967295 KernelCallA0_80_9f=4294967295 KernelCallA0_a0_bf=4294967295 KernelCallB0_00_1f=4294967295 KernelCallB0_20_3f=42949
+API PCSX.settings.emulator.Debug 67295 KernelCallB0_40_5f=4294967295 KernelCallC0_00_1f=4294967295 KernelLog=false LoggingCDROM=false PCdrv=false PCdrvBase:string SIO1Client=false SIO1ClientPort=6699 SIO1Clienthost:string SIO1Mode:string SIO1Server=false SIO1ServerPort=6699 SkipISR=false Trace=false WebServer=false WebServerPort=8080 
+API PCSX.settings.emulator.Debug 67295 KernelCallB0_40_5f=4294967295 KernelCallC0_00_1f=4294967295 KernelLog=false LoggingCDROM=false PCdrv=false PCdrvBase:string SIO1Client=false SIO1ClientPort=6699 SIO1Clienthost:string SIO1Mode:string SIO1Server=false SIO1ServerPort=6699 SkipISR=false Trace=false WebServer=false WebServerPort=8080
+API PCSX.settings.emulator 8Megs=false AutoUpdate=false AutoVideo=true Bios:string BiosPath:string BnWMdec=false Debug:table Dither=1 Dynarec=false EXP1BrowsePath:string EXP1Filepath:string FastBoot=false FullCaching=false GUITheme=0 HardwareRenderer=false IsoPath:string KioskMode=false LinearFiltering=true Locale:string MSAA=1 MapBrowsePath:string Mcd1:string Mcd1Inserted=true Mcd1Pocketstation=false Mc 
+API PCSX.settings.emulator 8Megs=false AutoUpdate=false AutoVideo=true Bios:string BiosPath:string BnWMdec=false Debug:table Dither=1 Dynarec=false EXP1BrowsePath:string EXP1Filepath:string FastBoot=false FullCaching=false GUITheme=0 HardwareRenderer=false IsoPath:string KioskMode=false LinearFiltering=true Locale:string MSAA=1 MapBrowsePath:string Mcd1:string Mcd1Inserted=true Mcd1Pocketstation=false Mc
+API PCSX.settings.emulator d2:string Mcd2Inserted=true Mcd2Pocketstation=false MemoryFillValue=0 PIOConnected=false PpfDir:string PsxExe:string RCntFix=false ReportGLErrors=false ReportGLErrorsSeverity=1 ShownAutoUpdateConfig=false SpuIrq=false UseCachedDithering=false Video:string Xa=true 
+API PCSX.settings.emulator d2:string Mcd2Inserted=true Mcd2Pocketstation=false MemoryFillValue=0 PIOConnected=false PpfDir:string PsxExe:string RCntFix=false ReportGLErrors=false ReportGLErrorsSeverity=1 ShownAutoUpdateConfig=false SpuIrq=false UseCachedDithering=false Video:string Xa=true
+API PCSX.settings.pads.1 Connected=true Controller_PadCircle=1 Controller_PadCross=0 Controller_PadDown=12 Controller_PadL1=9 Controller_PadL2=100 Controller_PadL3=7 Controller_PadLeft=13 Controller_PadR1=10 Controller_PadR2=101 Controller_PadR3=8 Controller_PadRight=14 Controller_PadSelect=4 Controller_PadSquare=2 Controller_PadSstart=6 Controller_PadTriangle=3 Controller_PadUp=11 DeviceType:string ID 
+API PCSX.settings.pads.1 Connected=true Controller_PadCircle=1 Controller_PadCross=0 Controller_PadDown=12 Controller_PadL1=9 Controller_PadL2=100 Controller_PadL3=7 Controller_PadLeft=13 Controller_PadR1=10 Controller_PadR2=101 Controller_PadR3=8 Controller_PadRight=14 Controller_PadSelect=4 Controller_PadSquare=2 Controller_PadSstart=6 Controller_PadTriangle=3 Controller_PadUp=11 DeviceType:string ID
+API PCSX.settings.pads.1 =0 Keyboard_AnalogMode=0 Keyboard_PadCircle=7 Keyboard_PadCross=27 Keyboard_PadDown=81 Keyboard_PadL1=20 Keyboard_PadL2=4 Keyboard_PadL3=26 Keyboard_PadLeft=80 Keyboard_PadR1=21 Keyboard_PadR2=9 Keyboard_PadR3=23 Keyboard_PadRight=79 Keyboard_PadSelect=42 Keyboard_PadSquare=29 Keyboard_PadSstart=40 Keyboard_PadTriangle=22 Keyboard_PadUp=82 MouseSensitivityX=0.5 MouseSensitivity 
+API PCSX.settings.pads.1 =0 Keyboard_AnalogMode=0 Keyboard_PadCircle=7 Keyboard_PadCross=27 Keyboard_PadDown=81 Keyboard_PadL1=20 Keyboard_PadL2=4 Keyboard_PadL3=26 Keyboard_PadLeft=80 Keyboard_PadR1=21 Keyboard_PadR2=9 Keyboard_PadR3=23 Keyboard_PadRight=79 Keyboard_PadSelect=42 Keyboard_PadSquare=29 Keyboard_PadSstart=40 Keyboard_PadTriangle=22 Keyboard_PadUp=82 MouseSensitivityX=0.5 MouseSensitivity
+API PCSX.settings.pads.1 Y=0.5 PadType:string 
+API PCSX.settings.pads.1 Y=0.5 PadType:string
+API PCSX.settings.pads.2 Connected=false Controller_PadCircle=1 Controller_PadCross=0 Controller_PadDown=12 Controller_PadL1=9 Controller_PadL2=100 Controller_PadL3=7 Controller_PadLeft=13 Controller_PadR1=10 Controller_PadR2=101 Controller_PadR3=8 Controller_PadRight=14 Controller_PadSelect=4 Controller_PadSquare=2 Controller_PadSstart=6 Controller_PadTriangle=3 Controller_PadUp=11 DeviceType:string I 
+API PCSX.settings.pads.2 Connected=false Controller_PadCircle=1 Controller_PadCross=0 Controller_PadDown=12 Controller_PadL1=9 Controller_PadL2=100 Controller_PadL3=7 Controller_PadLeft=13 Controller_PadR1=10 Controller_PadR2=101 Controller_PadR3=8 Controller_PadRight=14 Controller_PadSelect=4 Controller_PadSquare=2 Controller_PadSstart=6 Controller_PadTriangle=3 Controller_PadUp=11 DeviceType:string I
+API PCSX.settings.pads.2 D=0 Keyboard_AnalogMode=0 Keyboard_PadCircle=7 Keyboard_PadCross=27 Keyboard_PadDown=81 Keyboard_PadL1=20 Keyboard_PadL2=4 Keyboard_PadL3=26 Keyboard_PadLeft=80 Keyboard_PadR1=21 Keyboard_PadR2=9 Keyboard_PadR3=23 Keyboard_PadRight=79 Keyboard_PadSelect=42 Keyboard_PadSquare=29 Keyboard_PadSstart=40 Keyboard_PadTriangle=22 Keyboard_PadUp=82 MouseSensitivityX=0.5 MouseSensitivit 
+API PCSX.settings.pads.2 D=0 Keyboard_AnalogMode=0 Keyboard_PadCircle=7 Keyboard_PadCross=27 Keyboard_PadDown=81 Keyboard_PadL1=20 Keyboard_PadL2=4 Keyboard_PadL3=26 Keyboard_PadLeft=80 Keyboard_PadR1=21 Keyboard_PadR2=9 Keyboard_PadR3=23 Keyboard_PadRight=79 Keyboard_PadSelect=42 Keyboard_PadSquare=29 Keyboard_PadSstart=40 Keyboard_PadTriangle=22 Keyboard_PadUp=82 MouseSensitivityX=0.5 MouseSensitivit
+API PCSX.settings.pads.2 yY=0.5 PadType:string 
+API PCSX.settings.pads.2 yY=0.5 PadType:string
+API PCSX.settings.pads 1:table 2:table 
+API PCSX.settings.pads 1:table 2:table
+API PCSX.settings.spu Backend:string Device:string Interp=2 KeyOnDelay=6 Mono=false Mute=false Speed=1 Streaming=true UseNullSync=false Volume=3 
+API PCSX.settings.spu Backend:string Device:string Interp=2 KeyOnDelay=6 Mono=false Mute=false Speed=1 Streaming=true UseNullSync=false Volume=3
+API PCSX.settings emulator:table pads:table spu:table 
+API PCSX.settings emulator:table pads:table spu:table
+API == PCSX.GUI tipe=table 
+API == PCSX.GUI tipe=table
+API PCSX.GUI jumpToMemory:function jumpToPC:function 
+API PCSX.GUI jumpToMemory:function jumpToPC:function
+API == PCSX.Misc tipe=table 
+API == PCSX.Misc tipe=table
+API PCSX.Misc uclGetOverlapMargin:function uclPack:function uclUnpack:function writeUclDecomp:function 
+API PCSX.Misc uclGetOverlapMargin:function uclPack:function uclUnpack:function writeUclDecomp:function
+API == PCSX.SPU tipe=table 
+API == PCSX.SPU tipe=table
+API PCSX.SPU playAudio:function 
+API PCSX.SPU playAudio:function
+API == PCSX.GPU tipe=table 
+API == PCSX.GPU tipe=table
+API PCSX.GPU.DumpPlayer getFrame:function getVRAM:function load:function rewind:function step:function unload:function 
+API PCSX.GPU.DumpPlayer getFrame:function getVRAM:function load:function rewind:function step:function unload:function
+API PCSX.GPU DumpPlayer:table getDumpFrames:function getGuestFPS:function getVRAM:function isDumpArmed:function isDumping:function startDump:function stopDump:function takeScreenShot:function 
+API PCSX.GPU DumpPlayer:table getDumpFrames:function getGuestFPS:function getVRAM:function isDumpArmed:function isDumping:function startDump:function stopDump:function takeScreenShot:function
+API == PCSX.Events tipe=table 
+API == PCSX.Events tipe=table
+API PCSX.Events createEventListener:function 
+API PCSX.Events createEventListener:function
+API fps_awal=59.6 (300 frame dalam 5.04 dtk) 
+API fps_awal=59.6 (300 frame dalam 5.04 dtk)
+API nama_diubah=0 
+API nama_diubah=0
+API fps_sesudah=59.4 (300 frame dalam 5.05 dtk)
+API selesai 
+API selesai
+(rc=0)
+=== varian ser_file ===
+API varian=ser sub=file 
+API varian=ser sub=file
+API createSaveState ok=true tipe=table 
+API createSaveState ok=true tipe=table
+API len ok=true n=21123376 
+API len ok=true n=21123376
+API tostring ok=true panjang=21123376 
+API tostring ok=true panjang=21123376
+API byte_awal=10,27,10,23,80,67,83,88 
+API byte_awal=10,27,10,23,80,67,83,88
+API ram_simpan=4253777119 
+API ram_simpan=4253777119
+API berkas_ukuran=21123376 
+API berkas_ukuran=21123376
+API ram_sebelum_muat=3833408575 beda_dari_simpan=true 
+API ram_sebelum_muat=3833408575 beda_dari_simpan=true
+API open READ ok=true 
+API open READ ok=true
+API muat(berkas) mulai 
+API muat(berkas) mulai
+API muat selesai ok=true nil 
+API muat selesai ok=true nil
+API ram_sesudah_muat=4253777119 sama_dengan_simpan=true 
+API ram_sesudah_muat=4253777119 sama_dengan_simpan=true
+(rc=124)
+=== varian ser_zr ===
+API varian=ser sub=zr 
+API varian=ser sub=zr
+API createSaveState ok=true tipe=table 
+API createSaveState ok=true tipe=table
+API len ok=true n=21123376 
+API len ok=true n=21123376
+API tostring ok=true panjang=21123376 
+API tostring ok=true panjang=21123376
+API byte_awal=10,27,10,23,80,67,83,88 
+API byte_awal=10,27,10,23,80,67,83,88
+API ram_simpan=4253777119 
+API ram_simpan=4253777119
+API berkas_ukuran=21123376 
+API berkas_ukuran=21123376
+API ram_sebelum_muat=3833408575 beda_dari_simpan=true 
+API ram_sebelum_muat=3833408575 beda_dari_simpan=true
+API zReader ok=true  
+API zReader ok=true 
+API muat(zReader) mulai 
+API muat(zReader) mulai
+(rc=139)
+=== varian ser_buf ===
+API varian=ser sub=buf 
+API varian=ser sub=buf
+API createSaveState ok=true tipe=table 
+API createSaveState ok=true tipe=table
+API len ok=true n=21123376 
+API len ok=true n=21123376
+API tostring ok=true panjang=21123376 
+API tostring ok=true panjang=21123376
+API byte_awal=10,27,10,23,80,67,83,88 
+API byte_awal=10,27,10,23,80,67,83,88
+API ram_simpan=4253777119 
+API ram_simpan=4253777119
+API berkas_ukuran=21123376 
+API berkas_ukuran=21123376
+API ram_sebelum_muat=3833408575 beda_dari_simpan=true 
+API ram_sebelum_muat=3833408575 beda_dari_simpan=true
+API NewLuaBuffer ok=true tipe=cdata 
+API NewLuaBuffer ok=true tipe=cdata
+API isi_buffer ok=true 
+API isi_buffer ok=true
+API muat(buffer) mulai 
+API muat(buffer) mulai
+API muat selesai ok=false string src:corepcsxffi.lua:255: loadSaveState: requires an object as input 
+API muat selesai ok=false string src:corepcsxffi.lua:255: loadSaveState: requires an object as input
+API ram_sesudah_muat=3833408575 sama_dengan_simpan=false 
+API ram_sesudah_muat=3833408575 sama_dengan_simpan=false
+(rc=139)
