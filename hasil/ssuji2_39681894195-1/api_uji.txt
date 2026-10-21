@@ -1,0 +1,74 @@
+=== varian spdN ===
+API set spu.UseNullSync=true ok=true sekarang=true 
+API set spu.UseNullSync=true ok=true sekarang=true
+(rc=137)
+=== varian spdS ===
+API set spu.Speed=4 ok=true sekarang=4 
+API set spu.Speed=4 ok=true sekarang=4
+API fps=124.3 (300 frame dalam 2.41 dtk) 
+API fps=124.3 (300 frame dalam 2.41 dtk)
+API selesai 
+API selesai
+(rc=0)
+=== varian spdNS ===
+API set spu.UseNullSync=true ok=true sekarang=true 
+API set spu.UseNullSync=true ok=true sekarang=true
+API set spu.Streaming=nil ok=true sekarang=false 
+API set spu.Streaming=nil ok=true sekarang=false
+(rc=137)
+=== varian f_vs ===
+API varian=ser sub=file 
+API varian=ser sub=file
+API createSaveState ok=true tipe=table 
+API createSaveState ok=true tipe=table
+API len ok=true n=21123304 
+API len ok=true n=21123304
+API tostring ok=true panjang=21123304 
+API tostring ok=true panjang=21123304
+API byte_awal=10,27,10,23,80,67,83,88 
+API byte_awal=10,27,10,23,80,67,83,88
+API ram_simpan=4253777119 
+API ram_simpan=4253777119
+API berkas_ukuran=21123304 
+API berkas_ukuran=21123304
+API ram_sebelum_muat=3833408575 beda_dari_simpan=true 
+API ram_sebelum_muat=3833408575 beda_dari_simpan=true
+API open READ ok=true mode=vs 
+API open READ ok=true mode=vs
+API muat(berkas) mulai 
+API muat(berkas) mulai
+API muat selesai ok=true nil 
+API muat selesai ok=true nil
+API ram_sesudah_muat=4253777119 sama_dengan_simpan=true 
+API ram_sesudah_muat=4253777119 sama_dengan_simpan=true
+(rc=124)
+=== varian f_pr ===
+API varian=ser sub=file 
+API varian=ser sub=file
+API createSaveState ok=true tipe=table 
+API createSaveState ok=true tipe=table
+API len ok=true n=21123304 
+API len ok=true n=21123304
+API tostring ok=true panjang=21123304 
+API tostring ok=true panjang=21123304
+API byte_awal=10,27,10,23,80,67,83,88 
+API byte_awal=10,27,10,23,80,67,83,88
+API ram_simpan=4253777119 
+API ram_simpan=4253777119
+API berkas_ukuran=21123304 
+API berkas_ukuran=21123304
+API ram_sebelum_muat=3833408575 beda_dari_simpan=true 
+API ram_sebelum_muat=3833408575 beda_dari_simpan=true
+API open READ ok=true mode=pr 
+API open READ ok=true mode=pr
+API pause ok=true 
+API pause ok=true
+API muat(berkas) mulai 
+API muat(berkas) mulai
+API resume ok=true 
+API resume ok=true
+API muat selesai ok=true nil 
+API muat selesai ok=true nil
+API ram_sesudah_muat=4253777119 sama_dengan_simpan=true 
+API ram_sesudah_muat=4253777119 sama_dengan_simpan=true
+(rc=124)
