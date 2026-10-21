@@ -1,0 +1,8 @@
+jadwal=inputs/s4_F.txt maxf=28400 pokes=9000@70EB8@4@5000,13000@70EB8@4@5000 orpokes=14000-36000@70EBC@4@0x3000 dumps=
+rc_emulator=0 (0=selesai MAXF, 124=timeout) detik=484 baris_emu_log=303
+md5_chg_log=00d6756fe6de10faa8b2c2674d22eab9 jumlah_CHG=83
+--- nilai terakhir per alamat pantau ---
+CHG f=27119 A1: 4480 -> 4380 
+CHG f=27119 B1: 4480 -> 4380 
+CHG f=28167 A2: 1680 -> 1780 
+CHG f=28167 B2: 1680 -> 1780 
