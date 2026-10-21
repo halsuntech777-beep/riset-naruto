@@ -30,6 +30,8 @@ local frame, last = 0, {}
 local polls = {}
 for i, a in ipairs({ 0x1EFBBC, 0x1EFC4C, 0x1EFCDC, 0x1EFD6C }) do polls[#polls+1] = { a, 'A' .. i } end
 for i, a in ipairs({ 0x70EB8, 0x70F6C, 0x71020, 0x710D4 }) do polls[#polls+1] = { a, 'B' .. i } end
+-- posisi (struct +112/+116): P1 0x70F28/0x70F2C, P2 0x70FDC/0x70FE0 (angka saja)
+for i, a in ipairs({ 0x70F28, 0x70F2C, 0x70FDC, 0x70FE0 }) do polls[#polls+1] = { a, 'P' .. i } end
 -- HASH (hanya angka keluar): tiap HSTEP frame sejak HFROM cetak "HSH f= ram=" (hash RAM penuh) dan "HSF f= fb= n=" (hash framebuffer).
 -- Berkas screenshot sementara ditulis di OUTDIR (runner), dibaca, di-hash, lalu dihapus; tidak pernah keluar dari runner.
 local HFROM = tonumber(os.getenv('HFROM') or '19000')
