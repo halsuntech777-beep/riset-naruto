@@ -1,0 +1,5 @@
+Loading memory card /home/runner/.config/pcsx-redux/memcard1.mcd
+Loading memory card /home/runner/.config/pcsx-redux/memcard2.mcd
+SVE XS muat mulai site=top tag=top
+timeout: the monitored command dumped core
+Segmentation fault
