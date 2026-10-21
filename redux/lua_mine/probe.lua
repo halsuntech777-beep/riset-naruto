@@ -189,6 +189,22 @@ local function svsample(fr)
   end)
   if not ok then print('SVS scr f=' .. fr .. ' galat=' .. tostring(err):gsub('[^%w%s_%.:]', ''):sub(1, 80)) end
 end
+-- MODUS=svs: tangkapan layar mentah HANYA ke folder sementara runner (OUTDIR), pada frame di header jadwal "# SHOT f1 f2 ...".
+-- Runner lalu mengenkripsi (kunci publik) dan menghapus mentahnya; log hanya mencetak angka (w,h,bpp,len).
+local shotf = {}
+if SVSON then for line in io.lines(os.getenv('INPUTS')) do local l = line:match('^#%s*SHOT%s+([%d%s]+)$'); if l then for f in l:gmatch('%d+') do shotf[tonumber(f)] = true end end end end
+local function svshot(fr)
+  local ok, err = pcall(function()
+    local ss = PCSX.GPU.takeScreenShot()
+    local str = tostring(ss.data)
+    local w, h = tonumber(tostring(ss.width)), tonumber(tostring(ss.height))
+    local bpp = -1; pcall(function() bpp = tonumber(tostring(ss.bpp)) or -1 end)
+    local fh = io.open(string.format('%s/s%05d.raw', OUT, fr), 'wb'); fh:write(str); fh:close()
+    local fm = io.open(string.format('%s/s%05d.meta', OUT, fr), 'w'); fm:write(string.format('%d %d %d %d', w, h, bpp, #str)); fm:close()
+    print(string.format('SVS shot f=%d w=%d h=%d bpp=%d len=%d', fr, w, h, bpp, #str))
+  end)
+  if not ok then print('SVS shot f=' .. fr .. ' galat=' .. tostring(err):gsub('[^%w%s_%.:]', ''):sub(1, 80)) end
+end
 listener = PCSX.Events.createEventListener('GPU::Vsync', function()
   frame = frame + 1
   for _, pk in ipairs(pokes) do
@@ -231,6 +247,7 @@ listener = PCSX.Events.createEventListener('GPU::Vsync', function()
   if SVSON and frame >= SVSFROM and (((frame - SVSFROM) % SVSN == 0) or svsset[frame]) then
     local fr = frame; PCSX.nextTick(function() svsample(fr) end)
   end
+  if SVSON and shotf[frame] then local fr = frame; PCSX.nextTick(function() svshot(fr) end) end
   if not SVSON and frame >= HFROM and (frame - HFROM) % HSTEP == 0 then
     local ok, h = pcall(hram)
     print(string.format('HSH f=%d ram=%d', frame, ok and h or -1))

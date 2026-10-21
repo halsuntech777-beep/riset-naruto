@@ -134,6 +134,7 @@ PYEOF
   grep -aE '^(probe siap|POKE|ORPOKE|CHG|DUMP|HSH|HSF|SVS)' "$W/emu.log" | head -n 5000 > "$D/chg.log" || true
   tail -n 30 "$W/emu.log" | tr -cd '\11\12\40-\176' | cut -c1-200 > "$D/emu_tail.txt"
   if [ -n "${DUMPS:-}" ]; then python3 "$R/ci/ekstrak_dump.py" "$OUT" "$D/dump_angka.csv" "$ADDRS" || true; fi
+  if ls "$OUT"/s*.raw >/dev/null 2>&1; then python3 "$R/ci/enkripsi_shot.py" "$OUT" "$D" "$R/ci/shot_pub.pem" | tee -a "$D/chg.log" | sed "s/^/  /" || true; fi  # tangkapan layar: HANYA terenkripsi (kunci publik) keluar
   rm -rf "$OUT"/*   # dump/screenshot mentah tidak pernah keluar dari runner
   {
     echo "jadwal=$JADWAL maxf=$MAXF pokes=${POKES:-} orpokes=${ORPOKES:-} dumps=${DUMPS:-}"
@@ -149,6 +150,8 @@ hasil)
   [ -d "$D" ] || { echo "tidak ada hasil"; exit 0; }
   bad=$(find "$D" -type f \( -size +300k -o -not -regex '.*\.\(txt\|csv\|log\)' \)) || true
   [ -z "$bad" ] || { echo "Berkas terlarang/terlalu besar, TIDAK di-commit:"; echo "$bad"; exit 1; }
+  for f in "$D"/shot_*; do [ -e "$f" ] || continue; [[ "$f" =~ /shot_[0-9]{5}\.enc\.txt$ ]] && [ "$(head -c4 "$f")" = "ENC1" ] || { echo "shot tidak terenkripsi/tidak valid, TIDAK di-commit: $f"; exit 1; }; done
+  [ "$(ls "$D"/shot_* 2>/dev/null | wc -l)" -le 8 ] || { echo "terlalu banyak shot"; exit 1; }
   git config user.name "emulator-runner"; git config user.email "actions@users.noreply.github.com"
   git add "$D"; git commit -q -m "hasil run $ID ($LABEL)"
   for i in 1 2 3 4 5 6 7 8 9 10; do git pull --rebase -q origin "$GITHUB_REF_NAME" && git push -q origin "HEAD:$GITHUB_REF_NAME" && { echo "push ok"; break; }; sleep $((RANDOM % 9 + 3)); done
