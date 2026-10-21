@@ -1,0 +1,50 @@
+=== varian egl ===
+API C createSaveState ok=true
+API C muat mulai
+API C muat selesai ok=true
+API T f=00040 t=0.92
+API T f=00080 t=1.53
+API T f=00120 t=2.12
+API T f=00160 t=2.82
+API T f=00200 t=3.52
+API T f=00240 t=4.20
+API T f=00280 t=5.00
+API V getVRAM f=120 ok=true tipe=table
+API V getVRAM f=200 ok=true tipe=table
+API V getVRAM f=40 ok=true tipe=table
+API V ss f=120 w=640 h=478
+API V ss f=200 w=640 h=478
+API V ss f=40 w=640 h=478
+API V ss_f120 via=tostring bytes=611840 nonzero=382137 hash=3323435741
+API V ss_f200 via=tostring bytes=611840 nonzero=398825 hash=713460860
+API V ss_f40 via=tostring bytes=611840 nonzero=405865 hash=1142421948
+API V vram_f120 via=tostring bytes=1048576 nonzero=383417 hash=2988054999
+API V vram_f200 via=tostring bytes=1048576 nonzero=400105 hash=2113806405
+API V vram_f40 via=tostring bytes=1048576 nonzero=407145 hash=3378239279
+API X selesai t=5.36
+(rc=0)
+=== varian cli ===
+API C createSaveState ok=true
+API C muat mulai
+API C muat selesai ok=true
+API T f=00040 t=0.69
+API T f=00080 t=1.35
+API T f=00120 t=2.02
+API T f=00160 t=2.70
+API T f=00200 t=3.37
+API T f=00240 t=4.04
+API T f=00280 t=4.84
+API V getVRAM f=120 ok=true tipe=table
+API V getVRAM f=200 ok=true tipe=table
+API V getVRAM f=40 ok=true tipe=table
+API V ss f=120 w=640 h=478
+API V ss f=200 w=640 h=478
+API V ss f=40 w=640 h=478
+API V ss_f120 via=tostring bytes=611840 nonzero=382137 hash=3323435741
+API V ss_f200 via=tostring bytes=611840 nonzero=398825 hash=713460860
+API V ss_f40 via=tostring bytes=611840 nonzero=405865 hash=1142421948
+API V vram_f120 via=tostring bytes=1048576 nonzero=383417 hash=2988054999
+API V vram_f200 via=tostring bytes=1048576 nonzero=400105 hash=2113806405
+API V vram_f40 via=tostring bytes=1048576 nonzero=407145 hash=3378239279
+API X selesai t=5.17
+(rc=0)
