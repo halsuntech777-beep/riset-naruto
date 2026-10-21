@@ -87,7 +87,7 @@ jalankan)
   fi
   if [ "${MODUS:-}" = "ssuji" ]; then  # diagnostik TANPA game: pohon settings + kecepatan; serialisasi state ke berkas (3 cara)
     : > "$D/api_uji.txt"
-    for spec in "spdN|spd|-|-|UseNullSync=true" "spdS|spd|-|-|Speed=4" "spdNS|spd|-|-|UseNullSync=true;Streaming=false" "f_vs|ser|file|vs|-" "f_pr|ser|file|pr|-"; do
+    for spec in "spd8|spd|-|-|Speed=8" "spd16|spd|-|-|Speed=16" "spd64|spd|-|-|Speed=64" "f_sl|ser|file|sl|-" "f_hb|ser|file|hb|-"; do
       IFS='|' read -r v apiv apis apim apik <<< "$spec"; apik=${apik//;/,}; [ "$apik" = "-" ] && apik=""
       echo "=== varian $v ===" >> "$D/api_uji.txt"
       set +e

@@ -115,7 +115,19 @@ listener = PCSX.Events.createEventListener('GPU::Vsync', function()
       local M = os.getenv('APIM') or 'vs'
       local okf, fl = pcall(function() return Support.File.open(PATH) end); say('open READ ok=' .. tostring(okf) .. ' mode=' .. M)
       if M == 'pr' then say('pause ok=' .. tostring(pcall(function() PCSX.pauseEmulator() end))) end
+      if M == 'sl' then
+        local okr, sl = pcall(function() return fl:read(#saved) end)
+        say('read tipe=' .. type(sl) .. ' ok=' .. tostring(okr) .. ' len=' .. tostring(pcall(function() return #sl end) and #sl or '?'))
+        fl = sl
+      end
       say('muat(berkas) mulai'); okl, e = pcall(function() PCSX.loadSaveState(fl) end)
+      if M == 'hb' then
+        local n = 0
+        local function beat() n = n + 1; say('beat n=' .. n .. ' ram=' .. hram() .. ' cyc=' .. tostring(PCSX.getCPUCycles())); if n < 5 then PCSX.nextTick(beat) end end
+        PCSX.nextTick(beat)
+        local c2 = 0
+        local l2; l2 = PCSX.Events.createEventListener('GPU::Vsync', function() c2 = c2 + 1; if c2 <= 3 then say('vsync2 n=' .. c2) end; if c2 >= 40 then say('selesai2'); PCSX.nextTick(function() PCSX.quit(0) end) end end)
+      end
       if M == 'pr' then say('resume ok=' .. tostring(pcall(function() PCSX.resumeEmulator() end))) end
       loadedat = frame
     elseif S == 'zr' then
