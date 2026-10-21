@@ -85,18 +85,22 @@ jalankan)
     done
     echo "mode apiuji selesai"; exit 0
   fi
-  if [ "${MODUS:-}" = "guiuji" ]; then  # mode GUI (tanpa -cli) + Mesa llvmpipe, TANPA game: hanya angka/tipe + ekor log emulator
+  if [ "${MODUS:-}" = "guiuji" ]; then  # uji TANPA game: kecepatan, API GPU, bentuk screenshot, skema state; hanya nama/tipe/angka
     : > "$D/api_uji.txt"
     export LIBGL_ALWAYS_SOFTWARE=1 GALLIUM_DRIVER=llvmpipe MESA_GL_VERSION_OVERRIDE=4.5 MESA_GLSL_VERSION_OVERRIDE=450
-    for v in "egl_x11|SDL_VIDEO_FORCE_EGL=1" "egl_x11_x11drv|SDL_VIDEO_FORCE_EGL=1 SDL_VIDEODRIVER=x11" "offscreen|SDL_VIDEODRIVER=offscreen" "offscreen_egl|SDL_VIDEODRIVER=offscreen SDL_VIDEO_FORCE_EGL=1"; do
-      n=${v%%|*}; ev=${v#*|}; echo "=== varian $n ($ev) ===" >> "$D/api_uji.txt"
+    for n in egl cli; do
+      echo "=== varian $n ===" >> "$D/api_uji.txt"
       set +e
-      xvfb-run -a -s "-screen 0 1280x720x24 +extension GLX +render -noreset" timeout -k 5 100 env $ev LD_PRELOAD="$W/shim243.so" LD_LIBRARY_PATH="$PWD/usr/lib" \
-        usr/bin/pcsx-redux -noupdate -interpreter -softgpu -run -dofile "$R/redux/lua_mine/guiuji.lua" > "$W/gui_$n.log" 2>&1
+      if [ "$n" = "egl" ]; then
+        xvfb-run -a -s "-screen 0 1280x720x24 +extension GLX +render -noreset" timeout -k 5 170 env SDL_VIDEO_FORCE_EGL=1 LD_PRELOAD="$W/shim243.so" LD_LIBRARY_PATH="$PWD/usr/lib" \
+          usr/bin/pcsx-redux -noupdate -interpreter -softgpu -run -dofile "$R/redux/lua_mine/guiuji.lua" > "$W/gui_$n.log" 2>&1
+      else
+        xvfb-run -a -s "-screen 0 1280x720x24" timeout -k 5 100 env LD_PRELOAD="$W/shim243.so" LD_LIBRARY_PATH="$PWD/usr/lib" \
+          usr/bin/pcsx-redux -cli -noupdate -interpreter -softgpu -debugger -run -dofile "$R/redux/lua_mine/guiuji.lua" > "$W/gui_$n.log" 2>&1
+      fi
       rc=$?; set -e
-      grep -a '^API ' "$W/gui_$n.log" | sort -u | tr -cd '\11\12\40-\176' | cut -c1-300 | head -n 30 >> "$D/api_uji.txt" || true
+      grep -a '^API ' "$W/gui_$n.log" | sort -u | tr -cd '\11\12\40-\176' | cut -c1-700 | head -n 90 >> "$D/api_uji.txt" || true
       echo "(rc=$rc)" >> "$D/api_uji.txt"
-      tail -n 3 "$W/gui_$n.log" | tr -cd '\11\12\40-\176' | cut -c1-200 >> "$D/api_uji.txt"
     done
     echo "mode guiuji selesai"; exit 0
   fi

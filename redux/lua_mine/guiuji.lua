@@ -1,41 +1,63 @@
--- Uji mode GUI (tanpa -cli) + Mesa llvmpipe TANPA game (BIOS bawaan). Hanya angka/tipe yang dicetak (prefiks "API ").
+-- Uji tanpa game: (1) kecepatan frame, (2) nama/tipe API GPU, (3) bentuk data screenshot, (4) skema state (mencari VRAM). Hanya nama/tipe/angka.
 io.stdout:setvbuf('line')
 local ffi = require 'ffi'
-local bit = require 'bit'
-local OUT = os.getenv('OUTDIR') or '/tmp'
+ffi.cdef [[ typedef long time_t; typedef struct { time_t tv_sec; long tv_nsec; } ts_t; int clock_gettime(int, ts_t*); ]]
+local function now() local t = ffi.new('ts_t'); ffi.C.clock_gettime(1, t); return tonumber(t.tv_sec) + tonumber(t.tv_nsec) / 1e9 end
+local t0 = now()
+local function clean(x, n) return (tostring(x):gsub('[^%w%s_%.:,=<>%(%)%[%]/%-]', '')):sub(1, n or 90) end
 local function say(m) print('API ' .. m); pcall(function() io.stderr:write('API ' .. m .. '\n'); io.stderr:flush() end) end
-local frame = 0
-local function shot(tag)
-  PCSX.nextTick(function()
-    local ok, err = pcall(function()
-      local ss = PCSX.GPU.takeScreenShot()
-      local meta = {}
-      for _, k in ipairs({ 'width', 'height', 'bpp' }) do local v; pcall(function() v = ss[k] end); meta[#meta + 1] = k .. '=' .. tostring(v) end
-      local path = string.format('%s/g_%s.raw', OUT, tag)
-      local f = Support.File.open(path, 'TRUNCATE'); f:writeMoveSlice(ss.data); f:close()
-      local fh = io.open(path, 'rb'); local s = fh:read('*a'); fh:close(); os.remove(path)
-      local p = ffi.cast('const uint8_t*', s)
-      local nz, h = 0, 0
-      for i = 0, #s - 1 do if p[i] ~= 0 then nz = nz + 1 end; h = bit.tobit(bit.rol(bit.bxor(h, p[i]), 5) + 40503) end
-      say(string.format('shot %s bytes=%d nonzero=%d hash=%d %s', tag, #s, nz, h % 4294967296, table.concat(meta, ' ')))
-    end)
-    if not ok then say('shot ' .. tag .. ' galat=' .. tostring(err):gsub('[^%w%s_%.:]', ''):sub(1, 90)) end
-  end)
+local function keys(name, t)
+  local ks = {}
+  pcall(function() for k, v in pairs(t) do ks[#ks + 1] = tostring(k) .. ':' .. type(v) end end)
+  table.sort(ks); say('K ' .. name .. ' (' .. #ks .. ')=' .. clean(table.concat(ks, ','), 600))
 end
-local listener
+local function try(label, fn)
+  local ok, r = pcall(fn)
+  say('R ' .. label .. ' ok=' .. tostring(ok) .. ' -> ' .. clean(r, 80))
+end
+local frame = 0
 listener = PCSX.Events.createEventListener('GPU::Vsync', function()
   frame = frame + 1
-  if frame == 1 then say('mulai gui-mode') end
-  if frame == 60 or frame == 120 or frame == 180 then shot('f' .. frame) end
-  if frame == 200 then
-    local ok, s = pcall(function() return PCSX.createSaveState() end)
-    say('createSaveState ok=' .. tostring(ok) .. ' tipe=' .. type(s))
+  if frame % 20 == 0 and frame <= 300 then say(string.format('T f=%05d t=%.2f', frame, now() - t0)) end
+  if frame == 30 then
+    keys('PCSX.GPU', PCSX.GPU); keys('PCSX.GUI', PCSX.GUI); keys('PCSX.Misc', PCSX.Misc)
+  end
+  if frame == 40 then
+    PCSX.nextTick(function()
+      local ok, ss = pcall(function() return PCSX.GPU.takeScreenShot() end)
+      say('S takeScreenShot ok=' .. tostring(ok) .. ' tipe=' .. type(ss))
+      if not ok then return end
+      keys('ss', ss)
+      local d = ss.data
+      say('S data tipe=' .. type(d) .. ' tostring=' .. clean(d, 60))
+      try('S #data', function() return #d end)
+      try('S data:size()', function() return d:size() end)
+      try('S buffer+writeMoveSlice', function() local b = Support.File.buffer(); b:writeMoveSlice(d); return b:size() end)
+      try('S meta.__index keys', function()
+        local mt = getmetatable(d); local ks = {}
+        for k in pairs(mt.__index or {}) do ks[#ks + 1] = tostring(k) end
+        table.sort(ks); return table.concat(ks, ',')
+      end)
+    end)
+  end
+  if frame == 60 then
+    local ok, sch = pcall(function() return PCSX.getSaveStateProtoSchema() end)
+    say('P schema ok=' .. tostring(ok) .. ' tipe=' .. type(sch) .. ' len=' .. (ok and #tostring(sch) or -1))
     if ok then
-      say('muat mulai')
-      local ok2, e2 = pcall(function() PCSX.loadSaveState(s) end)
-      say('muat selesai ok=' .. tostring(ok2))
+      local n = 0
+      for line in tostring(sch):gmatch('[^\n]+') do
+        local l = line:lower()
+        if (l:find('vram') or l:find('gpu') or l:find('framebuffer') or l:find('display')) and n < 14 then
+          n = n + 1; say(string.format('P %02d %s', n, clean(line:gsub('^%s+', ''), 100)))
+        end
+      end
     end
   end
-  if frame == 230 then shot('f230_sesudah_muat') end
-  if frame >= 260 then say('selesai'); PCSX.nextTick(function() PCSX.quit(0) end) end
+  if frame == 100 then
+    say('C sebelum createSaveState f=100')
+    local ok, s = pcall(function() return PCSX.createSaveState() end)
+    say('C createSaveState ok=' .. tostring(ok) .. ' tipe=' .. type(s))
+    if ok then try('C #state', function() return #s end); try('C state:size()', function() return s:size() end) end
+  end
+  if frame >= 140 then say('X selesai t=' .. string.format('%.2f', now() - t0)); PCSX.nextTick(function() PCSX.quit(0) end) end
 end)
