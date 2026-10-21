@@ -87,45 +87,22 @@ jalankan)
   fi
   if [ "${MODUS:-}" = "guiuji" ]; then  # mode GUI (tanpa -cli) + Mesa llvmpipe, TANPA game: hanya angka/tipe + ekor log emulator
     : > "$D/api_uji.txt"
-    sudo apt-get install -y -qq mesa-utils x11-utils xserver-xorg-video-dummy xserver-xorg-core >/dev/null 2>&1 || echo "apt gagal" >> "$D/api_uji.txt"
     export LIBGL_ALWAYS_SOFTWARE=1 GALLIUM_DRIVER=llvmpipe MESA_GL_VERSION_OVERRIDE=4.5 MESA_GLSL_VERSION_OVERRIDE=450
-    echo "=== tabel visual GLX Xvfb (tanpa game) ===" >> "$D/api_uji.txt"
-    xvfb-run -a -s "-screen 0 1280x720x24 +extension GLX +render -noreset" sh -c 'glxinfo -t 2>&1 | head -n 14' | cut -c1-140 >> "$D/api_uji.txt" 2>&1 || true
-    cat > "$W/dummy.conf" <<'CONF'
-Section "Device"
-  Identifier "d"
-  Driver "dummy"
-  VideoRam 256000
-EndSection
-Section "Monitor"
-  Identifier "m"
-  HorizSync 5-100
-  VertRefresh 5-100
-EndSection
-Section "Screen"
-  Identifier "s"
-  Device "d"
-  Monitor "m"
-  DefaultDepth 24
-  SubSection "Display"
-    Depth 24
-    Modes "1280x720"
-  EndSubSection
-EndSection
-CONF
-    echo "=== varian Xorg dummy ===" >> "$D/api_uji.txt"
-    sudo Xorg :99 -config "$W/dummy.conf" -noreset -ac -nolisten tcp +extension GLX > "$W/xorg.log" 2>&1 &
-    sleep 5
-    DISPLAY=:99 glxinfo -B 2>&1 | grep -aiE "renderer string|core profile version|direct rendering" | cut -c1-120 >> "$D/api_uji.txt" || true
-    set +e
-    DISPLAY=:99 timeout -k 5 100 env LD_PRELOAD="$W/shim243.so" LD_LIBRARY_PATH="$PWD/usr/lib" \
-      usr/bin/pcsx-redux -noupdate -interpreter -softgpu -run -dofile "$R/redux/lua_mine/guiuji.lua" > "$W/guid.log" 2>&1
-    rc=$?; set -e
-    grep -a '^API ' "$W/guid.log" | sort -u | tr -cd '\11\12\40-\176' | cut -c1-300 | head -n 30 >> "$D/api_uji.txt" || true
-    echo "(rc=$rc)" >> "$D/api_uji.txt"
-    tail -n 4 "$W/guid.log" | tr -cd '\11\12\40-\176' | cut -c1-200 >> "$D/api_uji.txt"
-    tail -n 3 "$W/xorg.log" | cut -c1-160 >> "$D/api_uji.txt"
-    sudo pkill Xorg || true
+    echo "=== pustaka GL/SDL bawaan AppImage (nama saja) ===" >> "$D/api_uji.txt"
+    ls usr/lib 2>/dev/null | grep -aiE "^lib(GL|GLX|EGL|OpenGL|GLdispatch|glfw|SDL|X11|xcb)[A-Za-z_0-9-]*\.so" | head -n 40 >> "$D/api_uji.txt" || true
+    ls usr/lib/dri usr/lib/x86_64-linux-gnu/dri 2>/dev/null | head -n 5 >> "$D/api_uji.txt" || true
+    H=/usr/lib/x86_64-linux-gnu
+    for v in "tanpa_preload|" "preload_GL_host|$H/libGL.so.1:$H/libGLX.so.0:$H/libGLdispatch.so.0:$H/libGLX_mesa.so.0:$H/libEGL.so.1" "gl_host_dulu|HOSTFIRST"; do
+      n=${v%%|*}; pl=${v#*|}; echo "=== varian $n ===" >> "$D/api_uji.txt"
+      if [ "$pl" = "HOSTFIRST" ]; then LP="$H:$PWD/usr/lib"; PRE="$W/shim243.so"; else LP="$PWD/usr/lib"; PRE="$W/shim243.so${pl:+:$pl}"; fi
+      set +e
+      xvfb-run -a -s "-screen 0 1280x720x24 +extension GLX +render -noreset" timeout -k 5 100 env LD_PRELOAD="$PRE" LD_LIBRARY_PATH="$LP" \
+        usr/bin/pcsx-redux -noupdate -interpreter -softgpu -run -dofile "$R/redux/lua_mine/guiuji.lua" > "$W/gui_$n.log" 2>&1
+      rc=$?; set -e
+      grep -a '^API ' "$W/gui_$n.log" | sort -u | tr -cd '\11\12\40-\176' | cut -c1-300 | head -n 30 >> "$D/api_uji.txt" || true
+      echo "(rc=$rc)" >> "$D/api_uji.txt"
+      tail -n 3 "$W/gui_$n.log" | tr -cd '\11\12\40-\176' | cut -c1-200 >> "$D/api_uji.txt"
+    done
     echo "mode guiuji selesai"; exit 0
   fi
   if [ "${MODUS:-}" = "bantuan" ]; then  # hanya teks bantuan emulator (bukan isi game); TIDAK menjalankan game
