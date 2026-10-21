@@ -16,9 +16,9 @@ on:
       addrs:  { description: "ADDRS untuk CSV: 0xALAMAT[+panjang]:lebar,... (kosong = 9 alamat pantau)", default: "" }
       savef:  { description: "SAVEF: frame simpan save-state (kosong = tidak)", default: "" }
       loadf:  { description: "LOADF: frame muat kembali save-state", default: "" }
-      modus:  { description: "MODUS save-state: nt (nextTick) atau vs (di handler Vsync)", default: "" }
+      modus:  { description: "MODUS: nt/vs/ps/pc/pd (save-state), svs (hash layar+VRAM, angka), kosong = biasa", default: "" }
       label:  { description: "Label hasil", default: "uji" }
-concurrency: { group: emulator-run, cancel-in-progress: false }
+concurrency: { group: 'emulator-run-${{ inputs.label }}', cancel-in-progress: false }
 permissions: { contents: read }
 jobs:
   run:

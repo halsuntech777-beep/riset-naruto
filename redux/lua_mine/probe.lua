@@ -138,6 +138,57 @@ local function doLoad()
   print(string.format('SVS sesudah_muat f=%d ram=%d p=%d', frame, okh and h or -1, pass))
   if MODUS == 'pd' then hpages() end
 end
+
+-- MODUS=svs (baru): cetak hash layar + hash VRAM (ANGKA SAJA) tiap SVSN frame sejak SVSFROM dan sesudah tiap tombol di jadwal (lepas+2, lepas+30).
+-- Baris: "SVS scr f= sw= sn= sd= g=16angka vh= vn= vd=" (sw/vh=hash 32-bit, sn/vn=jumlah byte tidak nol, sd/vd=jumlah kata 32-bit beda vs sampel sebelumnya, g=beda per sel grid 4x4 layar).
+-- Piksel/gambar tidak pernah dicetak atau ditulis; hanya statistik.
+local SVSON = (MODUS == 'svs')
+local SVSFROM, SVSN = tonumber(os.getenv('SVSFROM') or '23000'), tonumber(os.getenv('SVSN') or '20')
+-- header opsional di berkas jadwal: "# SVS from=24500 step=20" (input workflow sudah 10 = batas GitHub, jadi parameter lewat jadwal)
+if SVSON then for line in io.lines(os.getenv('INPUTS')) do local hf, hs = line:match('^#%s*SVS%s+from=(%d+)%s+step=(%d+)'); if hf then SVSFROM, SVSN = tonumber(hf), tonumber(hs) end end end
+local svsset = {}
+if SVSON then
+  for _, i in ipairs(inputs) do
+    for _, d in ipairs({2, 30}) do if i[2] + d >= SVSFROM then svsset[i[2] + d] = true end end
+  end
+end
+local prevS, prevV = nil, nil
+local function svsample(fr)
+  local ok, err = pcall(function()
+    local ss = PCSX.GPU.takeScreenShot()
+    local s = tostring(ss.data)
+    local v = tostring(PCSX.GPU.getVRAM())
+    local function scan(str, prev, grid)
+      local n = math.floor(#str / 4)
+      local p = ffi.cast('const uint32_t*', str)
+      local h, nz, dw = 0, 0, 0
+      local g = {}
+      for k = 1, 16 do g[k] = 0 end
+      local same = prev and prev.n == n
+      for i = 0, n - 1 do
+        local w = p[i]
+        if w ~= 0 then nz = nz + 1 end
+        h = bit.tobit(bit.rol(bit.bxor(h, w), 5) + 40503)
+        if same and prev.buf[i] ~= w then
+          dw = dw + 1
+          if grid then
+            local r = math.min(3, math.floor(math.floor(i / 320) / 120))
+            local c = math.min(3, math.floor((i % 320) / 80))
+            g[r * 4 + c + 1] = g[r * 4 + c + 1] + 1
+          end
+        end
+      end
+      local nb = ffi.new('uint32_t[?]', n)
+      ffi.copy(nb, p, n * 4)
+      return h % 4294967296, nz, (same and dw or -1), g, { n = n, buf = nb }
+    end
+    local sh, snz, sd, g, ns = scan(s, prevS, true)
+    local vh, vnz, vd, _, nv = scan(v, prevV, false)
+    prevS, prevV = ns, nv
+    print(string.format('SVS scr f=%d sw=%d sn=%d sd=%d g=%s vh=%d vn=%d vd=%d', fr, sh, snz, sd, table.concat(g, ','), vh, vnz, vd))
+  end)
+  if not ok then print('SVS scr f=' .. fr .. ' galat=' .. tostring(err):gsub('[^%w%s_%.:]', ''):sub(1, 80)) end
+end
 listener = PCSX.Events.createEventListener('GPU::Vsync', function()
   frame = frame + 1
   for _, pk in ipairs(pokes) do
@@ -177,7 +228,10 @@ listener = PCSX.Events.createEventListener('GPU::Vsync', function()
   if LOADF and (pass == 1 or (MODUS == 'pd' and pass == 2)) and saved and frame == LOADF then
     if MODUS == 'vs' then doLoad() else PCSX.nextTick(doLoad) end
   end
-  if frame >= HFROM and (frame - HFROM) % HSTEP == 0 then
+  if SVSON and frame >= SVSFROM and (((frame - SVSFROM) % SVSN == 0) or svsset[frame]) then
+    local fr = frame; PCSX.nextTick(function() svsample(fr) end)
+  end
+  if not SVSON and frame >= HFROM and (frame - HFROM) % HSTEP == 0 then
     local ok, h = pcall(hram)
     print(string.format('HSH f=%d ram=%d', frame, ok and h or -1))
     hfb(frame)

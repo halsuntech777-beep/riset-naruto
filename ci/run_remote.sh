@@ -151,7 +151,7 @@ hasil)
   [ -z "$bad" ] || { echo "Berkas terlarang/terlalu besar, TIDAK di-commit:"; echo "$bad"; exit 1; }
   git config user.name "emulator-runner"; git config user.email "actions@users.noreply.github.com"
   git add "$D"; git commit -q -m "hasil run $ID ($LABEL)"
-  for i in 1 2 3 4; do git pull --rebase -q origin "$GITHUB_REF_NAME" && git push -q origin "HEAD:$GITHUB_REF_NAME" && { echo "push ok"; break; }; sleep 5; done
+  for i in 1 2 3 4 5 6 7 8 9 10; do git pull --rebase -q origin "$GITHUB_REF_NAME" && git push -q origin "HEAD:$GITHUB_REF_NAME" && { echo "push ok"; break; }; sleep $((RANDOM % 9 + 3)); done
   ;;
 *) gagal "sub-perintah tak dikenal" ;;
 esac
