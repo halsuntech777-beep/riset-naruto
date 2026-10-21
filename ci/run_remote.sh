@@ -99,7 +99,7 @@ jalankan)
           usr/bin/pcsx-redux -cli -noupdate -interpreter -softgpu -debugger -run -dofile "$R/redux/lua_mine/guiuji.lua" > "$W/gui_$n.log" 2>&1
       fi
       rc=$?; set -e
-      grep -a '^API ' "$W/gui_$n.log" | sort -u | tr -cd '\11\12\40-\176' | cut -c1-700 | head -n 90 >> "$D/api_uji.txt" || true
+      grep -a '^API ' "$W/gui_$n.log" | sed 's/ *$//' | sort -u | tr -cd '\11\12\40-\176' | cut -c1-700 | head -n 90 >> "$D/api_uji.txt" || true
       echo "(rc=$rc)" >> "$D/api_uji.txt"
     done
     echo "mode guiuji selesai"; exit 0
