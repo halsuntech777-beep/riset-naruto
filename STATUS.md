@@ -177,3 +177,14 @@ Target: simpan state di frame 24000 (jadwal inputs/inputs_story3.txt), muat kemb
 - [TERAMATI -> lebih kuat dari DUGAAN lama] CROSS@24800 memilih はい; P2 (Mizuki) membayar 150 chakra (1680 -> 1530); barrier petaknya naik ke level 2; nilai gem 100 -> 220.
 - [BELUM] Apa yang terjadi sesudah dialog Naruto dibuang (roulette giliran Naruto?).
 - Langkah: run paralel s3A/s3B/s3C (CROSS@26300 sekali / +26500 / +26700), SHOT tiap ~300 frame sampai 28200.
+
+## Sesi s3/s4 (chat baru): tombol yang benar = CIRCLE; satu giliran penuh terbaca di layar
+- [TERAMATI] Run s3A/B/C (CROSS di 26300 / +26500 / +26700): hash layar IDENTIK dengan s2shot dan satu sama lain; dialog Naruto 「いくぞ…」 tidak maju sampai 28200. CROSS = batal, tidak memajukan dialog.
+- [TERAMATI] Run s4D/E/F (jadwal `inputs/s4_D/E/F.txt` = prefix story3 + CROSS@24800 + CIRCLE di 26300 [,26500,26700,26900,27100]): CIRCLE memajukan layar (lonjakan sd mulai 26320). Urutan di run F (gambar didekripsi):
+  - 26400: menu giliran Naruto: ルーレット / 忍術 / チャンス札 / 情報 / マップを見る.
+  - 26600-26800: roulette berputar, berhenti di angka 3 (CIRCLE@26700 menghentikan).
+  - 27000: prompt 「ここに結界をはりますか？ 必要チャクラ 260」 (pasang barrier di sini? butuh 260 chakra) pilihan はい/いいえ.
+  - 27200: Naruto 4640 -> 4380 (= -260 persis; CHG mulai f=27105, turun bertahap 10 per langkah); ada petak baru dengan angka 60.
+  - 27500-28300: giliran Mizuki: 「なにもかも手にいれてやる！」, layar pilih kartu 「ゲットする札をえらべ！」 (3 kartu menghadap bawah), lalu 「チャクラが２５０回復」; Mizuki 1530 -> 1780.
+- [TERBUKTI, replay ini] Biaya pasang barrier di petak kosong yang dimaksud = 260 chakra (hanya satu sampel; petak ke-? belum dipastikan, harga petaknya perlu dicocokkan ke data/tabel_papan.json). Biaya level-up barrier sebelumnya = 150 (Mizuki, 1680 -> 1530; gem 100 -> 220).
+- [BELUM] Kondisi menang papan 1 dan apakah stage 2 terbuka; posisi petak Naruto/Mizuki sekarang.
