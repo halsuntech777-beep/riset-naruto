@@ -87,11 +87,11 @@ jalankan)
   fi
   if [ "${MODUS:-}" = "ssuji" ]; then  # diagnostik TANPA game: pohon settings + kecepatan; serialisasi state ke berkas (3 cara)
     : > "$D/api_uji.txt"
-    for spec in "cfg|cfg|-" "ser_file|ser|file" "ser_zr|ser|zr" "ser_buf|ser|buf"; do
-      IFS='|' read -r v apiv apis <<< "$spec"
+    for spec in "spdN|spd|-|-|UseNullSync=true" "spdS|spd|-|-|Speed=4" "spdNS|spd|-|-|UseNullSync=true;Streaming=false" "f_vs|ser|file|vs|-" "f_pr|ser|file|pr|-"; do
+      IFS='|' read -r v apiv apis apim apik <<< "$spec"; apik=${apik//;/,}; [ "$apik" = "-" ] && apik=""
       echo "=== varian $v ===" >> "$D/api_uji.txt"
       set +e
-      APIV=$apiv APIS=$apis APIPATH="$W/ss_uji.bin" xvfb-run -a -s "-screen 0 1280x720x24" timeout -k 5 90 env LD_PRELOAD="$W/shim243.so" LD_LIBRARY_PATH="$PWD/usr/lib" \
+      APIV=$apiv APIS=$apis APIM=$apim APIK="$apik" APIPATH="$W/ss_uji.bin" xvfb-run -a -s "-screen 0 1280x720x24" timeout -k 5 90 env LD_PRELOAD="$W/shim243.so" LD_LIBRARY_PATH="$PWD/usr/lib" \
         usr/bin/pcsx-redux -cli -noupdate -interpreter -softgpu -debugger -run -dofile "$R/redux/lua_mine/ssuji.lua" > "$W/uji_$v.log" 2>&1
       rc=$?; set -e
       grep -a '^API ' "$W/uji_$v.log" | awk '!s[$0]++' | tr -cd '\11\12\40-\176' | cut -c1-420 | head -n 300 >> "$D/api_uji.txt" || true

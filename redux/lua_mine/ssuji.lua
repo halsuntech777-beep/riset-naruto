@@ -42,10 +42,25 @@ local function dump(t, path, depth)
   while #line > 380 do say(path .. ' ' .. line:sub(1, 380)); line = line:sub(381) end
   say(path .. ' ' .. line)
 end
-local frame, t0, t1, savedh, saved, flipped = 0, nil, nil, nil, nil, {}
+local frame, t0, t1, savedh, saved, flipped, loadedat = 0, nil, nil, nil, nil, {}, nil
 local listener
 listener = PCSX.Events.createEventListener('GPU::Vsync', function()
   frame = frame + 1
+  if V == 'spd' then
+    local sp = PCSX.settings.spu
+    if frame == 20 then
+      for kv in (os.getenv('APIK') or ''):gmatch('[^,]+') do
+        local k, v = kv:match('^(%w+)=(%S+)$')
+        local val = (v == 'true') and true or (v == 'false') and false or tonumber(v)
+        local ok = pcall(function() sp[k] = val end)
+        say('set spu.' .. k .. '=' .. tostring(val) .. ' ok=' .. tostring(ok) .. ' sekarang=' .. tostring(sp[k]))
+      end
+    elseif frame == 60 then t0 = now()
+    elseif frame == 360 then
+      t1 = now(); say(string.format('fps=%.1f (300 frame dalam %.2f dtk)', 300 / (t1 - t0), t1 - t0)); say('selesai'); PCSX.nextTick(function() PCSX.quit(0) end)
+    end
+    return
+  end
   if V == 'cfg' then
     if frame == 20 then
       say('varian=cfg')
@@ -97,8 +112,12 @@ listener = PCSX.Events.createEventListener('GPU::Vsync', function()
     local h0 = hram(); say('ram_sebelum_muat=' .. h0 .. ' beda_dari_simpan=' .. tostring(h0 ~= savedh))
     local okl, e
     if S == 'file' then
-      local okf, fl = pcall(function() return Support.File.open(PATH) end); say('open READ ok=' .. tostring(okf))
+      local M = os.getenv('APIM') or 'vs'
+      local okf, fl = pcall(function() return Support.File.open(PATH) end); say('open READ ok=' .. tostring(okf) .. ' mode=' .. M)
+      if M == 'pr' then say('pause ok=' .. tostring(pcall(function() PCSX.pauseEmulator() end))) end
       say('muat(berkas) mulai'); okl, e = pcall(function() PCSX.loadSaveState(fl) end)
+      if M == 'pr' then say('resume ok=' .. tostring(pcall(function() PCSX.resumeEmulator() end))) end
+      loadedat = frame
     elseif S == 'zr' then
       local okf, fl = pcall(function() return Support.File.zReader(Support.File.open(PATH)) end); say('zReader ok=' .. tostring(okf) .. ' ' .. (okf and '' or et(fl)))
       say('muat(zReader) mulai'); okl, e = pcall(function() PCSX.loadSaveState(fl) end)
@@ -109,6 +128,7 @@ listener = PCSX.Events.createEventListener('GPU::Vsync', function()
     end
     say('muat selesai ok=' .. tostring(okl) .. ' ' .. et(e))
     local h1 = hram(); say('ram_sesudah_muat=' .. h1 .. ' sama_dengan_simpan=' .. tostring(h1 == savedh))
+  elseif frame > 60 and frame < 70 then say('frame_sesudah_muat=' .. frame .. ' ram=' .. hram())
   elseif frame >= 100 then
     say('selesai'); PCSX.nextTick(function() PCSX.quit(0) end)
   end
