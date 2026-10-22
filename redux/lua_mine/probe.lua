@@ -270,7 +270,7 @@ local function onVsync()
     print(string.format('SVS p=%d f=%d ram=%d p1=%s', pass, frame, ok and h or -1, p1words()))
   end
   if MODUS == 'pd' and SAVEF and frame >= SAVEF and HPSET[frame] then pcall(hpages) end
-  if SAVEF and MODUS ~= 'xs' and MODUS ~= 'xb' and pass == 1 and not saved and frame == SAVEF then
+  if SAVEF and MODUS ~= 'xs' and MODUS ~= 'xb' and MODUS ~= 'xv' and pass == 1 and not saved and frame == SAVEF then
     if MODUS == 'vs' then doSave() else PCSX.nextTick(doSave) end
   end
   if LOADF and (pass == 1 or (MODUS == 'pd' and pass == 2)) and saved and frame == LOADF then
@@ -292,13 +292,13 @@ local function onVsync()
     f:writeMoveSlice(ss.data); f:close(); print('SHOT ' .. frame) end) end
   if frame >= MAXF then PCSX.nextTick(function() PCSX.quit(0) end) end
   if frame % 1000 == 0 then print(string.format('TIME f=%d t=%.1f', frame, wall() - WALL0)) end
-  if (MODUS == 'xs' or MODUS == 'xb') and STATEOUT and frame == SAVEF then PCSX.nextTick(xsave) end
+  if (MODUS == 'xs' or MODUS == 'xb' or MODUS == 'xv') and STATEOUT and frame == SAVEF then PCSX.nextTick(xsave) end
 end
 function install() listener = PCSX.Events.createEventListener('GPU::Vsync', onVsync) end
 print('probe siap; input=' .. #inputs .. ' MAXF=' .. MAXF)
 -- MODUS=xs: proses penulis (STATEOUT) menyimpan state mentah ke berkas SEMENTARA di runner pada SAVEF lalu keluar; proses pembaca (STATEIN, LSITE=top|nt|vs1)
 -- memuat berkas itu di proses BARU dan melanjutkan dari SAVEF. Berkas state tidak pernah keluar dari runner (dihapus oleh run_remote.sh).
-if (MODUS == 'xs' or MODUS == 'xb') and STATEIN then
+if (MODUS == 'xs' or MODUS == 'xb' or MODUS == 'xv') and STATEIN then
   local function xload(tag)
     say('XS muat mulai site=' .. LSITE .. ' tag=' .. tag)
     local okf, fl = pcall(function() return Support.File.open(STATEIN) end)
