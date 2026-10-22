@@ -1,0 +1,13 @@
+referensi rc=0 detik=116 WDREF=9
+== fixp lsite=nt base=24000 ukuran=21163226 rc=0 detik=14 muat_selesai=2 HSH=165
+XS sesudah_muat f=24000 ram=247000128 override_aktif=0 
+XS nilai A1=4640 A2=1680 A3=0 A4=0 B1=4640 B2=1680 B3=0 B4=0 P1=11 P2=0 P3=10 P4=0 cyc=13545509090ULL 
+XS vsync n=1 f=24001 cyc=13546073485ULL 
+XS vsync n=2 f=24002 cyc=13546637892ULL 
+XS vsync n=3 f=24003 cyc=13547202284ULL 
+XS ev ExecutionFlow::Pause cyc=15408022498ULL 
+HSH f=24020 ram=183362940 
+HSH f=24040 ram=2447383860 
+HSH f=24060 ram=3894472766 
+HSH f=24080 ram=784036079 
+HSH f=24100 ram=2908415813 
