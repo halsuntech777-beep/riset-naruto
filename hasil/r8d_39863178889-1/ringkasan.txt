@@ -1,0 +1,10 @@
+jadwal=inputs/r8_d.txt maxf=28350 pokes=9000@70EB8@4@5000,13000@70EB8@4@5000 orpokes=14000-36000@70EBC@4@0x3000 dumps=
+rc_emulator=0 (0=selesai MAXF, 124=timeout) detik=123 baris_emu_log=269
+md5_chg_log=03ffc4a8fbbc06eadd09c0ac201fb642 jumlah_CHG=105
+--- nilai terakhir per alamat pantau ---
+CHG f=26829 P1: 11 -> 12 
+CHG f=27637 A1: 4520 -> 4420 
+CHG f=27637 B1: 4520 -> 4420 
+CHG f=28055 P3: 13 -> 14 
+CHG f=28115 A2: 1710 -> 1610 
+CHG f=28115 B2: 1710 -> 1610 
