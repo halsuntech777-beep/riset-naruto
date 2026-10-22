@@ -1,0 +1,1 @@
+penulis rc=0 detik=107 state_bytes=21163625

@@ -1,0 +1,33 @@
+== c0_E_asli base=3000 ukuran=21127645 rc=139 detik=1 muat_selesai=0 HSH=0
+== c1_L_asli base=24000 ukuran=21163625 rc=139 detik=1 muat_selesai=0 HSH=0
+== d66 base=24000 ukuran=21153781 rc=124 detik=40 muat_selesai=2 HSH=0
+XS sesudah_muat f=24000 ram=247000128 override_aktif=1 
+XS nilai A1=4640 A2=1680 A3=0 A4=0 B1=4640 B2=1680 B3=0 B4=0 P1=11 P2=0 P3=10 P4=0 cyc=13545509090ULL 
+XS tick1 cyc=13545510361ULL 
+XS resume ok=true nil 
+== d6 base=24000 ukuran=20530574 rc=124 detik=40 muat_selesai=2 HSH=0
+XS sesudah_muat f=24000 ram=247000128 override_aktif=1 
+XS nilai A1=4640 A2=1680 A3=0 A4=0 B1=4640 B2=1680 B3=0 B4=0 P1=11 P2=0 P3=10 P4=0 cyc=13545509090ULL 
+XS tick1 cyc=13545510361ULL 
+XS resume ok=true nil 
+== s6_dariE base=24000 ukuran=21127634 rc=139 detik=1 muat_selesai=0 HSH=0
+== s66_dariE base=24000 ukuran=21160449 rc=139 detik=1 muat_selesai=0 HSH=0
+== e66_dariL base=3000 ukuran=21130821 rc=139 detik=1 muat_selesai=0 HSH=0
+== e6_dariL base=3000 ukuran=21163636 rc=139 detik=1 muat_selesai=0 HSH=0
+== e_d66 base=3000 ukuran=21120977 rc=124 detik=40 muat_selesai=2 HSH=0
+XS sesudah_muat f=3000 ram=385256697 override_aktif=0 
+XS nilai A1=786444 A2=524312 A3=524312 A4=524296 B1=1500 B2=1500 B3=0 B4=0 P1=0 P2=0 P3=0 P4=0 cyc=1693151088ULL 
+XS tick1 cyc=1693152353ULL 
+XS resume ok=true nil 
+== e_d6 base=3000 ukuran=20530585 rc=124 detik=40 muat_selesai=2 HSH=0
+XS sesudah_muat f=3000 ram=385256697 override_aktif=0 
+XS nilai A1=786444 A2=524312 A3=524312 A4=524296 B1=1500 B2=1500 B3=0 B4=0 P1=0 P2=0 P3=0 P4=0 cyc=1693151088ULL 
+XS tick1 cyc=1693152353ULL 
+XS resume ok=true nil 
+== d66_1 base=24000 ukuran=21155069 rc=124 detik=40 muat_selesai=2 HSH=0
+XS sesudah_muat f=24000 ram=247000128 override_aktif=1 
+XS nilai A1=4640 A2=1680 A3=0 A4=0 B1=4640 B2=1680 B3=0 B4=0 P1=11 P2=0 P3=10 P4=0 cyc=13545509090ULL 
+XS tick1 cyc=13545510361ULL 
+XS resume ok=true nil 
+== d66_2 base=24000 ukuran=21162871 rc=139 detik=1 muat_selesai=0 HSH=0
+== d66_3 base=24000 ukuran=21163139 rc=139 detik=1 muat_selesai=0 HSH=0
