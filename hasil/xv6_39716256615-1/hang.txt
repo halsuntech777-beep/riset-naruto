@@ -1,0 +1,91 @@
+== hang fixp pid=2906
+thr1 pcsx-redux st=S ut=5 sys=14
+thr1 pcsx-redux st=S ut=0 sys=0
+thr1 SDLAudioP15 st=S ut=0 sys=4
+thr1 libuv-worker st=S ut=0 sys=0
+thr1 libuv-worker st=S ut=0 sys=0
+thr1 libuv-worker st=S ut=0 sys=0
+thr1 libuv-worker st=S ut=0 sys=0
+thr1 pcsx-redux st=S ut=0 sys=0
+thr2 pcsx-redux st=S ut=6 sys=14
+thr2 pcsx-redux st=S ut=0 sys=0
+thr2 SDLAudioP15 st=S ut=1 sys=4
+thr2 libuv-worker st=S ut=0 sys=0
+thr2 libuv-worker st=S ut=0 sys=0
+thr2 libuv-worker st=S ut=0 sys=0
+thr2 libuv-worker st=S ut=0 sys=0
+thr2 pcsx-redux st=S ut=0 sys=0
+Thread 8 (Thread 0x7fdf333ce6c0 (LWP 2907) "pcsx-redux"):
+#0  0x00007fdf3b12a170 in __GI_epoll_pwait (epfd=3, events=0x7fdf333c9ef0, maxevents=1024, timeout=500, set=0x0) at ../sysdeps/unix/sysv/linux/epoll_pwait.c:40
+#1  0x00007fdf3ff1681a in ?? () from /home/runner/work/_temp/naruto/squashfs-root/usr/lib/libuv.so.1
+#2  0x00007fdf3ff01d32 in uv_run () from /home/runner/work/_temp/naruto/squashfs-root/usr/lib/libuv.so.1
+#3  0x000055df0014c385 in ?? ()
+#4  0x00007fdf3b4ecdb4 in ?? () from /lib/x86_64-linux-gnu/libstdc++.so.6
+#5  0x00007fdf3b09cb84 in start_thread (arg=<optimized out>) at ./nptl/pthread_create.c:447
+#6  0x00007fdf3b129ecc in clone3 () at ../sysdeps/unix/sysv/linux/x86_64/clone3.S:78
+Thread 7 (Thread 0x7fdf312276c0 (LWP 2909) "SDLAudioP15"):
+#0  0x00007fdf3b0ecbdf in __GI___clock_nanosleep (clock_id=clock_id@entry=0, flags=flags@entry=0, req=0x7fdf31225f10, rem=0x7fdf31225f00) at ../sysdeps/unix/sysv/linux/cl
+#1  0x00007fdf3b0f9b27 in __GI___nanosleep (req=<optimized out>, rem=<optimized out>) at ../sysdeps/unix/sysv/linux/nanosleep.c:25
+#2  0x00007fdf3ba2b98c in ?? () from /home/runner/work/_temp/naruto/squashfs-root/usr/lib/libSDL3.so.0
+#3  0x00007fdf3b99374e in ?? () from /home/runner/work/_temp/naruto/squashfs-root/usr/lib/libSDL3.so.0
+#4  0x00007fdf3b852c96 in ?? () from /home/runner/work/_temp/naruto/squashfs-root/usr/lib/libSDL3.so.0
+#5  0x00007fdf3ba2665f in ?? () from /home/runner/work/_temp/naruto/squashfs-root/usr/lib/libSDL3.so.0
+#6  0x00007fdf3b09cb84 in start_thread (arg=<optimized out>) at ./nptl/pthread_create.c:447
+#7  0x00007fdf3b129ecc in clone3 () at ../sysdeps/unix/sysv/linux/x86_64/clone3.S:78
+Thread 6 (Thread 0x7fdf25ffe6c0 (LWP 2910) "libuv-worker"):
+#0  0x00007fdf3b098e51 in __futex_abstimed_wait_common64 (private=0, cancel=true, abstime=0x0, op=393, expected=0, futex_word=0x7fdf3ff23808) at ./nptl/futex-internal.c:5
+#1  __futex_abstimed_wait_common (cancel=true, private=0, abstime=0x0, clockid=0, expected=0, futex_word=0x7fdf3ff23808) at ./nptl/futex-internal.c:87
+#2  __GI___futex_abstimed_wait_cancelable64 (futex_word=futex_word@entry=0x7fdf3ff23808, expected=expected@entry=0, clockid=clockid@entry=0, abstime=abstime@entry=0x0, pr
+#3  0x00007fdf3b09b8cd in __pthread_cond_wait_common (abstime=0x0, clockid=0, mutex=0x7fdf3ff23860, cond=0x7fdf3ff237e0) at ./nptl/pthread_cond_wait.c:503
+#4  ___pthread_cond_wait (cond=0x7fdf3ff237e0, mutex=0x7fdf3ff23860) at ./nptl/pthread_cond_wait.c:627
+#5  0x00007fdf3ff0f35d in uv_cond_wait () from /home/runner/work/_temp/naruto/squashfs-root/usr/lib/libuv.so.1
+#6  0x00007fdf3ff0246a in ?? () from /home/runner/work/_temp/naruto/squashfs-root/usr/lib/libuv.so.1
+#7  0x00007fdf3b09cb84 in start_thread (arg=<optimized out>) at ./nptl/pthread_create.c:447
+#8  0x00007fdf3b129ecc in clone3 () at ../sysdeps/unix/sysv/linux/x86_64/clone3.S:78
+Thread 5 (Thread 0x7fdf257fd6c0 (LWP 2911) "libuv-worker"):
+#0  0x00007fdf3b098e51 in __futex_abstimed_wait_common64 (private=0, cancel=true, abstime=0x0, op=393, expected=0, futex_word=0x7fdf3ff23808) at ./nptl/futex-internal.c:5
+#1  __futex_abstimed_wait_common (cancel=true, private=0, abstime=0x0, clockid=0, expected=0, futex_word=0x7fdf3ff23808) at ./nptl/futex-internal.c:87
+#2  __GI___futex_abstimed_wait_cancelable64 (futex_word=futex_word@entry=0x7fdf3ff23808, expected=expected@entry=0, clockid=clockid@entry=0, abstime=abstime@entry=0x0, pr
+#3  0x00007fdf3b09b8cd in __pthread_cond_wait_common (abstime=0x0, clockid=0, mutex=0x7fdf3ff23860, cond=0x7fdf3ff237e0) at ./nptl/pthread_cond_wait.c:503
+#4  ___pthread_cond_wait (cond=0x7fdf3ff237e0, mutex=0x7fdf3ff23860) at ./nptl/pthread_cond_wait.c:627
+#5  0x00007fdf3ff0f35d in uv_cond_wait () from /home/runner/work/_temp/naruto/squashfs-root/usr/lib/libuv.so.1
+#6  0x00007fdf3ff0246a in ?? () from /home/runner/work/_temp/naruto/squashfs-root/usr/lib/libuv.so.1
+#7  0x00007fdf3b09cb84 in start_thread (arg=<optimized out>) at ./nptl/pthread_create.c:447
+#8  0x00007fdf3b129ecc in clone3 () at ../sysdeps/unix/sysv/linux/x86_64/clone3.S:78
+Thread 4 (Thread 0x7fdf24ffc6c0 (LWP 2912) "libuv-worker"):
+#0  0x00007fdf3b098e51 in __futex_abstimed_wait_common64 (private=0, cancel=true, abstime=0x0, op=393, expected=0, futex_word=0x7fdf3ff2380c) at ./nptl/futex-internal.c:5
+#1  __futex_abstimed_wait_common (cancel=true, private=0, abstime=0x0, clockid=0, expected=0, futex_word=0x7fdf3ff2380c) at ./nptl/futex-internal.c:87
+#2  __GI___futex_abstimed_wait_cancelable64 (futex_word=futex_word@entry=0x7fdf3ff2380c, expected=expected@entry=0, clockid=clockid@entry=0, abstime=abstime@entry=0x0, pr
+#3  0x00007fdf3b09b8cd in __pthread_cond_wait_common (abstime=0x0, clockid=0, mutex=0x7fdf3ff23860, cond=0x7fdf3ff237e0) at ./nptl/pthread_cond_wait.c:503
+#4  ___pthread_cond_wait (cond=0x7fdf3ff237e0, mutex=0x7fdf3ff23860) at ./nptl/pthread_cond_wait.c:627
+#5  0x00007fdf3ff0f35d in uv_cond_wait () from /home/runner/work/_temp/naruto/squashfs-root/usr/lib/libuv.so.1
+#6  0x00007fdf3ff0246a in ?? () from /home/runner/work/_temp/naruto/squashfs-root/usr/lib/libuv.so.1
+#7  0x00007fdf3b09cb84 in start_thread (arg=<optimized out>) at ./nptl/pthread_create.c:447
+#8  0x00007fdf3b129ecc in clone3 () at ../sysdeps/unix/sysv/linux/x86_64/clone3.S:78
+Thread 3 (Thread 0x7fdf1ffff6c0 (LWP 2913) "libuv-worker"):
+#0  0x00007fdf3b098e51 in __futex_abstimed_wait_common64 (private=0, cancel=true, abstime=0x0, op=393, expected=0, futex_word=0x7fdf3ff23808) at ./nptl/futex-internal.c:5
+#1  __futex_abstimed_wait_common (cancel=true, private=0, abstime=0x0, clockid=0, expected=0, futex_word=0x7fdf3ff23808) at ./nptl/futex-internal.c:87
+#2  __GI___futex_abstimed_wait_cancelable64 (futex_word=futex_word@entry=0x7fdf3ff23808, expected=expected@entry=0, clockid=clockid@entry=0, abstime=abstime@entry=0x0, pr
+#3  0x00007fdf3b09b8cd in __pthread_cond_wait_common (abstime=0x0, clockid=0, mutex=0x7fdf3ff23860, cond=0x7fdf3ff237e0) at ./nptl/pthread_cond_wait.c:503
+#4  ___pthread_cond_wait (cond=0x7fdf3ff237e0, mutex=0x7fdf3ff23860) at ./nptl/pthread_cond_wait.c:627
+#5  0x00007fdf3ff0f35d in uv_cond_wait () from /home/runner/work/_temp/naruto/squashfs-root/usr/lib/libuv.so.1
+#6  0x00007fdf3ff0246a in ?? () from /home/runner/work/_temp/naruto/squashfs-root/usr/lib/libuv.so.1
+#7  0x00007fdf3b09cb84 in start_thread (arg=<optimized out>) at ./nptl/pthread_create.c:447
+#8  0x00007fdf3b129ecc in clone3 () at ../sysdeps/unix/sysv/linux/x86_64/clone3.S:78
+Thread 2 (Thread 0x7fdf1f7fe6c0 (LWP 2915) "pcsx-redux"):
+#0  0x00007fdf3b098e51 in __futex_abstimed_wait_common64 (private=511700992, cancel=true, abstime=0x7fdf1f7fd010, op=137, expected=0, futex_word=0x7fdf312c22c8) at ./nptl
+#1  __futex_abstimed_wait_common (cancel=true, private=511700992, abstime=0x7fdf1f7fd010, clockid=32735, expected=0, futex_word=0x7fdf312c22c8) at ./nptl/futex-internal.c
+#2  __GI___futex_abstimed_wait_cancelable64 (futex_word=futex_word@entry=0x7fdf312c22c8, expected=expected@entry=0, clockid=clockid@entry=1, abstime=abstime@entry=0x7fdf1
+#3  0x00007fdf3b09c1f6 in __pthread_cond_wait_common (abstime=<optimized out>, clockid=<optimized out>, mutex=0x7fdf312c2278, cond=0x7fdf312c22a0) at ./nptl/pthread_cond_
+#4  ___pthread_cond_clockwait64 (abstime=<optimized out>, clockid=<optimized out>, mutex=0x7fdf312c2278, cond=0x7fdf312c22a0) at ./nptl/pthread_cond_wait.c:691
+#5  ___pthread_cond_clockwait64 (cond=0x7fdf312c22a0, mutex=0x7fdf312c2278, clockid=<optimized out>, abstime=<optimized out>) at ./nptl/pthread_cond_wait.c:679
+#6  0x000055df0006f7e6 in ?? ()
+#7  0x00007fdf3b4ecdb4 in ?? () from /lib/x86_64-linux-gnu/libstdc++.so.6
+#8  0x00007fdf3b09cb84 in start_thread (arg=<optimized out>) at ./nptl/pthread_create.c:447
+#9  0x00007fdf3b129ecc in clone3 () at ../sysdeps/unix/sysv/linux/x86_64/clone3.S:78
+Thread 1 (Thread 0x7fdf333d5580 (LWP 2906) "pcsx-redux"):
+#0  0x00007fdf3b0ecbdf in __GI___clock_nanosleep (clock_id=clock_id@entry=0, flags=flags@entry=0, req=0x7ffc41a078f0, rem=0x7ffc41a078f0) at ../sysdeps/unix/sysv/linux/cl
+#1  0x00007fdf3b0f9b27 in __GI___nanosleep (req=<optimized out>, rem=<optimized out>) at ../sysdeps/unix/sysv/linux/nanosleep.c:25
+#2  0x000055df0005bb87 in ?? ()
+#3  0x000055df0005692b in ?? ()
+#4  0x000055deffbb536b in main ()

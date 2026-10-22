@@ -1,0 +1,10 @@
+== fixp base=24000 ukuran=21163413 rc=124 detik=40 muat_selesai=2 HSH=0
+XS sesudah_muat f=24000 ram=247000128 override_aktif=1 
+XS nilai A1=4640 A2=1680 A3=0 A4=0 B1=4640 B2=1680 B3=0 B4=0 P1=11 P2=0 P3=10 P4=0 cyc=13545509090ULL 
+XS tick1 cyc=13545510361ULL 
+XS resume ok=true nil 
+== fixps base=24000 ukuran=21163489 rc=124 detik=41 muat_selesai=2 HSH=0
+XS sesudah_muat f=24000 ram=247000128 override_aktif=1 
+XS nilai A1=4640 A2=1680 A3=0 A4=0 B1=4640 B2=1680 B3=0 B4=0 P1=11 P2=0 P3=10 P4=0 cyc=13545509090ULL 
+XS tick1 cyc=13545510361ULL 
+XS resume ok=true nil 
