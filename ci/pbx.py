@@ -4,6 +4,7 @@
 #   pbx.py shape STATE PATH          -> jumlah elemen PATH + bentuk (nomor:tipe:panjang) 2 elemen pertama
 #   pbx.py drop STATE OUT PATH       -> tulis STATE tanpa semua kemunculan PATH (kedalaman bebas, mis. 6.6.3)
 #   pbx.py nums STATE PATH N        -> angka sub-field (varint/fixed; panjang untuk byte) N elemen pertama PATH
+#   pbx.py fixptr STATE OUT PATH FIELD SRC -> di tiap elemen PATH: bila varint FIELD (int64) di luar 0..0x7FFFF, ganti dengan SRC (nomor field saudara; 0 = nol)
 #   pbx.py swap A B OUT PATH         -> A dengan PATH diganti PATH milik B (semua kemunculan; ditaruh di akhir induk)
 import sys
 
@@ -93,6 +94,17 @@ def drop_path(b, lo, hi, path):
     return bytes(out)
 
 
+def rewrite(b, lo, hi, path, f):
+    out = bytearray()
+    for fn, wt, h0, e, p0, p1 in parse(b, lo, hi):
+        if fn != path[0] or wt != 2:
+            out += b[h0:e]
+            continue
+        body = f(b[p0:p1]) if len(path) == 1 else rewrite(b, p0, p1, path[1:], f)
+        out += enc((fn << 3) | 2) + enc(len(body)) + body
+    return bytes(out)
+
+
 def collect(b, lo, hi, path):
     res = []
     for fn, wt, h0, e, p0, p1 in parse(b, lo, hi):
@@ -132,6 +144,37 @@ def main():
         items = collect(bb, 0, len(bb), path)
         open(sys.argv[4], 'wb').write(put(a, 0, len(a), path, items))
         print('swap ok jumlah_elemen_B=%d' % len(items))
+        return
+    if cmd == 'fixptr':
+        b = open(sys.argv[2], 'rb').read()
+        path = [int(x) for x in sys.argv[4].split('.')]
+        field, src = int(sys.argv[5]), int(sys.argv[6])
+        cnt = [0, 0]
+
+        def fx(pl):
+            fl = parse(pl, 0, len(pl))
+            srcv = 0
+            if src:
+                for fn, wt, h0, e, p0, p1 in fl:
+                    if fn == src and wt == 0:
+                        v, _ = rv(pl, h0 + len(enc(fn << 3)))
+                        if 0 <= v < 0x80000:
+                            srcv = v
+            out = bytearray()
+            for fn, wt, h0, e, p0, p1 in fl:
+                if fn == field and wt == 0:
+                    v, _ = rv(pl, h0 + len(enc(fn << 3)))
+                    sv = v - (1 << 64) if v >= (1 << 63) else v
+                    cnt[1] += 1
+                    if sv < 0 or sv >= 0x80000:
+                        cnt[0] += 1
+                        if srcv:
+                            out += enc(field << 3) + enc(srcv)
+                        continue
+                out += pl[h0:e]
+            return bytes(out)
+        open(sys.argv[3], 'wb').write(rewrite(b, 0, len(b), path, fx))
+        print('fixptr diganti=%d dari=%d' % (cnt[0], cnt[1]))
         return
     b = open(sys.argv[2], 'rb').read()
     if cmd == 'drop':

@@ -176,6 +176,27 @@ PYEOF
             grep -aE '^HSH' "$W/emu_v.log" | head -n 2 || true; } >> "$D/varian.txt"
           rm -f "$W/var.bin"
         }
+        hangdiag(){  # $1 nama, $2 frame dasar; var.bin sudah ada. Hanya status thread + backtrace fungsi (tanpa data game).
+          export STATEIN="$W/var.bin" LSITE=top SAVEF="$2" HFROM="$2" HSTEP=20 MAXF=$(( $2 + 100 ))
+          ( run_emu "$W/emu_h.log" 80 ) &
+          sleep 30; hp=$(pgrep -x pcsx-redux | head -n 1 || true)
+          { echo "== hang $1 pid=${hp:-tak_ada}"
+            if [ -n "$hp" ]; then
+              for rep in 1 2; do
+                for t in /proc/$hp/task/*; do echo "thr$rep $(cat $t/comm 2>/dev/null) $(sed 's/.*) //' $t/stat 2>/dev/null | awk '{print "st="$1" ut="$12" sys="$13}')"; done | head -n 40
+                sleep 5
+              done
+              command -v gdb >/dev/null 2>&1 || sudo apt-get install -y -qq gdb >/dev/null 2>&1 || true
+              if command -v gdb >/dev/null 2>&1; then sudo timeout 60 gdb -p "$hp" -batch -ex 'set pagination off' -ex 'thread apply all bt 14' 2>&1 | grep -aE '^(Thread|#)' | cut -c1-170 | head -n 100 || true; else echo "gdb tidak tersedia"; fi
+            fi; } >> "$D/hang.txt" 2>&1 || true
+          wait || true
+          rm -f "$W/var.bin"
+        }
+        HANGV=$(grep -m1 '^# HANG ' "$R/$JADWAL" | awk '{print $3}' || true)
+        $PB fixptr "$W/stL.bin" "$W/var.bin" 6.6.1 8 0 >> "$D/struktur.txt" && runvar fixp "$SFL" || true
+        $PB fixptr "$W/stL.bin" "$W/var.bin" 6.6.1 8 7 >> "$D/struktur.txt" && runvar fixps "$SFL" || true
+        if [ "$HANGV" = "fixp" ]; then $PB fixptr "$W/stL.bin" "$W/var.bin" 6.6.1 8 0 >/dev/null && hangdiag fixp "$SFL" || true; fi
+        if [ "$HANGV" = "d661_8" ]; then $PB drop "$W/stL.bin" "$W/var.bin" 6.6.1.8 && hangdiag d661_8 "$SFL" || true; fi
         if [ -s "$W/stE.bin" ]; then cp "$W/stE.bin" "$W/var.bin"; runvar c0_E_asli "$SF2"; fi
         cp "$W/stL.bin" "$W/var.bin"; runvar c1_L_asli "$SFL"
         $PB drop "$W/stL.bin" "$W/var.bin" 6.6 && runvar d66 "$SFL" || true
