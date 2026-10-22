@@ -147,7 +147,7 @@ PYEOF
     grep -q '^# DYNAREC' "$R/$JADWAL" && EMU_CPU="-dynarec"
     run_emu(){ set +e; xvfb-run -a -s "-screen 0 1280x720x24" timeout -k 20 "$2" env LD_PRELOAD="$W/shim243.so" LD_LIBRARY_PATH="$PWD/usr/lib" \
       usr/bin/pcsx-redux -cli -noupdate $EMU_CPU -softgpu $EMU_DBG -fastboot -loadiso "$W/game/naruto.cue" -run -dofile "$R/redux/lua_mine/probe.lua" > "$1" 2>&1; XRC=$?; set -e; return 0; }
-    F='^(probe siap|POKE|ORPOKE|CHG|HSH|SVS|XS|TIME)'
+    F='^(probe siap|POKE|ORPOKE|CHG|HSH|HSB|SVS|XS|TIME)'
     export STATEOUT="$W/state.bin" STATEIN=""
     t0=$(date +%s); run_emu "$W/emu_w.log" 900; t1=$(date +%s); rcw=$XRC
     grep -aE "$F" "$W/emu_w.log" | head -n 3000 > "$D/chg_w.log" || true
@@ -175,7 +175,8 @@ PYEOF
           tail -n 14 "$W/emu_v.log" | tr -cd '\11\12\40-\176' | cut -c1-170 > "$D/ekor_$1_$VLS.txt" || true
           { echo "== $1 lsite=$VLS base=$2 ukuran=$(stat -c %s "$W/var.bin") rc=$XRC detik=$((t1-t0)) muat_selesai=$(grep -ac 'XS muat selesai ok=true' "$W/emu_v.log" || true) HSH=$(grep -ac '^HSH' "$W/emu_v.log" || true)"
             grep -aE '^XS (sesudah_muat|nilai|tick|resume|vsync|ev)' "$W/emu_v.log" | head -n 9 | cut -c1-300 || true
-            grep -aE '^HSH' "$W/emu_v.log" | head -n 2 || true; } >> "$D/varian.txt"
+            grep -aE '^HSH' "$W/emu_v.log" | uniq | head -n 5 || true; } >> "$D/varian.txt"
+          grep -a '^HSB' "$W/emu_v.log" | uniq | head -n 4 > "$D/blk_$1_$VLS.txt" || true
           rm -f "$W/var.bin"
         }
         hangdiag(){  # $1 nama, $2 frame dasar; var.bin sudah ada. Hanya status thread + backtrace fungsi (tanpa data game).
@@ -196,6 +197,7 @@ PYEOF
         }
         HANGV=$(grep -m1 '^# HANG ' "$R/$JADWAL" | awk '{print $3}' || true)
         $PB fixptr "$W/stL.bin" "$W/var.bin" 6.6.1 8 0 >> "$D/struktur.txt" && runvar fixp "$SFL" || true
+        $PB fixptr "$W/stL.bin" "$W/var.bin" 6.6.1 8 0 >/dev/null && runvar fixp_b "$SFL" || true
         $PB fixptr "$W/stL.bin" "$W/var.bin" 6.6.1 8 7 >> "$D/struktur.txt" && runvar fixps "$SFL" || true
         if [ "$HANGV" = "fixp" ]; then $PB fixptr "$W/stL.bin" "$W/var.bin" 6.6.1 8 0 >/dev/null && hangdiag fixp "$SFL" || true; fi
         if [ "$HANGV" = "d661_8" ]; then $PB drop "$W/stL.bin" "$W/var.bin" 6.6.1.8 && hangdiag d661_8 "$SFL" || true; fi
@@ -253,7 +255,7 @@ PYEOF
     env LD_PRELOAD="$W/shim243.so" LD_LIBRARY_PATH="$PWD/usr/lib" \
     usr/bin/pcsx-redux -cli -noupdate ${EMU_CPU0:--interpreter} -softgpu ${EMU_DBG0--debugger} -fastboot -loadiso "$W/game/naruto.cue" -run -dofile "$R/redux/lua_mine/probe.lua" > "$W/emu.log" 2>&1
   rc=$?; set -e; t1=$(date +%s)
-  grep -aE '^(probe siap|POKE|ORPOKE|CHG|DUMP|HSH|HSF|SVS|TIME)' "$W/emu.log" | head -n 5000 > "$D/chg.log" || true
+  grep -aE '^(probe siap|POKE|ORPOKE|CHG|DUMP|HSH|HSB|HSF|SVS|TIME)' "$W/emu.log" | head -n 5000 > "$D/chg.log" || true
   tail -n 30 "$W/emu.log" | tr -cd '\11\12\40-\176' | cut -c1-200 > "$D/emu_tail.txt"
   if [ -n "${DUMPS:-}" ]; then python3 "$R/ci/ekstrak_dump.py" "$OUT" "$D/dump_angka.csv" "$ADDRS" || true; fi
   if ls "$OUT"/s*.raw >/dev/null 2>&1; then python3 "$R/ci/enkripsi_shot.py" "$OUT" "$D" "$R/ci/shot_pub.pem" | tee -a "$D/chg.log" | sed "s/^/  /" || true; fi  # tangkapan layar: HANYA terenkripsi (kunci publik) keluar

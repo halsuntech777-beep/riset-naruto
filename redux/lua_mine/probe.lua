@@ -217,7 +217,10 @@ pcall(function()
 end)
 local WALL0 = wall()
 -- header opsional di jadwal: "# SPUSPEED n" (mengatur PCSX.settings.spu.Speed; hanya angka)
+local hblkset = {}
 for line in io.lines(os.getenv('INPUTS')) do
+  local hbl = line:match('^#%s*HBLK%s+([%d%s]+)')
+  if hbl then for fr in hbl:gmatch('%d+') do hblkset[tonumber(fr)] = true end end
   local sp = line:match('^#%s*SPUSPEED%s+(%d+)')
   if sp then local ok = pcall(function() PCSX.settings.spu.Speed = tonumber(sp) end); print('SVS spu.Speed=' .. sp .. ' ok=' .. tostring(ok)) end
 end
@@ -284,6 +287,16 @@ local function onVsync()
     local ok, h = pcall(hram)
     print(string.format('HSH f=%d ram=%d', frame, ok and h or -1))
     hfb(frame)
+  end
+  if hblkset[frame] then
+    local p = ffi.cast('uint32_t*', mem)
+    local out = {}
+    for b = 0, 31 do
+      local h = 0
+      for i = b * 16384, b * 16384 + 16383 do h = bit.tobit(bit.rol(bit.bxor(h, p[i]), 5) + 40503) end
+      out[#out + 1] = tostring(h % 4294967296)
+    end
+    print(string.format('HSB f=%d %s', frame, table.concat(out, ' ')))
   end
   if dumpset[frame] then PCSX.nextTick(function()
     local fh = io.open(string.format('%s/r_%05d.bin', OUT, frame), 'wb'); fh:write(ffi.string(PCSX.getMemPtr(), 0x200000)); fh:close(); print('DUMP ' .. frame) end) end
