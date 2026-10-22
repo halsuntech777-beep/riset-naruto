@@ -231,8 +231,14 @@ local function xsave()
   PCSX.nextTick(function() PCSX.quit(0) end)
 end
 local listener
+local XSPOST = nil
 local function onVsync()
   frame = frame + 1
+  if XSPOST and XSPOST < 3 then
+    XSPOST = XSPOST + 1
+    local okc, c = pcall(function() return PCSX.getCPUCycles() end)
+    say(string.format('XS vsync n=%d f=%d cyc=%s', XSPOST, frame, okc and tostring(c) or 'na'))
+  end
   for _, pk in ipairs(pokes) do
     if frame == pk[1] then
       local off = pk[2] % 0x200000
@@ -304,7 +310,18 @@ if (MODUS == 'xs' or MODUS == 'xb') and STATEIN then
     for _, i in ipairs(inputs) do if i[1] <= frame and frame < i[2] then pad.setOverride(i[3]); n = n + 1 end end
     local okh, h = pcall(hram)
     say(string.format('XS sesudah_muat f=%d ram=%d override_aktif=%d', frame, okh and h or -1, n))
+    local function cyc() local okc, c = pcall(function() return PCSX.getCPUCycles() end); return okc and tostring(c) or 'na' end
+    local vals = {}
+    for _, pl in ipairs(polls) do vals[#vals+1] = pl[2] .. '=' .. tostring(u32(pl[1])) end
+    say('XS nilai ' .. table.concat(vals, ' ') .. ' cyc=' .. cyc())
+    XSPOST = 0
     install()
+    PCSX.nextTick(function()
+      say('XS tick1 cyc=' .. cyc())
+      local okr, er = pcall(function() PCSX.resumeEmulator() end)
+      say('XS resume ok=' .. tostring(okr) .. ' ' .. tostring(er):gsub('[^%w%s_%.:]', ''):sub(1, 60))
+      PCSX.nextTick(function() say('XS tick2 cyc=' .. cyc()) end)
+    end)
   end
   if LSITE == 'top' then xload('top')
   elseif LSITE == 'nt' then PCSX.nextTick(function() xload('nt') end)

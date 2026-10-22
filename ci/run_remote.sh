@@ -141,7 +141,7 @@ PYEOF
     }
     echo "mode bantuan selesai"; exit 0
   fi
-  if [ "${MODUS:-}" = "xs" ] || [ "${MODUS:-}" = "xb" ]; then  # state lintas PROSES: penulis simpan state sementara -> pembaca (proses baru) memuat; state tidak keluar dari runner
+  if [ "${MODUS:-}" = "xs" ] || [ "${MODUS:-}" = "xb" ] || [ "${MODUS:-}" = "xv" ]; then  # state lintas PROSES: penulis simpan state sementara -> pembaca (proses baru) memuat; state tidak keluar dari runner
     EMU_DBG="-debugger"; EMU_CPU="-interpreter"
     grep -q '^# NODEBUG' "$R/$JADWAL" && EMU_DBG=""
     grep -q '^# DYNAREC' "$R/$JADWAL" && EMU_CPU="-dynarec"
@@ -153,6 +153,42 @@ PYEOF
     grep -aE "$F" "$W/emu_w.log" | head -n 3000 > "$D/chg_w.log" || true
     echo "flags cpu=$EMU_CPU debug=${EMU_DBG:-tidak}"; echo "penulis rc=$rcw detik=$((t1-t0)) state_bytes=$(stat -c %s "$W/state.bin" 2>/dev/null || echo 0)" > "$D/ringkasan.txt"
     export STATEOUT=""
+    if [ "$MODUS" = "xv" ]; then  # uji banyak VARIAN state (L = frame SAVEF, E = state awal "# SAVEF2 n"); semua state sementara, dihapus di akhir; hanya angka keluar
+      SF2=$(grep -m1 '^# SAVEF2 ' "$R/$JADWAL" | awk '{print $3}' || true); [[ "$SF2" =~ ^[0-9]{1,6}$ ]] || SF2=3000
+      SFL="$SAVEF"; PB="python3 $R/ci/pbx.py"; : > "$D/varian.txt"
+      if [ -s "$W/state.bin" ]; then
+        mv "$W/state.bin" "$W/stL.bin"
+        export STATEOUT="$W/state.bin" STATEIN="" SAVEF="$SF2"
+        run_emu "$W/emu_w2.log" 300
+        grep -aE "$F" "$W/emu_w2.log" | head -n 20 > "$D/chg_w2.log" || true
+        if [ -s "$W/state.bin" ]; then mv "$W/state.bin" "$W/stE.bin"; fi
+        export STATEOUT="" SAVEF="$SFL"
+        { echo "L frame=$SFL bytes=$(stat -c %s "$W/stL.bin")  E frame=$SF2 bytes=$(stat -c %s "$W/stE.bin" 2>/dev/null || echo 0)"
+          for st in L E; do for pth in 6 6.6; do echo "-- $st $pth"; $PB subs "$W/st$st.bin" $pth 2>&1 | head -n 3; $PB shape "$W/st$st.bin" $pth 2>&1 | head -n 4; done; done; } > "$D/struktur.txt" || true
+        runvar(){  # $1 nama, $2 frame dasar; $W/var.bin sudah dibuat
+          export STATEIN="$W/var.bin" LSITE=top SAVEF="$2" HFROM="$2" HSTEP=20 MAXF=$(( $2 + 100 ))
+          t0=$(date +%s); run_emu "$W/emu_v.log" 40; t1=$(date +%s)
+          { echo "== $1 base=$2 ukuran=$(stat -c %s "$W/var.bin") rc=$XRC detik=$((t1-t0)) muat_selesai=$(grep -ac 'XS muat selesai ok=true' "$W/emu_v.log" || true) HSH=$(grep -ac '^HSH' "$W/emu_v.log" || true)"
+            grep -aE '^XS (sesudah_muat|nilai|tick|resume|vsync)' "$W/emu_v.log" | head -n 9 | cut -c1-300
+            grep -aE '^HSH' "$W/emu_v.log" | head -n 2; } >> "$D/varian.txt"
+          rm -f "$W/var.bin"
+        }
+        if [ -s "$W/stE.bin" ]; then cp "$W/stE.bin" "$W/var.bin"; runvar c0_E_asli "$SF2"; fi
+        cp "$W/stL.bin" "$W/var.bin"; runvar c1_L_asli "$SFL"
+        $PB drop "$W/stL.bin" "$W/var.bin" 6.6 && runvar d66 "$SFL" || true
+        $PB drop "$W/stL.bin" "$W/var.bin" 6 && runvar d6 "$SFL" || true
+        if [ -s "$W/stE.bin" ]; then
+          $PB swap "$W/stL.bin" "$W/stE.bin" "$W/var.bin" 6 >/dev/null && runvar s6_dariE "$SFL" || true
+          $PB swap "$W/stL.bin" "$W/stE.bin" "$W/var.bin" 6.6 >/dev/null && runvar s66_dariE "$SFL" || true
+          $PB swap "$W/stE.bin" "$W/stL.bin" "$W/var.bin" 6.6 >/dev/null && runvar e66_dariL "$SF2" || true
+          $PB swap "$W/stE.bin" "$W/stL.bin" "$W/var.bin" 6 >/dev/null && runvar e6_dariL "$SF2" || true
+        fi
+        for k in $($PB subs "$W/stL.bin" 6.6 | head -n 1); do
+          $PB drop "$W/stL.bin" "$W/var.bin" 6.6.$k && runvar "d66_$k" "$SFL" || true
+        done
+      fi
+      rm -f "$W/state.bin" "$W/stL.bin" "$W/stE.bin" "$W/var.bin"; cat "$D/ringkasan.txt" "$D/varian.txt" | head -n 120; echo "mode xv selesai"; exit 0
+    fi
     if [ -s "$W/state.bin" ] && [ "$MODUS" = "xb" ]; then
       python3 "$R/ci/pbsplit.py" struct "$W/state.bin" | head -n 400 > "$D/pb_struct.txt" || true
       PATHS=$(python3 "$R/ci/pbsplit.py" list "$W/state.bin" 150); echo "jalur: $PATHS" >> "$D/ringkasan.txt"
