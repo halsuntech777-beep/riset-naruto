@@ -1,0 +1,12 @@
+== fixp lsite=vs1 base=24000 ukuran=21163466 rc=0 detik=1 muat_selesai=12 HSH=5
+XS sesudah_muat f=24000 ram=247000128 override_aktif=1 
+XS nilai A1=4640 A2=1680 A3=0 A4=0 B1=4640 B2=1680 B3=0 B4=0 P1=11 P2=0 P3=10 P4=0 cyc=13545509090ULL 
+XS vsync n=1 f=24001 cyc=13546073485ULL 
+XS sesudah_muat f=24000 ram=247000128 override_aktif=1 
+XS nilai A1=4640 A2=1680 A3=0 A4=0 B1=4640 B2=1680 B3=0 B4=0 P1=11 P2=0 P3=10 P4=0 cyc=13545509090ULL 
+XS vsync n=1 f=24001 cyc=13546073485ULL 
+XS vsync n=2 f=24002 cyc=13546073485ULL 
+XS sesudah_muat f=24000 ram=247000128 override_aktif=1 
+XS nilai A1=4640 A2=1680 A3=0 A4=0 B1=4640 B2=1680 B3=0 B4=0 P1=11 P2=0 P3=10 P4=0 cyc=13545509090ULL 
+HSH f=24020 ram=2806166462 
+HSH f=24040 ram=4101194862 
