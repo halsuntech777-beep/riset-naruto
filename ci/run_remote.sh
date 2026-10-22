@@ -169,8 +169,8 @@ PYEOF
           export STATEIN="$W/var.bin" LSITE=top SAVEF="$2" HFROM="$2" HSTEP=20 MAXF=$(( $2 + 100 ))
           t0=$(date +%s); run_emu "$W/emu_v.log" 40; t1=$(date +%s)
           { echo "== $1 base=$2 ukuran=$(stat -c %s "$W/var.bin") rc=$XRC detik=$((t1-t0)) muat_selesai=$(grep -ac 'XS muat selesai ok=true' "$W/emu_v.log" || true) HSH=$(grep -ac '^HSH' "$W/emu_v.log" || true)"
-            grep -aE '^XS (sesudah_muat|nilai|tick|resume|vsync)' "$W/emu_v.log" | head -n 9 | cut -c1-300
-            grep -aE '^HSH' "$W/emu_v.log" | head -n 2; } >> "$D/varian.txt"
+            grep -aE '^XS (sesudah_muat|nilai|tick|resume|vsync)' "$W/emu_v.log" | head -n 9 | cut -c1-300 || true
+            grep -aE '^HSH' "$W/emu_v.log" | head -n 2 || true; } >> "$D/varian.txt"
           rm -f "$W/var.bin"
         }
         if [ -s "$W/stE.bin" ]; then cp "$W/stE.bin" "$W/var.bin"; runvar c0_E_asli "$SF2"; fi
@@ -183,7 +183,11 @@ PYEOF
           $PB swap "$W/stE.bin" "$W/stL.bin" "$W/var.bin" 6.6 >/dev/null && runvar e66_dariL "$SF2" || true
           $PB swap "$W/stE.bin" "$W/stL.bin" "$W/var.bin" 6 >/dev/null && runvar e6_dariL "$SF2" || true
         fi
-        for k in $($PB subs "$W/stL.bin" 6.6 | head -n 1); do
+        if [ -s "$W/stE.bin" ]; then
+          $PB drop "$W/stE.bin" "$W/var.bin" 6.6 && runvar e_d66 "$SF2" || true
+          $PB drop "$W/stE.bin" "$W/var.bin" 6 && runvar e_d6 "$SF2" || true
+        fi
+        for k in $($PB subs "$W/stL.bin" 6.6 | head -n 1 || true); do
           $PB drop "$W/stL.bin" "$W/var.bin" 6.6.$k && runvar "d66_$k" "$SFL" || true
         done
       fi
