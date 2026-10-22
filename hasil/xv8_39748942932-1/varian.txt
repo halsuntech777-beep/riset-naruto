@@ -1,0 +1,72 @@
+== fixp lsite=nt base=24000 ukuran=21163422 rc=0 detik=1 muat_selesai=2 HSH=5
+XS sesudah_muat f=24000 ram=247000128 override_aktif=1 
+XS nilai A1=4640 A2=1680 A3=0 A4=0 B1=4640 B2=1680 B3=0 B4=0 P1=11 P2=0 P3=10 P4=0 cyc=13545509090ULL 
+XS vsync n=1 f=24001 cyc=13546073485ULL 
+XS vsync n=2 f=24002 cyc=13546637885ULL 
+XS vsync n=3 f=24003 cyc=13547202285ULL 
+XS ev ExecutionFlow::Pause cyc=13601948892ULL 
+HSH f=24020 ram=1184760695 
+HSH f=24040 ram=2236663633 
+HSH f=24060 ram=2577020301 
+HSH f=24080 ram=913109427 
+HSH f=24100 ram=3181498311 
+== fixp_b lsite=nt base=24000 ukuran=21163422 rc=0 detik=1 muat_selesai=2 HSH=5
+XS sesudah_muat f=24000 ram=247000128 override_aktif=1 
+XS nilai A1=4640 A2=1680 A3=0 A4=0 B1=4640 B2=1680 B3=0 B4=0 P1=11 P2=0 P3=10 P4=0 cyc=13545509090ULL 
+XS vsync n=1 f=24001 cyc=13546073485ULL 
+XS vsync n=2 f=24002 cyc=13546637885ULL 
+XS vsync n=3 f=24003 cyc=13547202285ULL 
+XS ev ExecutionFlow::Pause cyc=13601948892ULL 
+HSH f=24020 ram=1184760695 
+HSH f=24040 ram=2236663633 
+HSH f=24060 ram=2577020301 
+HSH f=24080 ram=913109427 
+HSH f=24100 ram=3181498311 
+== fixps lsite=nt base=24000 ukuran=21163498 rc=0 detik=1 muat_selesai=2 HSH=5
+XS sesudah_muat f=24000 ram=247000128 override_aktif=1 
+XS nilai A1=4640 A2=1680 A3=0 A4=0 B1=4640 B2=1680 B3=0 B4=0 P1=11 P2=0 P3=10 P4=0 cyc=13545509090ULL 
+XS vsync n=1 f=24001 cyc=13546073485ULL 
+XS vsync n=2 f=24002 cyc=13546637885ULL 
+XS vsync n=3 f=24003 cyc=13547202285ULL 
+XS ev ExecutionFlow::Pause cyc=13601948892ULL 
+HSH f=24020 ram=1184760695 
+HSH f=24040 ram=2236663633 
+HSH f=24060 ram=2577020301 
+HSH f=24080 ram=913109427 
+HSH f=24100 ram=3181498311 
+== d66 lsite=nt base=24000 ukuran=21153776 rc=0 detik=1 muat_selesai=2 HSH=5
+XS sesudah_muat f=24000 ram=247000128 override_aktif=1 
+XS nilai A1=4640 A2=1680 A3=0 A4=0 B1=4640 B2=1680 B3=0 B4=0 P1=11 P2=0 P3=10 P4=0 cyc=13545509090ULL 
+XS vsync n=1 f=24001 cyc=13546073485ULL 
+XS vsync n=2 f=24002 cyc=13546637885ULL 
+XS vsync n=3 f=24003 cyc=13547202285ULL 
+XS ev ExecutionFlow::Pause cyc=13601948892ULL 
+HSH f=24020 ram=1184760695 
+HSH f=24040 ram=2236663633 
+HSH f=24060 ram=2577020301 
+HSH f=24080 ram=913109427 
+HSH f=24100 ram=3181498311 
+== d6 lsite=nt base=24000 ukuran=20530574 rc=0 detik=1 muat_selesai=2 HSH=5
+XS sesudah_muat f=24000 ram=247000128 override_aktif=1 
+XS nilai A1=4640 A2=1680 A3=0 A4=0 B1=4640 B2=1680 B3=0 B4=0 P1=11 P2=0 P3=10 P4=0 cyc=13545509090ULL 
+XS vsync n=1 f=24001 cyc=13546073485ULL 
+XS vsync n=2 f=24002 cyc=13546637885ULL 
+XS vsync n=3 f=24003 cyc=13547202285ULL 
+XS ev ExecutionFlow::Pause cyc=13601948892ULL 
+HSH f=24020 ram=1184760695 
+HSH f=24040 ram=2236663633 
+HSH f=24060 ram=2577020301 
+HSH f=24080 ram=913109427 
+HSH f=24100 ram=3181498311 
+== d661_8 lsite=nt base=24000 ukuran=21163403 rc=0 detik=0 muat_selesai=2 HSH=5
+XS sesudah_muat f=24000 ram=247000128 override_aktif=1 
+XS nilai A1=4640 A2=1680 A3=0 A4=0 B1=4640 B2=1680 B3=0 B4=0 P1=11 P2=0 P3=10 P4=0 cyc=13545509090ULL 
+XS vsync n=1 f=24001 cyc=13546073485ULL 
+XS vsync n=2 f=24002 cyc=13546637885ULL 
+XS vsync n=3 f=24003 cyc=13547202285ULL 
+XS ev ExecutionFlow::Pause cyc=13601948892ULL 
+HSH f=24020 ram=1184760695 
+HSH f=24040 ram=2236663633 
+HSH f=24060 ram=2577020301 
+HSH f=24080 ram=913109427 
+HSH f=24100 ram=3181498311 
