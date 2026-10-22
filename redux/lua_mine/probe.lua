@@ -218,8 +218,37 @@ end)
 local WALL0 = wall()
 -- header opsional di jadwal: "# SPUSPEED n" (mengatur PCSX.settings.spu.Speed; hanya angka)
 local hblkset = {}
+local hfrset = {}
+local REFOUT, REFIN = os.getenv('REFOUT') or '', os.getenv('REFIN') or ''
+local WDFMAX = tonumber(os.getenv('WDFMAX') or '16')
+-- WDIFF: bandingkan RAM sekarang dengan snapshot referensi (berkas HANYA di runner, tidak pernah di-commit); cetak jumlah kata beda per blok 64 KB + beberapa kata beda sebagai ANGKA
+local function wdiff(fr)
+  local fh = io.open(string.format('%s_%d.bin', REFIN, fr), 'rb')
+  if not fh then print(string.format('WDN f=%d sem_ref', fr)); return end
+  local s = fh:read(0x200000); fh:close()
+  if not s or #s ~= 0x200000 then print(string.format('WDN f=%d ref_rusak', fr)); return end
+  local rp = ffi.new('uint32_t[?]', 0x80000)
+  ffi.copy(rp, s, 0x200000)
+  local cp = ffi.cast('uint32_t*', mem)
+  local cnt, shown, lines, total = {}, {}, {}, 0
+  for i = 0, 0x7FFFF do
+    local a, b = rp[i], cp[i]
+    if a ~= b then
+      local blk = math.floor(i / 16384)
+      cnt[blk] = (cnt[blk] or 0) + 1; total = total + 1
+      shown[blk] = (shown[blk] or 0) + 1
+      if shown[blk] <= WDFMAX then lines[#lines + 1] = string.format('WDF f=%d a=0x%06X ref=%d cur=%d', fr, i * 4, a, b) end
+    end
+  end
+  local parts = {}
+  for blk = 0, 31 do if cnt[blk] then parts[#parts + 1] = blk .. ':' .. cnt[blk] end end
+  print(string.format('WDN f=%d total=%d blok=%s', fr, total, table.concat(parts, ',')))
+  for _, l in ipairs(lines) do print(l) end
+end
 for line in io.lines(os.getenv('INPUTS')) do
   local hbl = line:match('^#%s*HBLK%s+([%d%s]+)')
+  local hfr = line:match('^#%s*HFR%s+([%d%s]+)')
+  if hfr then for fr in hfr:gmatch('%d+') do hfrset[tonumber(fr)] = true end end
   if hbl then for fr in hbl:gmatch('%d+') do hblkset[tonumber(fr)] = true end end
   local sp = line:match('^#%s*SPUSPEED%s+(%d+)')
   if sp then local ok = pcall(function() PCSX.settings.spu.Speed = tonumber(sp) end); print('SVS spu.Speed=' .. sp .. ' ok=' .. tostring(ok)) end
@@ -297,6 +326,17 @@ local function onVsync()
       out[#out + 1] = tostring(h % 4294967296)
     end
     print(string.format('HSB f=%d %s', frame, table.concat(out, ' ')))
+  end
+  if hfrset[frame] then
+    local fr = frame
+    if REFOUT ~= '' then pcall(function()
+      local fh = io.open(string.format('%s_%d.bin', REFOUT, fr), 'wb'); fh:write(ffi.string(mem, 0x200000)); fh:close()
+      print(string.format('WDREF f=%d ok', fr))
+    end) end
+    if REFIN ~= '' then
+      local okd, ed = pcall(wdiff, fr)
+      if not okd then print('WDN f=' .. fr .. ' galat=' .. tostring(ed):gsub('[^%w%s_%.:]', ''):sub(1, 60)) end
+    end
   end
   if dumpset[frame] then PCSX.nextTick(function()
     local fh = io.open(string.format('%s/r_%05d.bin', OUT, frame), 'wb'); fh:write(ffi.string(PCSX.getMemPtr(), 0x200000)); fh:close(); print('DUMP ' .. frame) end) end

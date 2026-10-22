@@ -159,6 +159,7 @@ PYEOF
       VTO=$(grep -m1 '^# VTO ' "$R/$JADWAL" | awk '{print $3}' || true); [[ "$VTO" =~ ^[0-9]{1,3}$ ]] || VTO=40; [ "$VTO" -le 280 ] || VTO=280
       VLS=$(grep -m1 '^# LSITE ' "$R/$JADWAL" | awk '{print $3}' || true); [[ "$VLS" =~ ^(top|nt|vs1)$ ]] || VLS=top
       ONLY=$(grep -m1 '^# ONLY ' "$R/$JADWAL" | cut -d' ' -f3- || true); [[ -z "$ONLY" || "$ONLY" =~ ^[A-Za-z0-9_*\ ]{1,200}$ ]] || ONLY=""
+      VMAX=$(grep -m1 '^# VMAX ' "$R/$JADWAL" | awk '{print $3}' || true); [[ "$VMAX" =~ ^[0-9]{1,6}$ ]] || VMAX=0
       if [ -s "$W/state.bin" ]; then
         mv "$W/state.bin" "$W/stL.bin"
         export STATEOUT="$W/state.bin" STATEIN="" SAVEF="$SF2"
@@ -170,13 +171,16 @@ PYEOF
           for st in L E; do echo "-- nums $st 6.6.1"; $PB nums "$W/st$st.bin" 6.6.1 4 2>&1 | head -n 4; for pth in 6 6.6; do echo "-- $st $pth"; $PB subs "$W/st$st.bin" $pth 2>&1 | head -n 3; $PB shape "$W/st$st.bin" $pth 2>&1 | head -n 4; done; done; } > "$D/struktur.txt" || true
         runvar(){  # $1 nama, $2 frame dasar; $W/var.bin sudah dibuat
           if [ -n "$ONLY" ]; then okv=0; set -f; for pat in $ONLY; do case "$1" in $pat) okv=1;; esac; done; set +f; if [ "$okv" = 0 ]; then rm -f "$W/var.bin"; return 0; fi; fi
-          export STATEIN="$W/var.bin" LSITE="$VLS" SAVEF="$2" HFROM="$2" HSTEP=20 MAXF=$(( $2 + 100 ))
+          MXV=$(( $2 + 100 )); if [ "$VMAX" -gt "$MXV" ]; then MXV=$VMAX; fi
+          export STATEIN="$W/var.bin" LSITE="$VLS" SAVEF="$2" HFROM="$2" HSTEP=20 MAXF=$MXV
           t0=$(date +%s); run_emu "$W/emu_v.log" "$VTO"; t1=$(date +%s)
           tail -n 14 "$W/emu_v.log" | tr -cd '\11\12\40-\176' | cut -c1-170 > "$D/ekor_$1_$VLS.txt" || true
           { echo "== $1 lsite=$VLS base=$2 ukuran=$(stat -c %s "$W/var.bin") rc=$XRC detik=$((t1-t0)) muat_selesai=$(grep -ac 'XS muat selesai ok=true' "$W/emu_v.log" || true) HSH=$(grep -ac '^HSH' "$W/emu_v.log" || true)"
             grep -aE '^XS (sesudah_muat|nilai|tick|resume|vsync|ev)' "$W/emu_v.log" | head -n 9 | cut -c1-300 || true
             grep -aE '^HSH' "$W/emu_v.log" | uniq | head -n 5 || true; } >> "$D/varian.txt"
           grep -a '^HSB' "$W/emu_v.log" | uniq | head -n 4 > "$D/blk_$1_$VLS.txt" || true
+          grep -aE '^HSH' "$W/emu_v.log" | uniq | head -n 400 > "$D/hsh_$1_$VLS.txt" || true
+          grep -aE '^(WDN|WDF)' "$W/emu_v.log" | head -n 3000 > "$D/wd_$1_$VLS.txt" || true
           rm -f "$W/var.bin"
         }
         hangdiag(){  # $1 nama, $2 frame dasar; var.bin sudah ada. Hanya status thread + backtrace fungsi (tanpa data game).
@@ -196,6 +200,13 @@ PYEOF
           rm -f "$W/var.bin"
         }
         HANGV=$(grep -m1 '^# HANG ' "$R/$JADWAL" | awk '{print $3}' || true)
+        if grep -q '^# REFRUN' "$R/$JADWAL"; then  # proses referensi: replay penuh TANPA muat; snapshot RAM (berkas hanya di runner, dihapus di akhir) pada frame "# HFR"
+          export STATEIN="" STATEOUT="" REFOUT="$W/ref" REFIN="" HFROM="$SFL" HSTEP=20 MAXF=$(( VMAX > SFL + 100 ? VMAX : SFL + 100 ))
+          t0=$(date +%s); run_emu "$W/emu_ref.log" 600; t1=$(date +%s)
+          echo "referensi rc=$XRC detik=$((t1-t0)) WDREF=$(grep -ac '^WDREF' "$W/emu_ref.log" || true)" >> "$D/varian.txt"
+          grep -aE '^HSH' "$W/emu_ref.log" | uniq | head -n 400 > "$D/hsh_ref.txt" || true
+          export REFOUT="" REFIN="$W/ref"
+        fi
         $PB fixptr "$W/stL.bin" "$W/var.bin" 6.6.1 8 0 >> "$D/struktur.txt" && runvar fixp "$SFL" || true
         $PB fixptr "$W/stL.bin" "$W/var.bin" 6.6.1 8 0 >/dev/null && runvar fixp_b "$SFL" || true
         $PB fixptr "$W/stL.bin" "$W/var.bin" 6.6.1 8 7 >> "$D/struktur.txt" && runvar fixps "$SFL" || true
@@ -222,7 +233,7 @@ PYEOF
           $PB drop "$W/stL.bin" "$W/var.bin" 6.6.$k && runvar "d66_$k" "$SFL" || true
         done
       fi
-      rm -f "$W/state.bin" "$W/stL.bin" "$W/stE.bin" "$W/var.bin"; cat "$D/ringkasan.txt" "$D/varian.txt" | head -n 120; echo "mode xv selesai"; exit 0
+      rm -f "$W/state.bin" "$W/stL.bin" "$W/stE.bin" "$W/var.bin" "$W"/ref_*.bin; cat "$D/ringkasan.txt" "$D/varian.txt" | head -n 120; echo "mode xv selesai"; exit 0
     fi
     if [ -s "$W/state.bin" ] && [ "$MODUS" = "xb" ]; then
       python3 "$R/ci/pbsplit.py" struct "$W/state.bin" | head -n 400 > "$D/pb_struct.txt" || true
