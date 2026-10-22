@@ -1,0 +1,5 @@
+== e_d66 base=3000 ukuran=21120977 rc=124 detik=280 muat_selesai=2 HSH=0
+XS sesudah_muat f=3000 ram=385256697 override_aktif=0 
+XS nilai A1=786444 A2=524312 A3=524312 A4=524296 B1=1500 B2=1500 B3=0 B4=0 P1=0 P2=0 P3=0 P4=0 cyc=1693151088ULL 
+XS tick1 cyc=1693152353ULL 
+XS resume ok=true nil 
