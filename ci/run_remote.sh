@@ -156,6 +156,8 @@ PYEOF
     if [ "$MODUS" = "xv" ]; then  # uji banyak VARIAN state (L = frame SAVEF, E = state awal "# SAVEF2 n"); semua state sementara, dihapus di akhir; hanya angka keluar
       SF2=$(grep -m1 '^# SAVEF2 ' "$R/$JADWAL" | awk '{print $3}' || true); [[ "$SF2" =~ ^[0-9]{1,6}$ ]] || SF2=3000
       SFL="$SAVEF"; PB="python3 $R/ci/pbx.py"; : > "$D/varian.txt"
+      VTO=$(grep -m1 '^# VTO ' "$R/$JADWAL" | awk '{print $3}' || true); [[ "$VTO" =~ ^[0-9]{1,3}$ ]] || VTO=40; [ "$VTO" -le 280 ] || VTO=280
+      ONLY=$(grep -m1 '^# ONLY ' "$R/$JADWAL" | cut -d' ' -f3- || true); [[ -z "$ONLY" || "$ONLY" =~ ^[A-Za-z0-9_*\ ]{1,200}$ ]] || ONLY=""
       if [ -s "$W/state.bin" ]; then
         mv "$W/state.bin" "$W/stL.bin"
         export STATEOUT="$W/state.bin" STATEIN="" SAVEF="$SF2"
@@ -164,10 +166,11 @@ PYEOF
         if [ -s "$W/state.bin" ]; then mv "$W/state.bin" "$W/stE.bin"; fi
         export STATEOUT="" SAVEF="$SFL"
         { echo "L frame=$SFL bytes=$(stat -c %s "$W/stL.bin")  E frame=$SF2 bytes=$(stat -c %s "$W/stE.bin" 2>/dev/null || echo 0)"
-          for st in L E; do for pth in 6 6.6; do echo "-- $st $pth"; $PB subs "$W/st$st.bin" $pth 2>&1 | head -n 3; $PB shape "$W/st$st.bin" $pth 2>&1 | head -n 4; done; done; } > "$D/struktur.txt" || true
+          for st in L E; do echo "-- nums $st 6.6.1"; $PB nums "$W/st$st.bin" 6.6.1 4 2>&1 | head -n 4; for pth in 6 6.6; do echo "-- $st $pth"; $PB subs "$W/st$st.bin" $pth 2>&1 | head -n 3; $PB shape "$W/st$st.bin" $pth 2>&1 | head -n 4; done; done; } > "$D/struktur.txt" || true
         runvar(){  # $1 nama, $2 frame dasar; $W/var.bin sudah dibuat
+          if [ -n "$ONLY" ]; then okv=0; set -f; for pat in $ONLY; do case "$1" in $pat) okv=1;; esac; done; set +f; if [ "$okv" = 0 ]; then rm -f "$W/var.bin"; return 0; fi; fi
           export STATEIN="$W/var.bin" LSITE=top SAVEF="$2" HFROM="$2" HSTEP=20 MAXF=$(( $2 + 100 ))
-          t0=$(date +%s); run_emu "$W/emu_v.log" 40; t1=$(date +%s)
+          t0=$(date +%s); run_emu "$W/emu_v.log" "$VTO"; t1=$(date +%s)
           { echo "== $1 base=$2 ukuran=$(stat -c %s "$W/var.bin") rc=$XRC detik=$((t1-t0)) muat_selesai=$(grep -ac 'XS muat selesai ok=true' "$W/emu_v.log" || true) HSH=$(grep -ac '^HSH' "$W/emu_v.log" || true)"
             grep -aE '^XS (sesudah_muat|nilai|tick|resume|vsync)' "$W/emu_v.log" | head -n 9 | cut -c1-300 || true
             grep -aE '^HSH' "$W/emu_v.log" | head -n 2 || true; } >> "$D/varian.txt"
@@ -187,6 +190,9 @@ PYEOF
           $PB drop "$W/stE.bin" "$W/var.bin" 6.6 && runvar e_d66 "$SF2" || true
           $PB drop "$W/stE.bin" "$W/var.bin" 6 && runvar e_d6 "$SF2" || true
         fi
+        for k in $($PB subs "$W/stL.bin" 6.6.1 | head -n 1 || true); do
+          $PB drop "$W/stL.bin" "$W/var.bin" 6.6.1.$k && runvar "d661_$k" "$SFL" || true
+        done
         for k in $($PB subs "$W/stL.bin" 6.6 | head -n 1 || true); do
           $PB drop "$W/stL.bin" "$W/var.bin" 6.6.$k && runvar "d66_$k" "$SFL" || true
         done

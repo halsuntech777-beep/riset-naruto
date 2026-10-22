@@ -3,6 +3,7 @@
 #   pbx.py subs STATE PATH           -> nomor sub-field unik di bawah PATH (mis. 6.6), dipisah spasi
 #   pbx.py shape STATE PATH          -> jumlah elemen PATH + bentuk (nomor:tipe:panjang) 2 elemen pertama
 #   pbx.py drop STATE OUT PATH       -> tulis STATE tanpa semua kemunculan PATH (kedalaman bebas, mis. 6.6.3)
+#   pbx.py nums STATE PATH N        -> angka sub-field (varint/fixed; panjang untuk byte) N elemen pertama PATH
 #   pbx.py swap A B OUT PATH         -> A dengan PATH diganti PATH milik B (semua kemunculan; ditaruh di akhir induk)
 import sys
 
@@ -145,6 +146,19 @@ def main():
             for fn, wt, h0, e, q0, q1 in parse(b, p0, p1):
                 seen.add(fn)
         print(' '.join(str(x) for x in sorted(seen)))
+    elif cmd == 'nums':
+        nmax = int(sys.argv[4])
+        for p0, p1 in sp[:nmax]:
+            row = []
+            for fn, wt, h0, e, q0, q1 in parse(b, p0, p1):
+                if wt == 0:
+                    v, _ = rv(b, h0 + len(enc(fn << 3)))
+                    row.append('%d=%d' % (fn, v))
+                elif wt in (1, 5):
+                    row.append('%d=%d' % (fn, int.from_bytes(b[q0:q1], 'little')))
+                else:
+                    row.append('%d:len%d' % (fn, q1 - q0))
+            print(' '.join(row[:60]))
     elif cmd == 'shape':
         print('elemen', len(sp))
         for p0, p1 in sp[:2]:
