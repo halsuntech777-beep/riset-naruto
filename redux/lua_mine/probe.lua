@@ -315,6 +315,10 @@ if (MODUS == 'xs' or MODUS == 'xb' or MODUS == 'xv') and STATEIN then
     for _, pl in ipairs(polls) do vals[#vals+1] = pl[2] .. '=' .. tostring(u32(pl[1])) end
     say('XS nilai ' .. table.concat(vals, ' ') .. ' cyc=' .. cyc())
     XSPOST = 0
+    XSEV = XSEV or {}
+    for _, evn in ipairs({'ExecutionFlow::Pause', 'ExecutionFlow::Run', 'ExecutionFlow::Reset'}) do
+      pcall(function() XSEV[#XSEV + 1] = PCSX.Events.createEventListener(evn, function() say('XS ev ' .. evn .. ' cyc=' .. cyc()) end) end)
+    end
     install()
     PCSX.nextTick(function()
       say('XS tick1 cyc=' .. cyc())

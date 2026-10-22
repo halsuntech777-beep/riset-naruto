@@ -157,6 +157,7 @@ PYEOF
       SF2=$(grep -m1 '^# SAVEF2 ' "$R/$JADWAL" | awk '{print $3}' || true); [[ "$SF2" =~ ^[0-9]{1,6}$ ]] || SF2=3000
       SFL="$SAVEF"; PB="python3 $R/ci/pbx.py"; : > "$D/varian.txt"
       VTO=$(grep -m1 '^# VTO ' "$R/$JADWAL" | awk '{print $3}' || true); [[ "$VTO" =~ ^[0-9]{1,3}$ ]] || VTO=40; [ "$VTO" -le 280 ] || VTO=280
+      VLS=$(grep -m1 '^# LSITE ' "$R/$JADWAL" | awk '{print $3}' || true); [[ "$VLS" =~ ^(top|nt|vs1)$ ]] || VLS=top
       ONLY=$(grep -m1 '^# ONLY ' "$R/$JADWAL" | cut -d' ' -f3- || true); [[ -z "$ONLY" || "$ONLY" =~ ^[A-Za-z0-9_*\ ]{1,200}$ ]] || ONLY=""
       if [ -s "$W/state.bin" ]; then
         mv "$W/state.bin" "$W/stL.bin"
@@ -169,10 +170,11 @@ PYEOF
           for st in L E; do echo "-- nums $st 6.6.1"; $PB nums "$W/st$st.bin" 6.6.1 4 2>&1 | head -n 4; for pth in 6 6.6; do echo "-- $st $pth"; $PB subs "$W/st$st.bin" $pth 2>&1 | head -n 3; $PB shape "$W/st$st.bin" $pth 2>&1 | head -n 4; done; done; } > "$D/struktur.txt" || true
         runvar(){  # $1 nama, $2 frame dasar; $W/var.bin sudah dibuat
           if [ -n "$ONLY" ]; then okv=0; set -f; for pat in $ONLY; do case "$1" in $pat) okv=1;; esac; done; set +f; if [ "$okv" = 0 ]; then rm -f "$W/var.bin"; return 0; fi; fi
-          export STATEIN="$W/var.bin" LSITE=top SAVEF="$2" HFROM="$2" HSTEP=20 MAXF=$(( $2 + 100 ))
+          export STATEIN="$W/var.bin" LSITE="$VLS" SAVEF="$2" HFROM="$2" HSTEP=20 MAXF=$(( $2 + 100 ))
           t0=$(date +%s); run_emu "$W/emu_v.log" "$VTO"; t1=$(date +%s)
-          { echo "== $1 base=$2 ukuran=$(stat -c %s "$W/var.bin") rc=$XRC detik=$((t1-t0)) muat_selesai=$(grep -ac 'XS muat selesai ok=true' "$W/emu_v.log" || true) HSH=$(grep -ac '^HSH' "$W/emu_v.log" || true)"
-            grep -aE '^XS (sesudah_muat|nilai|tick|resume|vsync)' "$W/emu_v.log" | head -n 9 | cut -c1-300 || true
+          tail -n 14 "$W/emu_v.log" | tr -cd '\11\12\40-\176' | cut -c1-170 > "$D/ekor_$1_$VLS.txt" || true
+          { echo "== $1 lsite=$VLS base=$2 ukuran=$(stat -c %s "$W/var.bin") rc=$XRC detik=$((t1-t0)) muat_selesai=$(grep -ac 'XS muat selesai ok=true' "$W/emu_v.log" || true) HSH=$(grep -ac '^HSH' "$W/emu_v.log" || true)"
+            grep -aE '^XS (sesudah_muat|nilai|tick|resume|vsync|ev)' "$W/emu_v.log" | head -n 9 | cut -c1-300 || true
             grep -aE '^HSH' "$W/emu_v.log" | head -n 2 || true; } >> "$D/varian.txt"
           rm -f "$W/var.bin"
         }
