@@ -1,0 +1,1 @@
+== c0_E_asli base=3000 ukuran=21127784 rc=139 detik=1 muat_selesai=0 HSH=0
