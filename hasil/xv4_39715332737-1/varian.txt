@@ -1,0 +1,24 @@
+== d661_2 base=24000 ukuran=21163537 rc=139 detik=1 muat_selesai=0 HSH=0
+== d661_3 base=24000 ukuran=21163489 rc=139 detik=1 muat_selesai=0 HSH=0
+== d661_4 base=24000 ukuran=21163511 rc=139 detik=1 muat_selesai=0 HSH=0
+== d661_5 base=24000 ukuran=21157170 rc=139 detik=1 muat_selesai=0 HSH=0
+== d661_6 base=24000 ukuran=21163369 rc=139 detik=1 muat_selesai=0 HSH=0
+== d661_7 base=24000 ukuran=21163490 rc=139 detik=1 muat_selesai=0 HSH=0
+== d661_8 base=24000 ukuran=21163357 rc=124 detik=41 muat_selesai=2 HSH=0
+XS sesudah_muat f=24000 ram=247000128 override_aktif=1 
+XS nilai A1=4640 A2=1680 A3=0 A4=0 B1=4640 B2=1680 B3=0 B4=0 P1=11 P2=0 P3=10 P4=0 cyc=13545509090ULL 
+XS tick1 cyc=13545510361ULL 
+XS resume ok=true nil 
+== d661_9 base=24000 ukuran=21163489 rc=139 detik=1 muat_selesai=0 HSH=0
+== d661_10 base=24000 ukuran=21163575 rc=139 detik=1 muat_selesai=0 HSH=0
+== d661_11 base=24000 ukuran=21163545 rc=139 detik=1 muat_selesai=0 HSH=0
+== d661_12 base=24000 ukuran=21163537 rc=139 detik=1 muat_selesai=0 HSH=0
+== d661_13 base=24000 ukuran=21163512 rc=139 detik=1 muat_selesai=0 HSH=0
+== d661_14 base=24000 ukuran=21163512 rc=139 detik=1 muat_selesai=0 HSH=0
+== d661_15 base=24000 ukuran=21163513 rc=139 detik=2 muat_selesai=0 HSH=0
+== d661_16 base=24000 ukuran=21163489 rc=139 detik=1 muat_selesai=0 HSH=0
+== d661_19 base=24000 ukuran=21163489 rc=139 detik=1 muat_selesai=0 HSH=0
+== d661_20 base=24000 ukuran=21163489 rc=139 detik=1 muat_selesai=0 HSH=0
+== d661_21 base=24000 ukuran=21163489 rc=139 detik=1 muat_selesai=0 HSH=0
+== d661_23 base=24000 ukuran=21163336 rc=139 detik=1 muat_selesai=0 HSH=0
+== d661_24 base=24000 ukuran=21163344 rc=139 detik=1 muat_selesai=0 HSH=0
