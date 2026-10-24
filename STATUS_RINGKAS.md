@@ -1,6 +1,22 @@
 # STATUS_RINGKAS (baca ini dulu; detail ada di STATUS.md bagian "Sesi x4", lalu "Sesi x3")
 Repo PUBLIK halsuntech777-beep/riset-naruto. Tujuan: bot aturan tetap (Lua, tanpa LLM/API key) yang main dan menamatkan story mode Naruto: Shinobi no Sato no Jintori Gassen (PS1) sendiri di GitHub Actions; hasil riset = aturan main pasti untuk TileDuel. Story mode ~7-8 papan, tiap papan unik dan syarat menangnya sendiri [pemilik].
 
+## Sesi x5 (TERBARU) - BOT aturan tetap + lanjut lewat replay log
+Alat (hemat panggilan): `T=<token> bash alat/kerja.sh dorong|jalan|tunggu|lihat` (token hanya env satu perintah), `alat/ringkas.py DIR` (ringkasan angka), `ci/bot_lanjut.py LOG BASE OUT --upto F --cfg '...'` (log tekan bot -> jadwal replay + `# BOT from=F`). Dasar jadwal: `inputs/r13_bot_base.txt`.
+Bot: blok BOT di `redux/lua_mine/probe.lua`, aktif bila jadwal punya `# BOT from=F`; `# BOTCFG k=v` (K stable gap max stuck dead maxlog shots hashrate lowchakra refuse). Keluaran: `BOT f TOMBOL lama` (tekan, = baris jadwal), `BOT# N/S/END`. Saringan chg.log di `ci/run_remote.sh` kini memuat `BOT` (disetujui pemilik; satu kata, penjaga ekstensi/ukuran tidak diubah).
+Temuan:
+- [TERBUKTI] Replay: CHG f<=33100 identik dengan baseline sc2 (md5 f770298dc3bf). Replay log tekan bot (t2) menghasilkan CHG (33100,40000] identik dengan run bot asli t1 (md5 b5c3150767f7); t5/t8 mencapai keadaan persimpangan yang sama dengan t3 (c=2000,2000,2000,0 p=0,0).
+- [TERAMATI] Bot CIRCLE periodik memainkan papan 1 tanpa macet (t1 f33100-45000: 132 tekan; t3: B1 4905->2000 di f~54095, lalu c=2000,2000,2000,0 p=0,0, cutscene "木ノ葉丸だコレ!" di f60000, papan baru di f100000). [DUGAAN] tamat papan 1 membuka papan/stage berikutnya; syarat menang [BELUM] (layar status menampilkan 目標チャクラ 3000).
+- [TERAMATI] MACET 1: persimpangan arah di papan baru (panah kiri/kanan di sekitar karakter, CIRCLE berlabel マップ). t3 macet >=96 ribu frame, t5 35 ribu frame; RAM statis. Penyebab penjaga gagal: animasi terus menghasilkan hash layar baru (40-150 per 1000 frame), jadi "hash baru = kemajuan" salah. Default sekarang kemajuan = RAM pantau saja (hashrate=9999).
+- [TERAMATI] Hash layar persis tidak bisa jadi tabel adegan (animasi): ~1000 hash baru per 12 ribu frame.
+- [TERAMATI] MACET 2: aturan いいえ buta (DOWN+CIRCLE di t4/t7, CROSS di t6) menghentikan permainan sejak f~36000: layar masuk status/peta (ステータス, マップ, info 結界, ×もどる); RAM statis sampai f52000; eskalasi (esc>=107) tidak memulihkan. [DUGAAN] tombol arah/CROSS di fase non-dialog membuka layar status/peta. Maka `lowchakra` default 0 (mati) sampai ada deteksi fase/dialog.
+- [TERAMATI] Pesan "ミズキの結界をうばいとりました" di f36201 (t6) = hasil rebut barrier.
+- [TERAMATI] Kecepatan ~235 f/s (papan 1) dan ~131 f/s (papan 2, t3); timeout emulator 1500 dtk ~ 195 ribu frame per run; replay 100 ribu frame ~ 7 menit.
+- [TERAMATI] Nama tangkapan: `s%05d.raw` -> frame >=100000 jadi 6 digit dan ci/enkripsi_shot.py membaca [1:6]: `shot_10000` = frame 100000, `shot_14000` = 140000, dst (frame/10). Tidak diubah (perlu persetujuan). Maks 8 tangkapan per run.
+- t8 (replay log t3 sampai 100000 lalu bot v2, kemajuan RAM saja, stuck=2500): HASIL_T8
+Keputusan terbuka untuk pemilik: (1) cara deteksi fase/dialog untuk aturan いいえ: RAM (cari penanda fase lewat dump/diff) atau wilayah layar; (2) izin memperbaiki parsing nama di ci/enkripsi_shot.py (satu baris).
+Langkah berikut: pastikan eskalasi memulihkan persimpangan, cari penanda fase di RAM, uji tamat papan 1 dari replay (t3 sampai f~54000), baru bangun aturan いいえ.
+
 ## Keputusan pemilik
 - Bangun bot aturan tetap LANGSUNG, beserta fitur lanjut ke tengah permainan. Tanpa LLM/API key (tidak punya kartu; hanya langganan Claude).
 - Tahap lanjut: replay log input dulu (tanpa secret). Checkpoint terenkripsi (STATE_KEY, ditambah pemilik sendiri) hanya bila replay mendekati ~20 mnt; minta persetujuan sebelum mengubah workflow berahasia.
