@@ -247,7 +247,7 @@ local function wdiff(fr)
 end
 -- SCAN_BEGIN
 -- SCAN (hanya angka keluar): "# SCAN f v1 v2 ..." cetak ALAMAT (offset RAM, hex tanpa 0x) kata 32-bit sejajar yang bernilai v pada frame f;
--- "# SCANH f v1 ..." sama untuk halfword 16-bit sejajar; "# SCANP w f1 v1 f2 v2 ..." rantai (w=2|4, frame menaik): alamat harus bernilai v_k pada frame f_k untuk SEMUA k;
+-- "# SCANH f v1 ..." sama untuk halfword 16-bit sejajar, "# SCANB f v1 ..." untuk byte; "# SCANP w f1 v1 f2 v2 ..." rantai (w=1|2|4, frame menaik): alamat harus bernilai v_k pada frame f_k untuk SEMUA k;
 -- "# SCANMAX n" batas alamat tercetak per baris (baku 300, maks 5000; n= tetap jumlah penuh). Nilai desimal tak negatif. Isi RAM lain tidak pernah dicetak.
 local SCAN = { jobs = {}, max = 300, chains = 0 }
 local function scanfind(w, v)
@@ -255,6 +255,9 @@ local function scanfind(w, v)
   if w == 4 then
     local p = ffi.cast('uint32_t*', mem)
     for i = 0, 0x7FFFF do if p[i] == v then n = n + 1; res[n] = i * 4 end end
+  elseif w == 1 then
+    local p = ffi.cast('uint8_t*', mem)
+    for i = 0, 0x1FFFFF do if p[i] == v then n = n + 1; res[n] = i end end
   else
     local p = ffi.cast('uint16_t*', mem)
     for i = 0, 0xFFFFF do if p[i] == v then n = n + 1; res[n] = i * 2 end end
@@ -263,8 +266,8 @@ local function scanfind(w, v)
 end
 local function scanfilter(w, cand, v)
   local res, n = {}, 0
-  local p = (w == 4) and ffi.cast('uint32_t*', mem) or ffi.cast('uint16_t*', mem)
-  local sh = (w == 4) and 2 or 1
+  local p = (w == 4) and ffi.cast('uint32_t*', mem) or ((w == 1) and ffi.cast('uint8_t*', mem) or ffi.cast('uint16_t*', mem))
+  local sh = (w == 4) and 2 or ((w == 1) and 0 or 1)
   for _, a in ipairs(cand) do
     if p[bit.rshift(a, sh)] == v then n = n + 1; res[n] = a end
   end
@@ -301,12 +304,12 @@ end
 function SCAN.parse(line)
   local sm = line:match('^#%s*SCANMAX%s+(%d+)')
   if sm then SCAN.max = math.max(1, math.min(tonumber(sm), 5000)); return end
-  local kh, rest = line:match('^#%s*SCAN(H?)%s+([%d%s]+)$')
+  local kh, rest = line:match('^#%s*SCAN([HB]?)%s+([%d%s]+)$')
   if rest then
     local nums = {}
     for n in rest:gmatch('%d+') do nums[#nums + 1] = tonumber(n) end
-    local w = (kh == 'H') and 2 or 4
-    local lim = (w == 2) and 65535 or 4294967295
+    local w = (kh == 'H') and 2 or ((kh == 'B') and 1 or 4)
+    local lim = (w == 1) and 255 or ((w == 2) and 65535 or 4294967295)
     local good = (#nums >= 2)
     for k = 2, #nums do if nums[k] > lim then good = false end end
     if good then scanadd(table.remove(nums, 1), { kind = 'scan', w = w, vals = nums }) else print('SCN galat scan_tak_sah') end
@@ -317,8 +320,8 @@ function SCAN.parse(line)
     local nums = {}
     for n in prest:gmatch('%d+') do nums[#nums + 1] = tonumber(n) end
     local w = tonumber(pw)
-    local lim = (w == 2) and 65535 or 4294967295
-    local good = ((w == 2 or w == 4) and #nums >= 2 and #nums % 2 == 0)
+    local lim = (w == 1) and 255 or ((w == 2) and 65535 or 4294967295)
+    local good = ((w == 1 or w == 2 or w == 4) and #nums >= 2 and #nums % 2 == 0)
     if good then
       for k = 1, #nums / 2 do
         if k > 1 and nums[2 * k - 1] <= nums[2 * k - 3] then good = false end
