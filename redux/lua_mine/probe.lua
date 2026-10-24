@@ -245,11 +245,100 @@ local function wdiff(fr)
   print(string.format('WDN f=%d total=%d blok=%s', fr, total, table.concat(parts, ',')))
   for _, l in ipairs(lines) do print(l) end
 end
+-- SCAN_BEGIN
+-- SCAN (hanya angka keluar): "# SCAN f v1 v2 ..." cetak ALAMAT (offset RAM, hex tanpa 0x) kata 32-bit sejajar yang bernilai v pada frame f;
+-- "# SCANH f v1 ..." sama untuk halfword 16-bit sejajar; "# SCANP w f1 v1 f2 v2 ..." rantai (w=2|4, frame menaik): alamat harus bernilai v_k pada frame f_k untuk SEMUA k;
+-- "# SCANMAX n" batas alamat tercetak per baris (baku 300, maks 5000; n= tetap jumlah penuh). Nilai desimal tak negatif. Isi RAM lain tidak pernah dicetak.
+local SCAN = { jobs = {}, max = 300, chains = 0 }
+local function scanfind(w, v)
+  local res, n = {}, 0
+  if w == 4 then
+    local p = ffi.cast('uint32_t*', mem)
+    for i = 0, 0x7FFFF do if p[i] == v then n = n + 1; res[n] = i * 4 end end
+  else
+    local p = ffi.cast('uint16_t*', mem)
+    for i = 0, 0xFFFFF do if p[i] == v then n = n + 1; res[n] = i * 2 end end
+  end
+  return res
+end
+local function scanfilter(w, cand, v)
+  local res, n = {}, 0
+  local p = (w == 4) and ffi.cast('uint32_t*', mem) or ffi.cast('uint16_t*', mem)
+  local sh = (w == 4) and 2 or 1
+  for _, a in ipairs(cand) do
+    if p[bit.rshift(a, sh)] == v then n = n + 1; res[n] = a end
+  end
+  return res
+end
+local function scanfmt(list)
+  local t = {}
+  for i = 1, math.min(#list, SCAN.max) do t[i] = string.format('%X', list[i]) end
+  return table.concat(t, ',')
+end
+local function scanrun(job, fr)
+  if job.kind == 'scan' then
+    for _, v in ipairs(job.vals) do
+      local r = scanfind(job.w, v)
+      print(string.format('SCN f=%d w=%d v=%d n=%d a=%s', fr, job.w, v, #r, scanfmt(r)))
+    end
+  else
+    local ch = job.ch
+    if job.k == 1 then ch.cand = scanfind(ch.w, job.v) else ch.cand = scanfilter(ch.w, ch.cand or {}, job.v) end
+    print(string.format('SCP c=%d k=%d/%d f=%d w=%d v=%d n=%d', ch.id, job.k, ch.n, fr, ch.w, job.v, #ch.cand))
+    if job.k == ch.n then print(string.format('SCP c=%d fin n=%d a=%s', ch.id, #ch.cand, scanfmt(ch.cand))) end
+  end
+end
+function SCAN.runall(list, fr)
+  for _, job in ipairs(list) do
+    local ok, e = pcall(scanrun, job, fr)
+    if not ok then print('SCN f=' .. fr .. ' galat=' .. tostring(e):gsub('[^%w%s_%.:]', ''):sub(1, 60)) end
+  end
+end
+local function scanadd(f, job)
+  SCAN.jobs[f] = SCAN.jobs[f] or {}
+  table.insert(SCAN.jobs[f], job)
+end
+function SCAN.parse(line)
+  local sm = line:match('^#%s*SCANMAX%s+(%d+)')
+  if sm then SCAN.max = math.max(1, math.min(tonumber(sm), 5000)); return end
+  local kh, rest = line:match('^#%s*SCAN(H?)%s+([%d%s]+)$')
+  if rest then
+    local nums = {}
+    for n in rest:gmatch('%d+') do nums[#nums + 1] = tonumber(n) end
+    local w = (kh == 'H') and 2 or 4
+    local lim = (w == 2) and 65535 or 4294967295
+    local good = (#nums >= 2)
+    for k = 2, #nums do if nums[k] > lim then good = false end end
+    if good then scanadd(table.remove(nums, 1), { kind = 'scan', w = w, vals = nums }) else print('SCN galat scan_tak_sah') end
+    return
+  end
+  local pw, prest = line:match('^#%s*SCANP%s+(%d)%s+([%d%s]+)$')
+  if prest then
+    local nums = {}
+    for n in prest:gmatch('%d+') do nums[#nums + 1] = tonumber(n) end
+    local w = tonumber(pw)
+    local lim = (w == 2) and 65535 or 4294967295
+    local good = ((w == 2 or w == 4) and #nums >= 2 and #nums % 2 == 0)
+    if good then
+      for k = 1, #nums / 2 do
+        if k > 1 and nums[2 * k - 1] <= nums[2 * k - 3] then good = false end
+        if nums[2 * k] > lim then good = false end
+      end
+    end
+    if good then
+      SCAN.chains = SCAN.chains + 1
+      local ch = { id = SCAN.chains, w = w, n = #nums / 2 }
+      for k = 1, ch.n do scanadd(nums[2 * k - 1], { kind = 'chain', ch = ch, k = k, v = nums[2 * k] }) end
+    else print('SCN galat rantai_tak_sah') end
+  end
+end
+-- SCAN_END
 for line in io.lines(os.getenv('INPUTS')) do
   local hbl = line:match('^#%s*HBLK%s+([%d%s]+)')
   local hfr = line:match('^#%s*HFR%s+([%d%s]+)')
   if hfr then for fr in hfr:gmatch('%d+') do hfrset[tonumber(fr)] = true end end
   if hbl then for fr in hbl:gmatch('%d+') do hblkset[tonumber(fr)] = true end end
+  SCAN.parse(line)
   local sp = line:match('^#%s*SPUSPEED%s+(%d+)')
   if sp then local ok = pcall(function() PCSX.settings.spu.Speed = tonumber(sp) end); print('SVS spu.Speed=' .. sp .. ' ok=' .. tostring(ok)) end
 end
@@ -338,6 +427,7 @@ local function onVsync()
       if not okd then print('WDN f=' .. fr .. ' galat=' .. tostring(ed):gsub('[^%w%s_%.:]', ''):sub(1, 60)) end
     end
   end
+  if SCAN.jobs[frame] then SCAN.runall(SCAN.jobs[frame], frame) end
   if dumpset[frame] then PCSX.nextTick(function()
     local fh = io.open(string.format('%s/r_%05d.bin', OUT, frame), 'wb'); fh:write(ffi.string(PCSX.getMemPtr(), 0x200000)); fh:close(); print('DUMP ' .. frame) end) end
   if shotset[frame] then PCSX.nextTick(function()
