@@ -1,0 +1,13 @@
+jadwal=inputs/bot_t8.txt maxf=114000 pokes=9000@70EB8@4@5000,13000@70EB8@4@5000 orpokes=14000-36000@70EBC@4@0x3000 dumps=
+rc_emulator=0 (0=selesai MAXF, 124=timeout) detik=484 baris_emu_log=197931
+md5_chg_log=7dca38a8d76b29e07f094066095394d9 jumlah_CHG=807
+--- nilai terakhir per alamat pantau ---
+CHG f=111480 B1: 1890 -> 1880 
+CHG f=112082 P3: 8 -> 9 
+CHG f=112208 B2: 1920 -> 1820 
+CHG f=113309 B3: 1690 -> 1590 
+CHG f=113957 P1: 6 -> 7 
+CHG f=53751 A4: 2425393296 -> 0 
+CHG f=60938 A1: 4 -> 2000 
+CHG f=60978 A2: 4 -> 2000 
+CHG f=61017 A3: 4 -> 2000 
