@@ -1,0 +1,12 @@
+jadwal=inputs/bot_t2.txt maxf=52000 pokes=9000@70EB8@4@5000,13000@70EB8@4@5000 orpokes=14000-36000@70EBC@4@0x3000 dumps=
+rc_emulator=0 (0=selesai MAXF, 124=timeout) detik=221 baris_emu_log=69923
+md5_chg_log=2a42bc2e8589692380af013c3e105db0 jumlah_CHG=551
+--- nilai terakhir per alamat pantau ---
+CHG f=37506 A1: 0 -> 2030520 
+CHG f=37506 A2: 0 -> 2030664 
+CHG f=39105 A3: 13369614 -> 13304052 
+CHG f=39201 A4: 12320717 -> 12320714 
+CHG f=49683 P3: 27 -> 28 
+CHG f=49737 B2: 2067 -> 1967 
+CHG f=50499 P1: 65557 -> 65558 
+CHG f=50911 B1: 4900 -> 4905 
