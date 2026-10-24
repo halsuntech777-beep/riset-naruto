@@ -342,6 +342,68 @@ function SCAN.parse(line)
 end
 -- SCAN_END
 -- BOT_BEGIN
+-- DISC (Sesi x6): pencari penanda RAM tanpa tebak alamat. "# DISC nama f1 f2 ..." = kelas frame berlabel; "# DISCQ q A B [cap] [maxv]": pada frame terakhir kedua kelas
+-- cetak alamat BYTE yang konstan di semua frame kelas A (nilai vA), konstan di kelas B (nilai vB), dan vA ~= vB. Keluaran HANYA angka dan terbatas:
+-- "SCNDSC q 0xADDR vA vB" (maks cap, baku 150, hanya bila vA dan vB <= maxv, baku 255), "SCNDSC# q total= tampil= reg64k=..." (jumlah kandidat per blok 64 KB). Awalan SCN agar lolos saringan chg.log.
+local DISC = { cls = {}, snapf = {}, snaps = {}, qs = {} }
+function DISC.parse(line)
+  local nm, fl = line:match('^#%s*DISC%s+(%w+)%s+([%d%s]+)$')
+  if nm then
+    local t = {}
+    for fr in fl:gmatch('%d+') do local f = tonumber(fr); t[#t + 1] = f; DISC.snapf[f] = true end
+    DISC.cls[nm] = t
+    return
+  end
+  local q, a, b, cap, mv = line:match('^#%s*DISCQ%s+(%w+)%s+(%w+)%s+(%w+)%s*(%d*)%s*(%d*)')
+  if q then DISC.qs[#DISC.qs + 1] = { q = q, a = a, b = b, cap = tonumber(cap) or 150, maxv = tonumber(mv) or 255 } end
+end
+function DISC.run(Q, A, B)
+  local pa, pb = {}, {}
+  for i, f in ipairs(A) do pa[i] = DISC.snaps[f] end
+  for i, f in ipairs(B) do pb[i] = DISC.snaps[f] end
+  local na, nb = #pa, #pb
+  local reg = {}
+  for r = 0, 31 do reg[r] = 0 end
+  local total, shown, out = 0, 0, {}
+  for a = 0, 0x1FFFFF do
+    local va = pa[1][a]
+    local ok = true
+    for k = 2, na do if pa[k][a] ~= va then ok = false; break end end
+    if ok then
+      local vb = pb[1][a]
+      if vb ~= va then
+        for k = 2, nb do if pb[k][a] ~= vb then ok = false; break end end
+        if ok then
+          total = total + 1
+          local r = math.floor(a / 65536); reg[r] = reg[r] + 1
+          if shown < Q.cap and va <= Q.maxv and vb <= Q.maxv then shown = shown + 1; out[#out + 1] = string.format('SCNDSC %s 0x%X %d %d', Q.q, a, va, vb) end
+        end
+      end
+    end
+  end
+  for _, l in ipairs(out) do print(l) end
+  local rs = {}
+  for r = 0, 31 do rs[#rs + 1] = tostring(reg[r]) end
+  print(string.format('SCNDSC# %s total=%d tampil=%d na=%d nb=%d reg64k=%s', Q.q, total, shown, na, nb, table.concat(rs, ',')))
+end
+function DISC.tick(frame)
+  if not DISC.snapf[frame] then return end
+  local buf = ffi.new('uint8_t[?]', 0x200000)
+  ffi.copy(buf, mem, 0x200000)
+  DISC.snaps[frame] = buf
+  for _, Q in ipairs(DISC.qs) do
+    if not Q.done then
+      local A, B = DISC.cls[Q.a], DISC.cls[Q.b]
+      if A and B then
+        local ready = true
+        for _, f in ipairs(A) do if not DISC.snaps[f] then ready = false end end
+        for _, f in ipairs(B) do if not DISC.snaps[f] then ready = false end end
+        if ready then Q.done = true; local ok, e = pcall(DISC.run, Q, A, B); if not ok then print('SCNDSC# galat ' .. tostring(e):gsub('[^%w%s_%.:]', ''):sub(1, 80)) end end
+      end
+    end
+  end
+end
+-- DISC_END
 -- BOT v0 (aturan tetap). "# BOT from=F": sebelum frame F jadwal/replay yang jalan, sesudah F bot memutuskan. Masukan: hash layar (tiap K frame) + RAM chakra/posisi.
 -- Aturan: tekan CIRCLE bila layar statis >= stable sampel dan >= gap frame sejak tekan terakhir, atau tiap max frame; tanpa kemajuan > stuck frame -> makro cadangan bergilir;
 -- tanpa kemajuan > dead frame -> MACET dan berhenti. Kemajuan = hash layar baru atau perubahan RAM pantau. "# BOTCFG K=10 stable=3 gap=30 max=100 stuck=3000 dead=30000 maxlog=11000", "# BOTSCENE <hash> <TOMBOL>".
@@ -449,6 +511,7 @@ for line in io.lines(os.getenv('INPUTS')) do
   if hbl then for fr in hbl:gmatch('%d+') do hblkset[tonumber(fr)] = true end end
   SCAN.parse(line)
   BOT.parse(line)
+  DISC.parse(line)
   local sp = line:match('^#%s*SPUSPEED%s+(%d+)')
   if sp then local ok = pcall(function() PCSX.settings.spu.Speed = tonumber(sp) end); print('SVS spu.Speed=' .. sp .. ' ok=' .. tostring(ok)) end
 end
@@ -516,6 +579,7 @@ local function onVsync()
     print(string.format('HSH f=%d ram=%d', frame, ok and h or -1))
     hfb(frame)
   end
+  DISC.tick(frame)
   if hblkset[frame] then
     local p = ffi.cast('uint32_t*', mem)
     local out = {}
