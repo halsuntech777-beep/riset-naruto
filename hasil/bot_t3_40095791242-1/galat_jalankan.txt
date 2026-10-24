@@ -1,0 +1,18 @@
+perintah=jalankan rc=124
+  SHOT_ENC f=10000 w=320 h=240 bpp=-1 len=153600 skala=1/1 tx_bytes=70855
+  SHOT_ENC f=14000 w=320 h=240 bpp=-1 len=153600 skala=1/1 tx_bytes=70815
+  SHOT_ENC f=18000 w=320 h=240 bpp=-1 len=153600 skala=1/1 tx_bytes=70791
+  SHOT_ENC f=60000 w=320 h=240 bpp=-1 len=153600 skala=1/1 tx_bytes=57351
+jadwal=inputs/bot_t3.txt maxf=220000 pokes=9000@70EB8@4@5000,13000@70EB8@4@5000 orpokes=14000-36000@70EBC@4@0x3000 dumps=
+rc_emulator=124 (0=selesai MAXF, 124=timeout) detik=1502 baris_emu_log=330175
+md5_chg_log=271a07918bd8153615090f6a842ca7f0 jumlah_CHG=384
+--- nilai terakhir per alamat pantau ---
+CHG f=27985 A1: 0 -> 2030520 
+CHG f=27985 A2: 0 -> 2030664 
+CHG f=30218 A3: 13304052 -> 13304042 
+CHG f=30318 A4: 12320703 -> 12320701 
+CHG f=54095 B1: 4905 -> 2000 
+CHG f=54095 B2: 1967 -> 2000 
+CHG f=54095 B3: 0 -> 2000 
+CHG f=54095 P1: 65558 -> 0 
+CHG f=54095 P3: 28 -> 0 
