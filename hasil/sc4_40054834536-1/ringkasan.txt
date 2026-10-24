@@ -1,0 +1,12 @@
+jadwal=inputs/sc4.txt maxf=33100 pokes=9000@70EB8@4@5000,13000@70EB8@4@5000 orpokes=14000-36000@70EBC@4@0x3000 dumps=
+rc_emulator=0 (0=selesai MAXF, 124=timeout) detik=143 baris_emu_log=67356
+md5_chg_log=9d84fab624506105ead0182485135936 jumlah_CHG=271
+--- nilai terakhir per alamat pantau ---
+CHG f=25235 P3: 10 -> 11 
+CHG f=27969 P1: 12 -> 65548 
+CHG f=27985 A1: 0 -> 2030520 
+CHG f=27985 A2: 0 -> 2030664 
+CHG f=30218 A3: 13304052 -> 13304042 
+CHG f=30318 A4: 12320703 -> 12320701 
+CHG f=32182 B1: 4640 -> 4590 
+CHG f=32182 B2: 1530 -> 1380 
