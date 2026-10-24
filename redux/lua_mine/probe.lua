@@ -488,7 +488,7 @@ local function onVsync()
   end end
   for _, p in ipairs(polls) do
     local v = u32(p[1])
-    if last[p[2]] ~= v and frame > 4000 then print(string.format('CHG%s f=%d %s: %s -> %d', pass >= 2 and tostring(pass) or '', frame, p[2], tostring(last[p[2]]), v)) end
+    if last[p[2]] ~= v and frame > 4000 and not (BOT.on and frame > BOT.from and p[2]:sub(1, 1) == 'A') then print(string.format('CHG%s f=%d %s: %s -> %d', pass >= 2 and tostring(pass) or '', frame, p[2], tostring(last[p[2]]), v)) end
     last[p[2]] = v
   end
   if SAVEF and LOADF and frame >= SAVEF and frame <= LOADF and (frame % 500 == 0) then
