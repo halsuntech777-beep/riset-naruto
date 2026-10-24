@@ -14,3 +14,5 @@ Batas tetap: jangan unggah/commit file game, gambar mentah, dump RAM/VRAM, atau 
 Di akhir sesi: perbarui STATUS.md, push, verifikasi dengan clone ulang tanpa token, ingatkan pemilik merevoke token.
 
 Tambahan Sesi x4: jalur r13 harus dijalankan dengan pokes/orpokes baku (lihat STATUS "Sesi x4"); probe punya header `# SCAN/SCANH/SCANB/SCANP/SCANMAX` (README.txt); chakra duel dibaca dari B1..B4 (0x70EB8, 0x70F6C, ...), bukan A1..A4. Rancangan bot tahap 2-4 menunggu persetujuan pemilik.
+
+Sesi x4 (akhir): baca STATUS_RINGKAS.md dulu. Prompt chat baru ada di PROMPT_CHAT_BARU.md (tanpa token). Keputusan pemilik: bot aturan tetap + fitur lanjut dibangun langsung; tanpa API key.
