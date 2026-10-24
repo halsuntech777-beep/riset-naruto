@@ -13,9 +13,9 @@ Temuan:
 - [TERAMATI] Pesan "ミズキの結界をうばいとりました" di f36201 (t6) = hasil rebut barrier.
 - [TERAMATI] Kecepatan ~235 f/s (papan 1) dan ~131 f/s (papan 2, t3); timeout emulator 1500 dtk ~ 195 ribu frame per run; replay 100 ribu frame ~ 7 menit.
 - [TERAMATI] Nama tangkapan: `s%05d.raw` -> frame >=100000 jadi 6 digit dan ci/enkripsi_shot.py membaca [1:6]: `shot_10000` = frame 100000, `shot_14000` = 140000, dst (frame/10). Tidak diubah (perlu persetujuan). Maks 8 tangkapan per run.
-- t8 (replay log t3 sampai 100000 lalu bot v2, kemajuan RAM saja, stuck=2500): HASIL_T8
+- t8 (replay log t3 sampai 100000 lalu bot v2, kemajuan RAM saja, stuck=2500): [TERBUKTI] eskalasi memulihkan persimpangan: bot ambil alih di f=100000 (stuck=2500, kemajuan RAM saja); tekan RIGHT (makro eskalasi pertama) di f=102602 -> P1 0->4 dalam 76 frame dan permainan lanjut (B2 f105632, B3 f111468, 158 tekan sampai f=114000, tanpa macet permanen). Ada jeda tanpa perubahan RAM f~107650-110150 lalu makro eskalasi berulang (esc 2->17); apakah makro atau hal alami yang melanjutkan = [DUGAAN].
 Keputusan terbuka untuk pemilik: (1) cara deteksi fase/dialog untuk aturan いいえ: RAM (cari penanda fase lewat dump/diff) atau wilayah layar; (2) izin memperbaiki parsing nama di ci/enkripsi_shot.py (satu baris).
-Langkah berikut: pastikan eskalasi memulihkan persimpangan, cari penanda fase di RAM, uji tamat papan 1 dari replay (t3 sampai f~54000), baru bangun aturan いいえ.
+Langkah berikut: cari penanda fase di RAM, uji tamat papan 1 dari replay (t3 sampai f~54000), baru bangun aturan いいえ; kurangi eskalasi saat jeda wajar (jeda normal RAM bisa ~4000 frame).
 
 ## Keputusan pemilik
 - Bangun bot aturan tetap LANGSUNG, beserta fitur lanjut ke tengah permainan. Tanpa LLM/API key (tidak punya kartu; hanya langganan Claude).
