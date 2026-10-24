@@ -1,7 +1,15 @@
 # STATUS_RINGKAS (baca ini dulu; detail ada di STATUS.md bagian "Sesi x4", lalu "Sesi x3")
 Repo PUBLIK halsuntech777-beep/riset-naruto. Tujuan: bot aturan tetap (Lua, tanpa LLM/API key) yang main dan menamatkan story mode Naruto: Shinobi no Sato no Jintori Gassen (PS1) sendiri di GitHub Actions; hasil riset = aturan main pasti untuk TileDuel. Story mode ~7-8 papan, tiap papan unik dan syarat menangnya sendiri [pemilik].
 
-## Sesi x5 (TERBARU) - BOT aturan tetap + lanjut lewat replay log
+## Sesi x6 (TERBARU) - penanda fase di RAM untuk aturan いいえ (keputusan pemilik: lewat RAM)
+- [TERAMATI] Penanda prompt Ya/Tidak papan: byte RAM 0x139F46 = 5 saat prompt terbuka, 0 di fase lain. Dump angka 40 frame di jalur baku (x6v1, x6v2): bernilai 5 di f24100-24800, f25500, f27400-27530; bernilai 0 di f15000, 20000, 23000, 24810-25200, 26000-27300, 27560-32000 (menu giliran, dialog teks, duel). Ditemukan dengan fitur DISC (kelas A prompt vs B bukan: x6d1; tangkapan terdekripsi memberi label, x6s).
+- [TERAMATI] Kursor prompt: byte 0x1CECF0 = 0 (はい) -> 1 (いいえ) setelah DOWN, identik di dua prompt berbeda (naik level f24520, serang f27520; x6d2 dan x6d3; irisan 7 alamat, ini yang paling masuk akal). Nilai 0 di semua frame jalur baku tanpa DOWN.
+- [TERAMATI] Prompt kartu (この札をつかいますか, sekitar f28500) TIDAK menyalakan 0x139F46 (bernilai 0 di f28450-28700): layar duel memakai mekanisme lain. [BELUM] layar sebenarnya di f25500 (flag=5, tampak prompt lain), apakah alamat sama di papan 2+, pemetaan jenis prompt.
+- Alat baru: probe.lua `# DISC nama f...` + `# DISCQ q A B [cap] [maxv]` (cetak alamat byte konstan per kelas dan beda antar kelas; hanya angka, maks cap baris, awalan SCNDSC lolos saringan); alat/kerja.sh `jalan LABEL JADWAL MAXF [MODUS] [DUMPS] [ADDRS]`.
+- ci/enkripsi_shot.py diperbaiki (izin pemilik): urut menurut frame numerik; nama shot_<frame> untuk frame<100000, shot_<frame/10> untuk >=100000 (penjaga run_remote.sh hanya menerima 5 digit; frame asli ada di baris SHOT_ENC f= arq=). Penjaga tidak diubah.
+- Bot: aturan いいえ kini hanya jalan bila 0x139F46==5 (lalu DOWN, tunggu kursor RAM=1, baru CIRCLE); kursor nyasar di いいえ dikembalikan dengan UP; log transisi `BOT# P f= pf= cur= b1=`. lowchakra baku tetap 0. Uji: x6p1..p3 (lowchakra 4700, 4850, 0) dari f33100 sampai 54000.
+
+## Sesi x5 - BOT aturan tetap + lanjut lewat replay log
 Alat (hemat panggilan): `T=<token> bash alat/kerja.sh dorong|jalan|tunggu|lihat` (token hanya env satu perintah), `alat/ringkas.py DIR` (ringkasan angka), `ci/bot_lanjut.py LOG BASE OUT --upto F --cfg '...'` (log tekan bot -> jadwal replay + `# BOT from=F`). Dasar jadwal: `inputs/r13_bot_base.txt`.
 Bot: blok BOT di `redux/lua_mine/probe.lua`, aktif bila jadwal punya `# BOT from=F`; `# BOTCFG k=v` (K stable gap max stuck dead maxlog shots hashrate lowchakra refuse). Keluaran: `BOT f TOMBOL lama` (tekan, = baris jadwal), `BOT# N/S/END`. Saringan chg.log di `ci/run_remote.sh` kini memuat `BOT` (disetujui pemilik; satu kata, penjaga ekstensi/ukuran tidak diubah).
 Temuan:

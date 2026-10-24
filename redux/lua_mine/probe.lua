@@ -447,6 +447,7 @@ function BOT.queue(fr, macro)
   end
 end
 BOT.nshot = 0
+BOT.np = 0; BOT.lastpk = -1; BOT.pflag = 0; BOT.pcur = 0  -- penanda RAM (Sesi x6): prompt Ya/Tidak papan terbuka bila byte 0x139F46 == 5; kursor byte 0x1CECF0 (0 = はい, 1 = いいえ)
 function BOT.snap(fr)
   if BOT.nshot >= BOT.cfg.shots then return end
   BOT.nshot = BOT.nshot + 1
@@ -474,6 +475,9 @@ function BOT.tick(fr)
     local v = u32(a)
     if BOT.ram[i] ~= v then BOT.ram[i] = v; BOT.lastprog = fr end
   end
+  do local pb = ffi.cast('uint8_t*', mem); BOT.pflag = pb[0x139F46]; BOT.pcur = pb[0x1CECF0] end
+  local pk = BOT.pflag * 256 + BOT.pcur
+  if pk ~= BOT.lastpk then BOT.lastpk = pk; BOT.np = BOT.np + 1; if BOT.np <= 600 then print(string.format('BOT# P f=%d pf=%d cur=%d b1=%d', fr, BOT.pflag, BOT.pcur, BOT.ram[1] or 0)) end end
   if fr % 500 == 0 then if BOT.nh >= c.hashrate then BOT.lastprog = fr end; BOT.nh = 0 end  -- kemajuan = RAM pantau berubah ATAU >= hashrate hash layar baru per 500 frame
   if fr >= MAXF then BOT.finish(fr, 'MAXF'); return end
   if BOT.nlog >= c.maxlog then BOT.finish(fr, 'LOG_PENUH'); return end
@@ -497,7 +501,9 @@ function BOT.tick(fr)
       local btn = BOT.h and BOT.scene[BOT.h]
       if fr - BOT.lastprog > c.stuck then if BOT.esc == 0 then BOT.snap(fr) end; macro = BOT.macros[(BOT.esc % #BOT.macros) + 1]; BOT.esc = BOT.esc + 1
       elseif btn and BOT.stable >= 1 then macro = { { 0, btn, 4 } }
-      elseif c.lowchakra > 0 and (BOT.ram[1] or 0) < c.lowchakra then macro = (c.refuse == 2) and { { 0, 'CROSS', 4 } } or { { 0, 'DOWN', 4 }, { 20, 'CIRCLE', 4 } }; BOT.nref = BOT.nref + 1  -- chakra B1 rendah: pilih いいえ
+      elseif BOT.pflag == 5 and c.lowchakra > 0 and (BOT.ram[1] or 0) < c.lowchakra then  -- chakra B1 rendah DAN prompt Ya/Tidak terbuka (RAM): pilih いいえ (DOWN dulu, CIRCLE setelah kursor RAM = 1)
+        if BOT.pcur == 0 then macro = { { 0, 'DOWN', 4 } } else macro = { { 0, 'CIRCLE', 4 } }; BOT.nref = BOT.nref + 1 end
+      elseif BOT.pflag == 5 and BOT.pcur == 1 then macro = { { 0, 'UP', 4 } }  -- kursor di いいえ padahal tidak ingin menolak: kembalikan ke はい
       else macro = { { 0, 'CIRCLE', 4 } } end
       BOT.queue(fr, macro); BOT.lastp = fr
     end
