@@ -8,3 +8,5 @@ Cara pakai (ringkas):
 5. inputs_base.txt = jalur Party Mode (4 pemain) sampai frame 7680. inputs_cp/cq/cr = lanjutan ke petak kartu (RIGHT 7520, CIRCLE 7580, dst).
 6. tools/sheet.py membuat montase dari screenshot mentah (.raw 320x240).
 Format baris input: <frame_mulai> <TOMBOL> <lama_frame>.
+
+SCAN (Sesi x4, header jadwal; hanya angka keluar): "# SCAN f v1 v2 ..." (kata 32-bit), "# SCANH" (16-bit), "# SCANB" (byte): cetak alamat RAM bernilai v pada frame f; "# SCANP w f1 v1 f2 v2 ..." rantai (alamat harus bernilai v_k pada frame f_k untuk semua k); "# SCANMAX n" batas alamat tercetak. Contoh: inputs/sc2.txt.

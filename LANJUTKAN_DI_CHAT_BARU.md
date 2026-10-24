@@ -2,7 +2,7 @@
 
 Pemilik memberi token GitHub (fine-grained, hanya repo ini) di pesan pertama chat baru; JANGAN taruh token di repo, disk, atau memori.
 
-Urutan: (1) clone dengan header sementara (`git -c "http.extraheader=Authorization: Basic <base64 x-access-token:TOKEN>" clone ...`), bukan raw.githubusercontent.com; (2) baca README.md dan STATUS.md ("Sesi x2" dulu, lalu "Sesi x1"); (3) buat kunci RSA baru (privat hanya di sandbox, `ci/shot_pub.pem` diganti); (4) jalankan di runner (workflow `emulator-run.yml`), hasil angka di `hasil/<label>_<run>/`.
+Urutan: (1) clone dengan header sementara (`git -c "http.extraheader=Authorization: Basic <base64 x-access-token:TOKEN>" clone ...`), bukan raw.githubusercontent.com; (2) baca README.md dan STATUS.md ("Sesi x4" dulu, lalu "Sesi x3" dan "Sesi x2"); (3) buat kunci RSA baru (privat hanya di sandbox, `ci/shot_pub.pem` diganti); (4) jalankan di runner (workflow `emulator-run.yml`), hasil angka di `hasil/<label>_<run>/`.
 
 Keadaan ringkas (detail di STATUS.md "Sesi x2"):
 - Replay cepat terbukti: header jadwal `# SPUSPEED 4` dan `# NODEBUG` (26300 frame +-115 dtk).
@@ -12,3 +12,5 @@ Keadaan ringkas (detail di STATUS.md "Sesi x2"):
 Batas tetap: jangan unggah/commit file game, gambar mentah, dump RAM/VRAM, atau save-state TIDAK terenkripsi (repo, release, artefak, cache publik, log); jangan tambah upload-artifact; jangan minta/pakai izin Secrets; jangan bangun/ganti emulator tanpa persetujuan pemilik. Yang boleh keluar: angka, nama/tipe API, teks bantuan emulator, gambar terenkripsi (AES-256-CBC + RSA-OAEP, `ci/shot_pub.pem`), state terenkripsi dengan STATE_KEY.
 
 Di akhir sesi: perbarui STATUS.md, push, verifikasi dengan clone ulang tanpa token, ingatkan pemilik merevoke token.
+
+Tambahan Sesi x4: jalur r13 harus dijalankan dengan pokes/orpokes baku (lihat STATUS "Sesi x4"); probe punya header `# SCAN/SCANH/SCANB/SCANP/SCANMAX` (README.txt); chakra duel dibaca dari B1..B4 (0x70EB8, 0x70F6C, ...), bukan A1..A4. Rancangan bot tahap 2-4 menunggu persetujuan pemilik.
