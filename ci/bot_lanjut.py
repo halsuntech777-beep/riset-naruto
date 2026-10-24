@@ -10,7 +10,7 @@ if len(a) < 3: sys.exit(__doc__)
 log, base, out = a[:3]
 upto = int(a[a.index('--upto') + 1]) if '--upto' in a else None
 cfg = a[a.index('--cfg') + 1] if '--cfg' in a else None
-rx = re.compile(r'^SVS BOT (\d+) ([A-Z][A-Z0-9]*) (\d+)\s*$')
+rx = re.compile(r'^(?:SVS )?BOT (\d+) ([A-Z][A-Z0-9]*) (\d+)\s*$')
 pres = []
 for ln in open(log, encoding='utf-8', errors='replace'):
     m = rx.match(ln)

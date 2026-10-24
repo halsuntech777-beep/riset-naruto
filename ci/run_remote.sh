@@ -266,7 +266,7 @@ PYEOF
     env LD_PRELOAD="$W/shim243.so" LD_LIBRARY_PATH="$PWD/usr/lib" \
     usr/bin/pcsx-redux -cli -noupdate ${EMU_CPU0:--interpreter} -softgpu ${EMU_DBG0--debugger} -fastboot -loadiso "$W/game/naruto.cue" -run -dofile "$R/redux/lua_mine/probe.lua" > "$W/emu.log" 2>&1
   rc=$?; set -e; t1=$(date +%s)
-  grep -aE '^(probe siap|POKE|ORPOKE|CHG|DUMP|HSH|HSB|HSF|SVS|TIME|SCN|SCP)' "$W/emu.log" | head -n 5000 > "$D/chg.log" || true
+  grep -aE '^(probe siap|POKE|ORPOKE|CHG|DUMP|HSH|HSB|HSF|SVS|TIME|SCN|SCP|BOT)' "$W/emu.log" | head -n 5000 > "$D/chg.log" || true
   tail -n 30 "$W/emu.log" | tr -cd '\11\12\40-\176' | cut -c1-200 > "$D/emu_tail.txt"
   if [ -n "${DUMPS:-}" ]; then python3 "$R/ci/ekstrak_dump.py" "$OUT" "$D/dump_angka.csv" "$ADDRS" || true; fi
   if ls "$OUT"/s*.raw >/dev/null 2>&1; then python3 "$R/ci/enkripsi_shot.py" "$OUT" "$D" "$R/ci/shot_pub.pem" | tee -a "$D/chg.log" | sed "s/^/  /" || true; fi  # tangkapan layar: HANYA terenkripsi (kunci publik) keluar

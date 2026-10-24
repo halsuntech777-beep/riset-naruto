@@ -346,11 +346,14 @@ end
 -- Aturan: tekan CIRCLE bila layar statis >= stable sampel dan >= gap frame sejak tekan terakhir, atau tiap max frame; tanpa kemajuan > stuck frame -> makro cadangan bergilir;
 -- tanpa kemajuan > dead frame -> MACET dan berhenti. Kemajuan = hash layar baru atau perubahan RAM pantau. "# BOTCFG K=10 stable=3 gap=30 max=100 stuck=3000 dead=30000 maxlog=11000", "# BOTSCENE <hash> <TOMBOL>".
 -- Keluaran angka: "BOT <frame> <TOMBOL> <lama>" (format jadwal; dipakai ci/bot_lanjut.py), "BOT# N f= h=" adegan baru, "BOT# S ..." status, "BOT# END f= why=".
-local BOT = { on = false, from = 0, q = {}, seen = {}, nseen = 0, scene = {}, nlog = 0, h = nil, ph = nil, stable = 0, lastp = -100000, lastprog = 0, esc = 0, pend = false, done = false, ram = {},
-  cfg = { K = 10, stable = 3, gap = 30, max = 100, stuck = 3000, dead = 30000, maxlog = 11000, shots = 3 },
+local BOT = { on = false, nh = 0, nref = 0, from = 0, q = {}, seen = {}, nseen = 0, scene = {}, nlog = 0, h = nil, ph = nil, stable = 0, lastp = -100000, lastprog = 0, esc = 0, pend = false, done = false, ram = {},
+  cfg = { K = 10, stable = 3, gap = 30, max = 100, stuck = 1800, dead = 30000, maxlog = 11000, shots = 3, hashrate = 20, lowchakra = 600 },
   watch = { 0x70EB8, 0x70F6C, 0x71020, 0x710D4, 0x70F28, 0x70FDC },
   macros = { { { 0, 'CROSS', 4 } }, { { 0, 'TRIANGLE', 4 } }, { { 0, 'SQUARE', 4 } }, { { 0, 'START', 4 } },
     { { 0, 'DOWN', 4 }, { 20, 'CIRCLE', 4 } }, { { 0, 'UP', 4 }, { 20, 'CIRCLE', 4 } }, { { 0, 'RIGHT', 4 }, { 20, 'CIRCLE', 4 } }, { { 0, 'LEFT', 4 }, { 20, 'CIRCLE', 4 } } } }
+-- eskalasi saat macet (arah dulu: persimpangan papan memakai kiri/kanan; CIRCLE = peta)
+BOT.macros = { { { 0, 'RIGHT', 4 } }, { { 0, 'LEFT', 4 } }, { { 0, 'CROSS', 4 } }, { { 0, 'RIGHT', 4 }, { 20, 'CROSS', 4 } }, { { 0, 'LEFT', 4 }, { 20, 'CROSS', 4 } },
+  { { 0, 'TRIANGLE', 4 } }, { { 0, 'SQUARE', 4 } }, { { 0, 'START', 4 } }, { { 0, 'DOWN', 4 }, { 20, 'CIRCLE', 4 } }, { { 0, 'UP', 4 }, { 20, 'CIRCLE', 4 } } }
 function BOT.parse(line)
   local f = line:match('^#%s*BOT%s+from=(%d+)')
   if f then BOT.on = true; BOT.from = tonumber(f); return end
@@ -371,8 +374,8 @@ function BOT.newhash(h, f0)
   if h == BOT.ph then BOT.stable = BOT.stable + 1 else BOT.stable = 0 end
   BOT.ph = h; BOT.h = h
   if not BOT.seen[h] then
-    BOT.seen[h] = true; BOT.nseen = BOT.nseen + 1; BOT.lastprog = f0
-    if BOT.nseen <= 300 then print(string.format('SVS BOT# N f=%d h=%d', f0, h)) end
+    BOT.seen[h] = true; BOT.nseen = BOT.nseen + 1; BOT.nh = BOT.nh + 1
+    if BOT.nseen <= 300 then print(string.format('BOT# N f=%d h=%d', f0, h)) end
   end
 end
 function BOT.queue(fr, macro)
@@ -390,7 +393,7 @@ end
 function BOT.finish(fr, why)
   if BOT.done then return end
   BOT.done = true
-  print(string.format('SVS BOT# END f=%d why=%s', fr, why))
+  print(string.format('BOT# END f=%d why=%s', fr, why))
   if why == 'MACET' then BOT.snap(fr) end
   if why ~= 'MAXF' then PCSX.nextTick(function() PCSX.quit(0) end) end
 end
@@ -401,7 +404,7 @@ function BOT.tick(fr)
     local e = BOT.q[i]
     if not e.on and fr >= e.s then
       pad.setOverride(e.b); e.on = true; BOT.nlog = BOT.nlog + 1
-      print(string.format('SVS BOT %d %s %d', fr, e.n, e.d))
+      print(string.format('BOT %d %s %d', fr, e.n, e.d))
     end
     if e.on and fr >= e.s + e.d then pad.clearOverride(e.b); table.remove(BOT.q, i) end
   end
@@ -409,12 +412,13 @@ function BOT.tick(fr)
     local v = u32(a)
     if BOT.ram[i] ~= v then BOT.ram[i] = v; BOT.lastprog = fr end
   end
+  if fr % 500 == 0 then if BOT.nh >= c.hashrate then BOT.lastprog = fr end; BOT.nh = 0 end  -- kemajuan = RAM pantau berubah ATAU >= hashrate hash layar baru per 500 frame
   if fr >= MAXF then BOT.finish(fr, 'MAXF'); return end
   if BOT.nlog >= c.maxlog then BOT.finish(fr, 'LOG_PENUH'); return end
   if fr - BOT.lastprog > c.dead then BOT.finish(fr, 'MACET'); return end
   if fr % 2000 == 0 then
     local r = BOT.ram
-    print(string.format('SVS BOT# S f=%d c=%d,%d,%d,%d p=%d,%d seen=%d esc=%d', fr, r[1] or 0, r[2] or 0, r[3] or 0, r[4] or 0, r[5] or 0, r[6] or 0, BOT.nseen, BOT.esc))
+    print(string.format('BOT# S f=%d c=%d,%d,%d,%d p=%d,%d seen=%d esc=%d ref=%d', fr, r[1] or 0, r[2] or 0, r[3] or 0, r[4] or 0, r[5] or 0, r[6] or 0, BOT.nseen, BOT.esc, BOT.nref))
   end
   if fr % c.K == 0 and not BOT.pend then
     BOT.pend = true
@@ -431,6 +435,7 @@ function BOT.tick(fr)
       local btn = BOT.h and BOT.scene[BOT.h]
       if fr - BOT.lastprog > c.stuck then if BOT.esc == 0 then BOT.snap(fr) end; macro = BOT.macros[(BOT.esc % #BOT.macros) + 1]; BOT.esc = BOT.esc + 1
       elseif btn and BOT.stable >= 1 then macro = { { 0, btn, 4 } }
+      elseif c.lowchakra > 0 and (BOT.ram[1] or 0) < c.lowchakra then macro = { { 0, 'DOWN', 4 }, { 20, 'CIRCLE', 4 } }; BOT.nref = BOT.nref + 1  -- chakra B1 rendah: pilih いいえ
       else macro = { { 0, 'CIRCLE', 4 } } end
       BOT.queue(fr, macro); BOT.lastp = fr
     end
