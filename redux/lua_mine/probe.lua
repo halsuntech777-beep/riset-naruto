@@ -347,7 +347,7 @@ end
 -- tanpa kemajuan > dead frame -> MACET dan berhenti. Kemajuan = hash layar baru atau perubahan RAM pantau. "# BOTCFG K=10 stable=3 gap=30 max=100 stuck=3000 dead=30000 maxlog=11000", "# BOTSCENE <hash> <TOMBOL>".
 -- Keluaran angka: "BOT <frame> <TOMBOL> <lama>" (format jadwal; dipakai ci/bot_lanjut.py), "BOT# N f= h=" adegan baru, "BOT# S ..." status, "BOT# END f= why=".
 local BOT = { on = false, nh = 0, nref = 0, from = 0, q = {}, seen = {}, nseen = 0, scene = {}, nlog = 0, h = nil, ph = nil, stable = 0, lastp = -100000, lastprog = 0, esc = 0, pend = false, done = false, ram = {},
-  cfg = { K = 10, stable = 3, gap = 30, max = 100, stuck = 1800, dead = 30000, maxlog = 11000, shots = 3, hashrate = 9999, lowchakra = 600, refuse = 1 },
+  cfg = { K = 10, stable = 3, gap = 30, max = 100, stuck = 1800, dead = 30000, maxlog = 11000, shots = 3, hashrate = 9999, lowchakra = 0, refuse = 1 },
   watch = { 0x70EB8, 0x70F6C, 0x71020, 0x710D4, 0x70F28, 0x70FDC },
   macros = { { { 0, 'CROSS', 4 } }, { { 0, 'TRIANGLE', 4 } }, { { 0, 'SQUARE', 4 } }, { { 0, 'START', 4 } },
     { { 0, 'DOWN', 4 }, { 20, 'CIRCLE', 4 } }, { { 0, 'UP', 4 }, { 20, 'CIRCLE', 4 } }, { { 0, 'RIGHT', 4 }, { 20, 'CIRCLE', 4 } }, { { 0, 'LEFT', 4 }, { 20, 'CIRCLE', 4 } } } }
