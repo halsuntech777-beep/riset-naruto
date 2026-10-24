@@ -10,6 +10,11 @@ for line in io.lines(os.getenv('INPUTS')) do
   local s, b, d = line:match('^(%d+)%s+(%u[%u%d]*)%s+(%d+)')
   if s and B[b] then table.insert(inputs, {tonumber(s), tonumber(s) + tonumber(d), B[b]}) end
 end
+local INEV = {}  -- frame -> daftar {1=set|0=clear, tombol}, urutan = urutan input (identik dengan loop lama)
+for _, i in ipairs(inputs) do
+  INEV[i[1]] = INEV[i[1]] or {}; table.insert(INEV[i[1]], {1, i[3]})
+  INEV[i[2]] = INEV[i[2]] or {}; table.insert(INEV[i[2]], {0, i[3]})
+end
 local dumpset, shotset, pokes = {}, {}, {}
 for f in (os.getenv('DUMPS') or ''):gmatch('%d+') do dumpset[tonumber(f)] = true end
 for f in (os.getenv('SHOTS') or ''):gmatch('%d+') do shotset[tonumber(f)] = true end
@@ -336,12 +341,109 @@ function SCAN.parse(line)
   end
 end
 -- SCAN_END
+-- BOT_BEGIN
+-- BOT v0 (aturan tetap). "# BOT from=F": sebelum frame F jadwal/replay yang jalan, sesudah F bot memutuskan. Masukan: hash layar (tiap K frame) + RAM chakra/posisi.
+-- Aturan: tekan CIRCLE bila layar statis >= stable sampel dan >= gap frame sejak tekan terakhir, atau tiap max frame; tanpa kemajuan > stuck frame -> makro cadangan bergilir;
+-- tanpa kemajuan > dead frame -> MACET dan berhenti. Kemajuan = hash layar baru atau perubahan RAM pantau. "# BOTCFG K=10 stable=3 gap=30 max=100 stuck=3000 dead=30000 maxlog=11000", "# BOTSCENE <hash> <TOMBOL>".
+-- Keluaran angka: "BOT <frame> <TOMBOL> <lama>" (format jadwal; dipakai ci/bot_lanjut.py), "BOT# N f= h=" adegan baru, "BOT# S ..." status, "BOT# END f= why=".
+local BOT = { on = false, from = 0, q = {}, seen = {}, nseen = 0, scene = {}, nlog = 0, h = nil, ph = nil, stable = 0, lastp = -100000, lastprog = 0, esc = 0, pend = false, done = false, ram = {},
+  cfg = { K = 10, stable = 3, gap = 30, max = 100, stuck = 3000, dead = 30000, maxlog = 11000, shots = 3 },
+  watch = { 0x70EB8, 0x70F6C, 0x71020, 0x710D4, 0x70F28, 0x70FDC },
+  macros = { { { 0, 'CROSS', 4 } }, { { 0, 'TRIANGLE', 4 } }, { { 0, 'SQUARE', 4 } }, { { 0, 'START', 4 } },
+    { { 0, 'DOWN', 4 }, { 20, 'CIRCLE', 4 } }, { { 0, 'UP', 4 }, { 20, 'CIRCLE', 4 } }, { { 0, 'RIGHT', 4 }, { 20, 'CIRCLE', 4 } }, { { 0, 'LEFT', 4 }, { 20, 'CIRCLE', 4 } } } }
+function BOT.parse(line)
+  local f = line:match('^#%s*BOT%s+from=(%d+)')
+  if f then BOT.on = true; BOT.from = tonumber(f); return end
+  local cfg = line:match('^#%s*BOTCFG%s+(.+)$')
+  if cfg then for k, v in cfg:gmatch('(%a+)=(%d+)') do if BOT.cfg[k] then BOT.cfg[k] = tonumber(v) end end return end
+  local h, b = line:match('^#%s*BOTSCENE%s+(%d+)%s+(%u+)')
+  if h and B[b] then BOT.scene[tonumber(h)] = b end
+end
+function BOT.shot()
+  local ss = PCSX.GPU.takeScreenShot()
+  local str = tostring(ss.data)
+  local p = ffi.cast('const uint32_t*', str)
+  local h = 0
+  for i = 0, math.floor(#str / 4) - 1 do h = bit.tobit(bit.rol(bit.bxor(h, p[i]), 5) + 40503) end
+  return h % 4294967296
+end
+function BOT.newhash(h, f0)
+  if h == BOT.ph then BOT.stable = BOT.stable + 1 else BOT.stable = 0 end
+  BOT.ph = h; BOT.h = h
+  if not BOT.seen[h] then
+    BOT.seen[h] = true; BOT.nseen = BOT.nseen + 1; BOT.lastprog = f0
+    if BOT.nseen <= 300 then print(string.format('SVS BOT# N f=%d h=%d', f0, h)) end
+  end
+end
+function BOT.queue(fr, macro)
+  for _, m in ipairs(macro) do
+    local b = B[m[2]]
+    if b then table.insert(BOT.q, { s = fr + 1 + m[1], n = m[2], b = b, d = m[3], on = false }) end
+  end
+end
+BOT.nshot = 0
+function BOT.snap(fr)
+  if BOT.nshot >= BOT.cfg.shots then return end
+  BOT.nshot = BOT.nshot + 1
+  PCSX.nextTick(function() svshot(fr) end)
+end
+function BOT.finish(fr, why)
+  if BOT.done then return end
+  BOT.done = true
+  print(string.format('SVS BOT# END f=%d why=%s', fr, why))
+  if why == 'MACET' then BOT.snap(fr) end
+  if why ~= 'MAXF' then PCSX.nextTick(function() PCSX.quit(0) end) end
+end
+function BOT.tick(fr)
+  if BOT.done then return end
+  local c = BOT.cfg
+  for i = #BOT.q, 1, -1 do
+    local e = BOT.q[i]
+    if not e.on and fr >= e.s then
+      pad.setOverride(e.b); e.on = true; BOT.nlog = BOT.nlog + 1
+      print(string.format('SVS BOT %d %s %d', fr, e.n, e.d))
+    end
+    if e.on and fr >= e.s + e.d then pad.clearOverride(e.b); table.remove(BOT.q, i) end
+  end
+  for i, a in ipairs(BOT.watch) do
+    local v = u32(a)
+    if BOT.ram[i] ~= v then BOT.ram[i] = v; BOT.lastprog = fr end
+  end
+  if fr >= MAXF then BOT.finish(fr, 'MAXF'); return end
+  if BOT.nlog >= c.maxlog then BOT.finish(fr, 'LOG_PENUH'); return end
+  if fr - BOT.lastprog > c.dead then BOT.finish(fr, 'MACET'); return end
+  if fr % 2000 == 0 then
+    local r = BOT.ram
+    print(string.format('SVS BOT# S f=%d c=%d,%d,%d,%d p=%d,%d seen=%d esc=%d', fr, r[1] or 0, r[2] or 0, r[3] or 0, r[4] or 0, r[5] or 0, r[6] or 0, BOT.nseen, BOT.esc))
+  end
+  if fr % c.K == 0 and not BOT.pend then
+    BOT.pend = true
+    PCSX.nextTick(function()
+      local ok, h = pcall(BOT.shot)
+      BOT.pend = false
+      if ok then BOT.newhash(h, fr) end
+    end)
+  end
+  if #BOT.q == 0 then
+    local since = fr - BOT.lastp
+    if (BOT.stable >= c.stable and since >= c.gap) or since >= c.max then
+      local macro
+      local btn = BOT.h and BOT.scene[BOT.h]
+      if fr - BOT.lastprog > c.stuck then if BOT.esc == 0 then BOT.snap(fr) end; macro = BOT.macros[(BOT.esc % #BOT.macros) + 1]; BOT.esc = BOT.esc + 1
+      elseif btn and BOT.stable >= 1 then macro = { { 0, btn, 4 } }
+      else macro = { { 0, 'CIRCLE', 4 } } end
+      BOT.queue(fr, macro); BOT.lastp = fr
+    end
+  end
+end
+-- BOT_END
 for line in io.lines(os.getenv('INPUTS')) do
   local hbl = line:match('^#%s*HBLK%s+([%d%s]+)')
   local hfr = line:match('^#%s*HFR%s+([%d%s]+)')
   if hfr then for fr in hfr:gmatch('%d+') do hfrset[tonumber(fr)] = true end end
   if hbl then for fr in hbl:gmatch('%d+') do hblkset[tonumber(fr)] = true end end
   SCAN.parse(line)
+  BOT.parse(line)
   local sp = line:match('^#%s*SPUSPEED%s+(%d+)')
   if sp then local ok = pcall(function() PCSX.settings.spu.Speed = tonumber(sp) end); print('SVS spu.Speed=' .. sp .. ' ok=' .. tostring(ok)) end
 end
@@ -380,10 +482,10 @@ local function onVsync()
       if new ~= old then ptr[0] = new; if frame == op[1] then print(string.format('ORPOKE f=%d addr=0x%X old=%d new=%d', frame, op[3], old, new)) end end
     end
   end
-  for _, i in ipairs(inputs) do
-    if frame == i[1] then pad.setOverride(i[3]) end
-    if frame == i[2] then pad.clearOverride(i[3]) end
-  end
+  local iev = INEV[frame]
+  if iev then for _, e in ipairs(iev) do
+    if e[1] == 1 then if not (BOT.on and frame > BOT.from) then pad.setOverride(e[2]) end else pad.clearOverride(e[2]) end
+  end end
   for _, p in ipairs(polls) do
     local v = u32(p[1])
     if last[p[2]] ~= v and frame > 4000 then print(string.format('CHG%s f=%d %s: %s -> %d', pass >= 2 and tostring(pass) or '', frame, p[2], tostring(last[p[2]]), v)) end
@@ -431,6 +533,7 @@ local function onVsync()
     end
   end
   if SCAN.jobs[frame] then SCAN.runall(SCAN.jobs[frame], frame) end
+  if BOT.on and frame > BOT.from then BOT.tick(frame) end
   if dumpset[frame] then PCSX.nextTick(function()
     local fh = io.open(string.format('%s/r_%05d.bin', OUT, frame), 'wb'); fh:write(ffi.string(PCSX.getMemPtr(), 0x200000)); fh:close(); print('DUMP ' .. frame) end) end
   if shotset[frame] then PCSX.nextTick(function()
