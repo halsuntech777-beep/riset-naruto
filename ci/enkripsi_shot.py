@@ -25,13 +25,15 @@ def enc(data):
     wk = subprocess.run(["openssl", "pkeyutl", "-encrypt", "-pubin", "-inkey", pub, "-pkeyopt", "rsa_padding_mode:oaep"], input=key + iv, capture_output=True, check=True).stdout
     return b"ENC1\n" + base64.b64encode(wk) + b"\n" + base64.b64encode(ct) + b"\n"
 n = 0
-for rawf in sorted(glob.glob(out + "/s*.raw"))[:8]:
-    fr = int(os.path.basename(rawf)[1:6])
+for rawf in sorted(glob.glob(out + "/s*.raw"), key=lambda p: int(os.path.basename(p)[1:-4]))[:8]:
+    fr = int(os.path.basename(rawf)[1:-4])   # nama s%05d.raw bisa 6 digit (frame>=100000)
     w, h, bpp, ln = map(int, open(rawf[:-4] + ".meta").read().split())
     s = open(rawf, "rb").read()
     for k in (1, 2, 4):
         wk_, hk_ = (w + k - 1) // k, (h + k - 1) // k
         blob = enc(png(wk_, hk_, rows_of(w, h, bpp, s, k)))
         if len(blob) <= 270000: break
-    open(f"{d}/shot_{fr:05d}.enc.txt", "wb").write(blob); n += 1
-    print(f"SHOT_ENC f={fr} w={w} h={h} bpp={bpp} len={ln} skala=1/{k} tx_bytes={len(blob)}")
+    nm = fr if fr < 100000 else fr // 10   # penjaga run_remote.sh hanya menerima shot_ + 5 digit; frame asli ada di baris SHOT_ENC (f=)
+    while os.path.exists(f"{d}/shot_{nm:05d}.enc.txt"): nm += 1   # hindari tabrakan nama
+    open(f"{d}/shot_{nm:05d}.enc.txt", "wb").write(blob); n += 1
+    print(f"SHOT_ENC f={fr} arq=shot_{nm:05d} w={w} h={h} bpp={bpp} len={ln} skala=1/{k} tx_bytes={len(blob)}")
