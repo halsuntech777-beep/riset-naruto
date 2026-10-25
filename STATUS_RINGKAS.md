@@ -1,7 +1,14 @@
 # STATUS_RINGKAS (baca ini dulu; detail ada di STATUS.md bagian "Sesi x4", lalu "Sesi x3")
 Repo PUBLIK halsuntech777-beep/riset-naruto. Tujuan: bot aturan tetap (Lua, tanpa LLM/API key) yang main dan menamatkan story mode Naruto: Shinobi no Sato no Jintori Gassen (PS1) sendiri di GitHub Actions; hasil riset = aturan main pasti untuk TileDuel. Story mode ~7-8 papan, tiap papan unik dan syarat menangnya sendiri [pemilik].
 
-## Sesi x6 (TERBARU) - penanda fase RAM, aturan いいえ, perbaikan alat, serah-terima ke Sesi x7
+## Sesi x7 (TERBARU) - hasil x6q1, kunci gambar baru
+- [TERBUKTI] ci/shot_pub.pem diganti kunci RSA 3072 baru (db8e41e); kunci privat hanya di sandbox chat x7, di luar repo. Shot dari run sebelum db8e41e (termasuk x6q1) memakai kunci lama.
+- [TERAMATI] x6q1 (run 40159762435, jadwal x6_q1, maxf 190000, pokes baku, lowchakra=0): completed success, emulator 681 dtk. Bot menekan 741 kali dari f100002 (CIRCLE 381, CROSS 90, RIGHT 60, LEFT 60, lainnya 30 tiap tombol), lalu BOT# END f=161006 why=MACET (maxf 190000 tidak tercapai).
+- [TERAMATI] S: f102000 c=2000,2000,2000,0 p=0,0; f104000 p=4,0; f132000 sampai f160000 c=1930,1300,1450,0 p=25,26 tidak berubah, seen 3118 -> 5760, esc 25 -> 290, ref=0, fb=0. CHG terakhir di ringkasan: P3 24 -> 25 di f130989. Keadaan beku +-f131000-f161006 sementara bot terus menekan.
+- [BELUM] fase/layar saat macet (5 shot x6q1 terenkripsi kunci lama, tak terbaca), arti c=/p=/seen/esc, penyebab macet.
+- Rencana: lanjut dari +-f130000 lewat ci/bot_lanjut.py; run paralel dengan ADDRS penanda fase (0x139F46, 0x1CECF0) dan SHOT di +-f135000/f145000 (kunci baru).
+
+## Sesi x6 - penanda fase RAM, aturan いいえ, perbaikan alat, serah-terima ke Sesi x7
 - [TERAMATI] Penanda RAM 0x139F46 = "jendela menunggu masukan": saat jendela terbuka berjalan 2,3,4,5 (tiap 2 frame), 5 = menunggu, 0 = tutup/tidak ada. Bernilai 5 di prompt Ya/Tidak (f24100-24800, f27400-27530) DAN di layar pilih kartu chance "ゲットする札をえらべ！" (x6p1 f39801); bernilai 0 di menu giliran, dialog teks, transisi, pilih kartu duel, menu duel (dump 40 frame, x6v1/x6v2). Ditemukan dengan fitur DISC (x6d1: kelas prompt vs bukan), lalu DIKOREKSI: bukan khusus Ya/Tidak. Prompt kartu duel (この札, f~28500) tidak menyalakannya.
 - [TERAMATI] Kursor Ya/Tidak 0x1CECF0: 0 -> 1 setelah DOWN di prompt naik level (f24520) dan prompt serang (f27520) (x6d2, x6d3). Tidak bergerak di layar pilih kartu; tetap 1 setelah prompt ditutup => hanya dicatat, TIDAK dipercaya.
 - [TERAMATI] Aturan lama (DOWN sampai kursor RAM=1) macet +-4000 frame di layar pilih kartu (x6p1/p2: f36728-40786). Aturan baru "satu episode flag=5: DOWN lalu CIRCLE" (x6pa lowchakra 4700, x6pb 4400, x6pc kontrol 0; jalur r13_bot_base, bot dari f33100, maxf 55500): tidak ada episode flag=5 >600 frame, tidak ada MACET 2, papan 1 tamat (B1 -> 0 -> 1500) di f44517 (pa), f49437 (pb), f49197 (pc). S akhir: pa ref=2 fb=3 (2 penolakan nyata dengan kursor bergerak), pb ref=0 fb=5, pc ref=0 fb=0. [DUGAAN] lowchakra=4700 mempercepat tamat papan 1 ~4700 frame (satu run per ambang; perlu ulangan).
