@@ -1,5 +1,7 @@
 # STATUS (baca ini dulu)
 
+> Sesi x10 (terbaru): lihat STATUS_RINGKAS.md bagian "Sesi x10" (instrumen v1, gelombang x10*, rencana tuas C lalu A).
+
 Keadaan terakhir riset game PS1 *Naruto: Shinobi no Sato no Jintori Gassen* untuk TileDuel. Detail: `catatan_riset.md`. Riwayat chat: `riwayat/kronologi_chat.md`.
 
 ## Sudah terbukti
