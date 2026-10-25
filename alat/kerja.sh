@@ -15,7 +15,7 @@ api(){ curl -s -H "Authorization: Bearer $T" -H "Accept: application/vnd.github+
 ids(){ api "https://api.github.com/repos/$R/actions/runs?event=workflow_dispatch&per_page=15" | python3 -c "import sys,json; print(' '.join(str(r['id']) for r in json.load(sys.stdin)['workflow_runs']))"; }
 case "${1:-}" in
 tarik) git -c "$H" pull --rebase -q origin main 2>&1 | tail -2;;
-dorong) git add -A; git -c user.name=claude -c user.email=claude@users.noreply.github.com commit -q -m "${2:-Sesi: pembaruan}" 2>&1 | tail -1
+dorong) git config user.name claude; git config user.email claude@users.noreply.github.com; git rebase --abort 2>/dev/null; git add -A; git -c user.name=claude -c user.email=claude@users.noreply.github.com commit -q -m "${2:-Sesi: pembaruan}" 2>&1 | tail -1
   git -c "$H" pull --rebase -q origin main 2>&1 | tail -2; git -c "$H" push -q origin main 2>&1 | tail -2; git log --oneline | head -1;;
 jalan) L=$2; J=$3; M=$4; MO=${5:-}; DU=${6:-}; AD=${7:-}; before=" $(ids) "
   c=$(curl -s -o /dev/null -w '%{http_code}' -X POST -H "Authorization: Bearer $T" -H "Accept: application/vnd.github+json" "https://api.github.com/repos/$R/actions/workflows/emulator-run.yml/dispatches" \
