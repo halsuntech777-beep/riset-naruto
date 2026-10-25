@@ -6,6 +6,7 @@
 #   jalan LABEL JADWAL MAXF [MODUS] [DUMPS] [ADDRS]  dispatch jalur baku r13 (pokes/orpokes baku) -> cetak "LABEL run_id"
 #   tunggu DETIK ID...             polling tiap 10 dtk sampai SEMUA ID selesai atau batas DETIK (uji: <= 280 aman)
 #   lihat LABEL                    tarik + ringkasan angka hasil/<LABEL>_* terbaru (alat/ringkas.py)
+#   env PK= OPK= (di-set kosong) pada jalan = TANPA poke RAM; tidak di-set = poke baku (9000/13000 B1=5000; orpoke 0x3000)
 set -u
 R=halsuntech777-beep/riset-naruto
 [ -n "${T:-}" ] || { echo "env T (token) kosong"; exit 2; }
@@ -19,7 +20,7 @@ dorong) git config user.name claude; git config user.email claude@users.noreply.
   git -c "$H" pull --rebase -q origin main 2>&1 | tail -2; git -c "$H" push -q origin main 2>&1 | tail -2; git log --oneline | head -1;;
 jalan) L=$2; J=$3; M=$4; MO=${5:-}; DU=${6:-}; AD=${7:-}; before=" $(ids) "
   c=$(curl -s -o /dev/null -w '%{http_code}' -X POST -H "Authorization: Bearer $T" -H "Accept: application/vnd.github+json" "https://api.github.com/repos/$R/actions/workflows/emulator-run.yml/dispatches" \
-    -d "{\"ref\":\"main\",\"inputs\":{\"jadwal\":\"$J\",\"maxf\":\"$M\",\"pokes\":\"9000@70EB8@4@5000,13000@70EB8@4@5000\",\"orpokes\":\"14000-36000@70EBC@4@0x3000\",\"modus\":\"$MO\",\"dumps\":\"$DU\",\"addrs\":\"$AD\",\"label\":\"$L\"}}")
+    -d "{\"ref\":\"main\",\"inputs\":{\"jadwal\":\"$J\",\"maxf\":\"$M\",\"pokes\":\"${PK-9000@70EB8@4@5000,13000@70EB8@4@5000}\",\"orpokes\":\"${OPK-14000-36000@70EBC@4@0x3000}\",\"modus\":\"$MO\",\"dumps\":\"$DU\",\"addrs\":\"$AD\",\"label\":\"$L\"}}")
   [ "$c" = 204 ] || { echo "dispatch gagal http=$c"; exit 1; }
   for i in 1 2 3 4 5 6 7 8; do sleep 4; for id in $(ids); do case "$before" in *" $id "*) ;; *) echo "$L $id"; exit 0;; esac; done; done; echo "$L id-tidak-ketemu";;
 tunggu) D=$2; shift 2; t0=$(date +%s)
