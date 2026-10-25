@@ -470,7 +470,7 @@ function BOT.finish(fr, why)
 end
 -- INSTRUMEN Sesi x10 (HANYA cetak angka; tidak mengubah keputusan/penekanan bot; dipanggil lewat pcall). Rekaman tampilan petak RAM (catatan_riset 11.1): pasangan harga,sewa u16 di 0x13BA6E + 0x124*i; level di -4 (256 = level 1); pemilik di +44 (242 kosong, 245 P1, 246 P2). Hanya dibaca.
 -- Keluaran: "BOT# I0 f= hs=harga/sewa x22" (validasi pemetaan), "BOT# Q f= pos=P1..P4 c=B1..B4(bertanda) cur= own=22 huruf lev=22 digit" saat flag 0x139F46 masuk 5, "BOT# R f= c=..." saat keluar dari 5.
-BOT.tb = 0x13BA6E; BOT.nq = 0; BOT.prevpf = 0; BOT.t0 = false
+BOT.tb = 0x13BA6E; BOT.nq = 0; BOT.prevpf = 0; BOT.t0 = false; BOT.nh5 = 0; BOT.lh5 = nil  -- v2: hash layar stabil per jendela flag=5
 function BOT.u16(a) return ffi.cast('uint16_t*', mem + (a % 0x200000))[0] end
 function BOT.sg32(v) if v >= 2147483648 then return v - 4294967296 end return v end
 function BOT.tiles()
@@ -498,6 +498,12 @@ function BOT.inst(fr)
   elseif pf ~= 5 and BOT.prevpf == 5 and BOT.nq <= 500 then
     print(string.format('BOT# R f=%d c=%d,%d,%d,%d', fr, BOT.sg32(u32(0x70EB8)), BOT.sg32(u32(0x70F6C)), BOT.sg32(u32(0x71020)), BOT.sg32(u32(0x710D4))))
   end
+  -- INSTRUMEN v2 (hanya cetak): hash layar yang stabil (>= stable sampel) selama flag=5, sekali per hash per jendela -> mengenali layar prompt beli/serang/level-up vs menu/pesan.
+  if pf == 5 and BOT.stable >= BOT.cfg.stable and BOT.h and BOT.h ~= BOT.lh5 and BOT.nh5 < 800 then
+    BOT.lh5 = BOT.h; BOT.nh5 = BOT.nh5 + 1
+    print(string.format('BOT# H f=%d h=%d p1=%d cur=%d', fr, BOT.h, u32(0x70F28) % 65536, BOT.pcur))
+  end
+  if pf ~= 5 then BOT.lh5 = nil end
   BOT.prevpf = pf
 end
 function BOT.tick(fr)
