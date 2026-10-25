@@ -8,7 +8,7 @@ Repo PUBLIK halsuntech777-beep/riset-naruto. Tujuan: bot aturan tetap (Lua, tanp
 - [TERAMATI] Chakra B1 bisa NEGATIF (utang): terbaca bilangan >= 2^31 tanpa tanda (x7n1400b f85571 B1 870 -> 4294967166 = -130, pulih ke 1 di f108497). menang.py awal salah menyebut 1400b/2400a/infa MENANG; sudah diperbaiki (nilai >= 2^31 dibaca negatif). Arti utang [BELUM].
 - [TERAMATI] x7n2400a dan x7ninfa memberi hasil identik (TAMAT, puncak, END sama), konsisten dengan emulator deterministik.
 - [BELUM] bot "mandiri": kemenangan bergantung pada variasi waktu tekan (a=gap30/max100, b=gap45/max150) dan lowchakra; hanya 6 dari 12 variasi menang. Bukan strategi yang menang pada semua varian.
-<!--x8r-->
+- [BELUM] Bukti ulang deterministik (TANPA poke, jadwal SAMA persis, hanya label dan maxf berbeda), dikirim 14:23 UTC (21:23 WIB): x8r0a=40201998773 (jadwal x7_n0a, maxf 100000, asal TAMAT@95095 puncak 3784/1704), x8r1400a=40202007326 (x7_n1400a, 111000, asal @106095 3568/568), x8r1000b=40202015204 (x7_n1000b, 122000, asal @117295 3122/87), x8r1800b=40202023552 (x7_n1800b, 124000, asal @118995 4386/1283). Perkiraan selesai 14:36 UTC (21:36 WIB); baca aman mulai 14:40 UTC (21:40 WIB). Baca: `python3 alat/menang.py x8r0a x8r1400a x8r1000b x8r1800b` (setelah `git pull --rebase`); cocok bila TAMAT dan puncak sama dengan asal. Bila cocok: catat sebagai RUTE MENANG (jadwal inputs/x7_n0a.txt dst.).
 
 ## Serah-terima Sesi x8 (dari chat x7; chat x7 TIDAK menulis ke repo lagi setelah ini)
 Tujuan (keputusan pengguna): bot aturan tetap menamatkan PAPAN 1 secara MANDIRI (tanpa poke RAM). Story mode penuh ditunda (terlalu besar).
