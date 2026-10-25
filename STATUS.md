@@ -295,3 +295,5 @@ Temuan:
 Keputusan terbuka untuk pemilik: (1) cara deteksi fase/dialog untuk aturan いいえ: RAM (cari penanda fase lewat dump/diff) atau wilayah layar; (2) izin memperbaiki parsing nama di ci/enkripsi_shot.py (satu baris).
 Langkah berikut: cari penanda fase di RAM, uji tamat papan 1 dari replay (t3 sampai f~54000), baru bangun aturan いいえ; kurangi eskalasi saat jeda wajar (jeda normal RAM bisa ~4000 frame).
 
+## Sesi x6 (ringkas; rincian di STATUS_RINGKAS.md bagian "Sesi x6")
+- Penanda RAM 0x139F46 (jendela menunggu masukan) dan kursor 0x1CECF0 ditemukan lewat DISC dan dikoreksi lewat x6p1; aturan いいえ kini satu episode flag=5 (DOWN lalu CIRCLE), tanpa deadlock (x6pa-pc). Papan 1 tamat di f44517-49437 pada jalur kode baru (c=1500,1500,0,0), beda dari t3 (c=2000,2000,2000,0). Serah-terima dan rencana Sesi x7 ada di STATUS_RINGKAS.md. Run latar belakang: x6q1.
