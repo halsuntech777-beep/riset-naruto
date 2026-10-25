@@ -409,13 +409,17 @@ end
 -- tanpa kemajuan > dead frame -> MACET dan berhenti. Kemajuan = hash layar baru atau perubahan RAM pantau. "# BOTCFG K=10 stable=3 gap=30 max=100 stuck=3000 dead=30000 maxlog=11000", "# BOTSCENE <hash> <TOMBOL>".
 -- Keluaran angka: "BOT <frame> <TOMBOL> <lama>" (format jadwal; dipakai ci/bot_lanjut.py), "BOT# N f= h=" adegan baru, "BOT# S ..." status, "BOT# END f= why=".
 local BOT = { on = false, nh = 0, nref = 0, from = 0, q = {}, seen = {}, nseen = 0, scene = {}, nlog = 0, h = nil, ph = nil, stable = 0, lastp = -100000, lastprog = 0, esc = 0, pend = false, done = false, ram = {},
-  cfg = { K = 10, stable = 3, gap = 30, max = 100, stuck = 1800, dead = 30000, maxlog = 11000, shots = 3, hashrate = 9999, lowchakra = 0, refuse = 1 },
+  cfg = { K = 10, stable = 3, gap = 30, max = 100, stuck = 1800, dead = 30000, maxlog = 11000, shots = 3, hashrate = 9999, lowchakra = 0, refuse = 1, ext = 0 },
   watch = { 0x70EB8, 0x70F6C, 0x71020, 0x710D4, 0x70F28, 0x70FDC },
   macros = { { { 0, 'CROSS', 4 } }, { { 0, 'TRIANGLE', 4 } }, { { 0, 'SQUARE', 4 } }, { { 0, 'START', 4 } },
     { { 0, 'DOWN', 4 }, { 20, 'CIRCLE', 4 } }, { { 0, 'UP', 4 }, { 20, 'CIRCLE', 4 } }, { { 0, 'RIGHT', 4 }, { 20, 'CIRCLE', 4 } }, { { 0, 'LEFT', 4 }, { 20, 'CIRCLE', 4 } } } }
 -- eskalasi saat macet (arah dulu: persimpangan papan memakai kiri/kanan; CIRCLE = peta)
 BOT.macros = { { { 0, 'RIGHT', 4 } }, { { 0, 'LEFT', 4 } }, { { 0, 'CROSS', 4 } }, { { 0, 'RIGHT', 4 }, { 20, 'CROSS', 4 } }, { { 0, 'LEFT', 4 }, { 20, 'CROSS', 4 } },
   { { 0, 'TRIANGLE', 4 } }, { { 0, 'SQUARE', 4 } }, { { 0, 'START', 4 } }, { { 0, 'DOWN', 4 }, { 20, 'CIRCLE', 4 } }, { { 0, 'UP', 4 }, { 20, 'CIRCLE', 4 } } }
+-- ext=1: eskalasi dengan kombinasi arah/bahu lalu CIRCLE (layar pilih bola kristal: ジャンプする水晶玉をえらんでください)
+BOT.macros2 = { { { 0, 'RIGHT', 4 }, { 20, 'CIRCLE', 4 } }, { { 0, 'LEFT', 4 }, { 20, 'CIRCLE', 4 } }, { { 0, 'DOWN', 4 }, { 20, 'CIRCLE', 4 } }, { { 0, 'UP', 4 }, { 20, 'CIRCLE', 4 } },
+  { { 0, 'R1', 4 }, { 20, 'CIRCLE', 4 } }, { { 0, 'L1', 4 }, { 20, 'CIRCLE', 4 } }, { { 0, 'R2', 4 }, { 20, 'CIRCLE', 4 } }, { { 0, 'L2', 4 }, { 20, 'CIRCLE', 4 } },
+  { { 0, 'CROSS', 4 } }, { { 0, 'TRIANGLE', 4 } }, { { 0, 'SQUARE', 4 } }, { { 0, 'START', 4 } }, { { 0, 'SELECT', 4 } } }
 function BOT.parse(line)
   local f = line:match('^#%s*BOT%s+from=(%d+)')
   if f then BOT.on = true; BOT.from = tonumber(f); return end
@@ -499,7 +503,7 @@ function BOT.tick(fr)
     if (BOT.stable >= c.stable and since >= c.gap) or since >= c.max then
       local macro
       local btn = BOT.h and BOT.scene[BOT.h]
-      if fr - BOT.lastprog > c.stuck then if BOT.esc == 0 then BOT.snap(fr) end; macro = BOT.macros[(BOT.esc % #BOT.macros) + 1]; BOT.esc = BOT.esc + 1
+      if fr - BOT.lastprog > c.stuck then if BOT.esc == 0 then BOT.snap(fr) end; local ms = (c.ext > 0) and BOT.macros2 or BOT.macros; macro = ms[(BOT.esc % #ms) + 1]; BOT.esc = BOT.esc + 1
       elseif btn and BOT.stable >= 1 then macro = { { 0, btn, 4 } }
       elseif BOT.pflag == 5 and c.lowchakra > 0 and (BOT.ram[1] or 0) < c.lowchakra then  -- chakra B1 rendah DAN jendela menunggu masukan (RAM flag=5)
         -- satu episode flag=5: giliran 1 = DOWN, giliran berikut = CIRCLE. Kursor RAM hanya dicatat (layar pilih kartu tidak menggerakkannya; nilainya tetap 1 setelah prompt ditutup).
