@@ -1,0 +1,15 @@
+jadwal=inputs/x7_n1000b.txt maxf=122000 pokes= orpokes= dumps=
+rc_emulator=0 (0=selesai MAXF, 124=timeout) detik=516 baris_emu_log=198992
+md5_chg_log=69cbcac71f455edf551cd26d0bc523bc jumlah_CHG=813
+--- nilai terakhir per alamat pantau ---
+CHG f=117295 B1: 3122 -> 2000 
+CHG f=117295 B2: 87 -> 2000 
+CHG f=117295 B3: 0 -> 2000 
+CHG f=117295 P1: 196674 -> 0 
+CHG f=117295 P2: 196608 -> 0 
+CHG f=117295 P3: 73 -> 0 
+CHG f=27985 A1: 0 -> 2030520 
+CHG f=27985 A2: 0 -> 2030664 
+CHG f=30218 A3: 13304052 -> 13304042 
+CHG f=30318 A4: 12320703 -> 12320701 
+CHG f=61359 P4: 65536 -> 0 
