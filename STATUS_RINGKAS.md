@@ -1,7 +1,27 @@
 # STATUS_RINGKAS (baca ini dulu; detail ada di STATUS.md bagian "Sesi x4", lalu "Sesi x3")
 Repo PUBLIK halsuntech777-beep/riset-naruto. Tujuan: bot aturan tetap (Lua, tanpa LLM/API key) yang main dan menamatkan story mode Naruto: Shinobi no Sato no Jintori Gassen (PS1) sendiri di GitHub Actions; hasil riset = aturan main pasti untuk TileDuel. Story mode ~7-8 papan, tiap papan unik dan syarat menangnya sendiri [pemilik].
 
-## Sesi x7 (TERBARU) - hasil x6q1, kunci gambar baru
+## Serah-terima Sesi x8 (dari chat x7; chat x7 TIDAK menulis ke repo lagi setelah ini)
+Tujuan (keputusan pengguna): bot aturan tetap menamatkan PAPAN 1 secara MANDIRI (tanpa poke RAM). Story mode penuh ditunda (terlalu besar).
+Fakta kunci:
+- [TERAMATI] Papan 1 berakhir saat satu pemain mencapai chakra target lalu kembali ke start. Poke B1 sama di f9000+f13000 (tanpa bendera kristal): 2500 -> TIDAK tamat (B1 puncak 2997), 3000 -> tamat f50337, 3500/4000 -> tamat f49377. [DUGAAN kuat] target = 3000 (Clear Chakra bawaan). Kristal terlewati alami (h1 tamat tanpa poke bendera).
+- [TERAMATI] COM (B2) bisa menang: x7m1 B2 3170 (f107425), papan berakhir f109105 saat B1=363 -> KALAH. Tanda reset sama untuk menang/kalah (c=1500,1500,0,0 p=0,0). Pakai `python3 alat/menang.py LABEL...` (menang B1 = pemenang kita; B2 = kalah).
+- [TERAMATI] Tanpa poke, 110000 frame: tidak ada kemenangan kita; B1 maks 2781 (k2000/k3000 = hampir selalu menolak beli). B1 tak tumbuh karena sewa ke petak COM; COM bisa lebih dulu mencapai target.
+- [TERAMATI] Beku 1: dialog ジャンプする水晶玉をえらんでください -> ext=1 (arah/bahu lalu CIRCLE) memecahkannya (g1/g2).
+- [TERAMATI] Beku 2 (m2, tanpa poke): layar peta/info petak (空き地, tombol ✕もどる) f~49000-78938; RAM pantau statis. [DUGAAN] CIRCLE menjebak di peta; ext=2 (CROSS, arah, CIRCLE) dikirim untuk diuji. m3 beku f~97000 (layar belum dilihat).
+- [TERAMATI] Jadwal diturunkan dari inputs/x7_e2.txt (f1-f5) gagal (timeout 1502 dtk + "unknown exception", penyebab [BELUM]). Bangun jadwal dari x6_q1.txt/x6_p6.txt + log, bukan dari jadwal turunan.
+- Rute: replay input f0-f33100 (x6_p6) lalu bot (`# BOT from=33100`). Emulator deterministik, jadi variasi waktu tekan (gap/max) mengubah dadu; jadwal pemenang bisa direkam sebagai rute menang (replay log).
+Alat: alat/kerja.sh (dorong/jalan/tunggu/lihat; env `PK= OPK=` = tanpa poke), alat/ringkas.py, alat/menang.py (BARU), ci/bot_lanjut.py, probe.lua cfg ext=0/1/2 (ext=1 arah/bahu->CIRCLE; ext=2 menambah CROSS->arah->CIRCLE didahulukan), lowchakra=N (tolak beli bila B1<N; 99999 = selalu tolak).
+Gelombang 6 (12 run, TANPA poke, ext=2, stuck=1500 dead=40000, shots=0, maxf 170000, jadwal x6_p6; lowchakra {0,1000,1400,1800,2400,inf} x timing a=gap30/max100, b=gap45/max150): x7n0a=40180586552 x7n0b=40180594073 x7n1000a=40180601138 x7n1000b=40180608508 x7n1400a=40180615573 x7n1400b=40180622379 x7n1800a=40180629499 x7n1800b=40180636759 x7n2400a=40180643883 x7n2400b=40180650948 x7ninfa=40180657881 x7ninfb=40180665242
+ Perkiraan selesai 09:41 UTC (16:41 WIB); baca aman mulai 09:47 UTC (16:47 WIB). Baca dengan: `python3 alat/menang.py x7n0a x7n0b x7n1000a x7n1000b x7n1400a x7n1400b x7n1800a x7n1800b x7n2400a x7n2400b x7ninfa x7ninfb` (setelah `git pull --rebase`).
+Rencana Sesi x8:
+ 1. Baca gelombang 6 dengan menang.py. Bila ada run MENANG tanpa poke: catat jadwalnya (inputs/x7_n*.txt + presses di chg.log -> ci/bot_lanjut.py) sebagai RUTE MENANG, lalu ULANGI run yang sama untuk bukti deterministik.
+ 2. Bila belum ada: cari penyebab MACET (dd. shot dengan kunci baru; shots>=1), tambah makro/aturan, dan variasikan lowchakra/gap/max lebih banyak (ratusan variasi dadu murah di runner). Pertimbangkan aturan beli yang lebih cerdas (hanya beli petak murah, hanya saat B1 tinggi).
+ 3. Buat kunci RSA BARU di sandbox chat baru (kunci chat x7 hilang; shot gelombang 6 sengaja tanpa gambar).
+ 4. Jangan aktifkan loop tanpa pengawasan; usulkan dulu cara berhenti (berkas STOP, batas run). Jangan ubah workflow/skrip yang memakai secret tanpa persetujuan.
+Keputusan menunggu pengguna: tidak ada yang mendesak; setelah ada rute menang, putuskan apakah bot dianggap "mandiri" jika kemenangan berasal dari pemilihan variasi waktu (deterministik) atau harus strategi umum.
+
+## Sesi x7 - hasil x6q1, kunci gambar baru
 - [TERBUKTI] ci/shot_pub.pem diganti kunci RSA 3072 baru (db8e41e); kunci privat hanya di sandbox chat x7, di luar repo. Shot dari run sebelum db8e41e (termasuk x6q1) memakai kunci lama.
 - [TERAMATI] x6q1 (run 40159762435, jadwal x6_q1, maxf 190000, pokes baku, lowchakra=0): completed success, emulator 681 dtk. Bot menekan 741 kali dari f100002 (CIRCLE 381, CROSS 90, RIGHT 60, LEFT 60, lainnya 30 tiap tombol), lalu BOT# END f=161006 why=MACET (maxf 190000 tidak tercapai).
 - [TERAMATI] S: f102000 c=2000,2000,2000,0 p=0,0; f104000 p=4,0; f132000 sampai f160000 c=1930,1300,1450,0 p=25,26 tidak berubah, seen 3118 -> 5760, esc 25 -> 290, ref=0, fb=0. CHG terakhir di ringkasan: P3 24 -> 25 di f130989. Keadaan beku +-f131000-f161006 sementara bot terus menekan.

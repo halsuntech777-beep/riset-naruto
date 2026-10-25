@@ -297,3 +297,7 @@ Langkah berikut: cari penanda fase di RAM, uji tamat papan 1 dari replay (t3 sam
 
 ## Sesi x6 (ringkas; rincian di STATUS_RINGKAS.md bagian "Sesi x6")
 - Penanda RAM 0x139F46 (jendela menunggu masukan) dan kursor 0x1CECF0 ditemukan lewat DISC dan dikoreksi lewat x6p1; aturan いいえ kini satu episode flag=5 (DOWN lalu CIRCLE), tanpa deadlock (x6pa-pc). Papan 1 tamat di f44517-49437 pada jalur kode baru (c=1500,1500,0,0), beda dari t3 (c=2000,2000,2000,0). Serah-terima dan rencana Sesi x7 ada di STATUS_RINGKAS.md. Run latar belakang: x6q1.
+
+## Sesi x7 (ringkas; rincian dan serah-terima Sesi x8 ada di STATUS_RINGKAS.md)
+- [TERAMATI] Target papan 1 mandiri. Poke B1 tanpa bendera kristal: 2500 tidak tamat (puncak 2997), 3000 tamat (f50337), 3500/4000 tamat (f49377) -> target [DUGAAN kuat] 3000. COM (B2) bisa menang (x7m1: B2 3170, papan berakhir f109105, B1=363 = kalah).
+- [TERAMATI] Tanpa poke 110000 frame belum ada kemenangan B1 (B1 maks 2781). ext=1 memecahkan beku dialog pilih bola kristal; ext=2 dikirim untuk beku layar peta. Alat baru: alat/menang.py; kerja.sh env PK= OPK= = tanpa poke.
