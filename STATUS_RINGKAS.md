@@ -1,6 +1,15 @@
 # STATUS_RINGKAS (baca ini dulu; detail ada di STATUS.md bagian "Sesi x4", lalu "Sesi x3")
 Repo PUBLIK halsuntech777-beep/riset-naruto. Tujuan: bot aturan tetap (Lua, tanpa LLM/API key) yang main dan menamatkan story mode Naruto: Shinobi no Sato no Jintori Gassen (PS1) sendiri di GitHub Actions; hasil riset = aturan main pasti untuk TileDuel. Story mode ~7-8 papan, tiap papan unik dan syarat menangnya sendiri [pemilik].
 
+## Sesi x8 - hasil gelombang 6 (12 run TANPA poke, ext=2) dan bukti ulang
+- [TERAMATI] Kunci RSA 3072 baru: ci/shot_pub.pem di origin (1d78c5f); kunci privat hanya di sandbox chat x8, di luar repo. Gelombang 6 tidak bisa dibaca gambarnya (shot_45000/54000 memakai kunci lama).
+- [TERAMATI] 12 run gelombang 6 tanpa poke (ringkasan pokes= orpokes= kosong; 0 baris POKE di chg.log). Pemenang dinilai alat/menang.py = heuristik chakra puncak tertinggi 3000 frame sebelum tanda reset, BUKAN penanda RAM menang. 6/12 MENANG (pemenang=B1, puncak B1/B2): x7n0a TAMAT@95095 3784/1704; x7n0b @159655 4276/2531; x7n1000a @95525 3784/1704; x7n1000b @117295 3122/87; x7n1400a @106095 3568/568; x7n1800b @118995 4386/1283.
+- [TERAMATI] 6/12 KALAH ke COM (B2): x7n1400b @111489 (B2 4007), x7n1800a @106095 (3649), x7n2400a=x7ninfa identik @123775 (4471), x7n2400b @146199 dan x7ninfb @146499 (3089). Puncak B1 yang menang paling rendah 3122, puncak B2 yang menang paling rendah 3089 [DUGAAN kuat: target 3000 konsisten].
+- [TERAMATI] Chakra B1 bisa NEGATIF (utang): terbaca bilangan >= 2^31 tanpa tanda (x7n1400b f85571 B1 870 -> 4294967166 = -130, pulih ke 1 di f108497). menang.py awal salah menyebut 1400b/2400a/infa MENANG; sudah diperbaiki (nilai >= 2^31 dibaca negatif). Arti utang [BELUM].
+- [TERAMATI] x7n2400a dan x7ninfa memberi hasil identik (TAMAT, puncak, END sama), konsisten dengan emulator deterministik.
+- [BELUM] bot "mandiri": kemenangan bergantung pada variasi waktu tekan (a=gap30/max100, b=gap45/max150) dan lowchakra; hanya 6 dari 12 variasi menang. Bukan strategi yang menang pada semua varian.
+<!--x8r-->
+
 ## Serah-terima Sesi x8 (dari chat x7; chat x7 TIDAK menulis ke repo lagi setelah ini)
 Tujuan (keputusan pengguna): bot aturan tetap menamatkan PAPAN 1 secara MANDIRI (tanpa poke RAM). Story mode penuh ditunda (terlalu besar).
 Fakta kunci:

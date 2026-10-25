@@ -3,6 +3,7 @@
 Tamat = CHG P1 -> 0 (posisi reset) atau BOT# S c=1500,1500,0,0 p=0,0. Pemenang = pemain dengan chakra puncak tertinggi 3000 frame sebelum reset
 (menang B1 = pemain kita; B2 = COM menang = KALAH). END = alasan berhenti bot (MAXF/MACET)."""
 import glob, re, sys
+def sg(v): return v - 2**32 if v >= 2**31 else v  # chakra negatif (utang) terbaca sebagai bilangan besar tanpa tanda
 for lab in sys.argv[1:]:
     ds = sorted(glob.glob('hasil/%s_*' % lab))
     if not ds: print(lab, '-- belum ada hasil'); continue
@@ -10,7 +11,7 @@ for lab in sys.argv[1:]:
     h = [[] for _ in range(4)]; clear = None; end = 'END?'; sig = None
     for l in L:
         m = re.match(r'CHG f=(\d+) B([1-4]): (\d+) -> (\d+)', l)
-        if m: h[int(m[2]) - 1].append((int(m[1]), int(m[4])))
+        if m: h[int(m[2]) - 1].append((int(m[1]), sg(int(m[4]))))
         m = re.match(r'CHG f=(\d+) P1: (\d+) -> 0\b', l)
         if m and clear is None and int(m[2]) > 0 and int(m[1]) > 34000: clear = int(m[1])
         m = re.match(r'BOT# S f=(\d+) c=1500,1500,0,0 p=0,0', l)
