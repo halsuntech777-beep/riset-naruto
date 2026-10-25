@@ -1,0 +1,30 @@
+65444: (Table) 
+65445: (Table) 
+65446: (Table) 
+65447: (Table) 
+65448: (Table) 
+65449: (String) stack overflow 
+65450: (String) at =[C]:-1 ([top]) 
+65451: (String) at =[C]:-1 (__index) 
+65452: (String) at @/home/runner/work/riset-naruto/riset-naruto/redux/lua_mine/probe.lua:518 (tick) 
+65453: (String) at @/home/runner/work/riset-naruto/riset-naruto/redux/lua_mine/probe.lua:653 ([top]) 
+Error in event listener: Runtime error while running LUA code.BOT 163637 CIRCLE 4 
+BOT 163757 L1 4 
+BOT 163777 CIRCLE 4 
+BOT 163897 R2 4 
+BOT 163917 CIRCLE 4 
+BOT# S f=164000 c=1330,1180,1710,0 p=65557,19 seen=12229 esc=282 ref=0 fb=0 
+TIME f=164000 t=689.5 
+BOT 164037 L2 4 
+BOT 164057 CIRCLE 4 
+BOT 164177 CROSS 4 
+BOT 164317 TRIANGLE 4 
+BOT 164457 SQUARE 4 
+BOT 164597 START 4 
+BOT 164737 SELECT 4 
+BOT 164877 CROSS 4 
+BOT 164907 UP 4 
+BOT 164937 CIRCLE 4 
+BOT# Q f=164951 pos=65557,0,19,0 c=1330,1180,1710,0 cur=0 own=1..3.12..13........2.. lev=000000000000000000?000 
+BOT# END f=165000 why=MAXF 
+TIME f=165000 t=693.7 
