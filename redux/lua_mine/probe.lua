@@ -420,6 +420,10 @@ BOT.macros = { { { 0, 'RIGHT', 4 } }, { { 0, 'LEFT', 4 } }, { { 0, 'CROSS', 4 } 
 BOT.macros2 = { { { 0, 'RIGHT', 4 }, { 20, 'CIRCLE', 4 } }, { { 0, 'LEFT', 4 }, { 20, 'CIRCLE', 4 } }, { { 0, 'DOWN', 4 }, { 20, 'CIRCLE', 4 } }, { { 0, 'UP', 4 }, { 20, 'CIRCLE', 4 } },
   { { 0, 'R1', 4 }, { 20, 'CIRCLE', 4 } }, { { 0, 'L1', 4 }, { 20, 'CIRCLE', 4 } }, { { 0, 'R2', 4 }, { 20, 'CIRCLE', 4 } }, { { 0, 'L2', 4 }, { 20, 'CIRCLE', 4 } },
   { { 0, 'CROSS', 4 } }, { { 0, 'TRIANGLE', 4 } }, { { 0, 'SQUARE', 4 } }, { { 0, 'START', 4 } }, { { 0, 'SELECT', 4 } } }
+-- ext=2: macros2 + keluar dari layar peta/info petak (✕もどる): CROSS, arah, CIRCLE (didahulukan)
+BOT.macros3 = { { { 0, 'CROSS', 4 }, { 30, 'UP', 4 }, { 60, 'CIRCLE', 4 } }, { { 0, 'CROSS', 4 }, { 30, 'DOWN', 4 }, { 60, 'CIRCLE', 4 } }, { { 0, 'CROSS', 4 }, { 30, 'CROSS', 4 }, { 60, 'CIRCLE', 4 } },
+  { { 0, 'CROSS', 4 }, { 30, 'LEFT', 4 }, { 60, 'CIRCLE', 4 } }, { { 0, 'CROSS', 4 }, { 30, 'RIGHT', 4 }, { 60, 'CIRCLE', 4 } } }
+for _, m in ipairs(BOT.macros2) do table.insert(BOT.macros3, m) end
 function BOT.parse(line)
   local f = line:match('^#%s*BOT%s+from=(%d+)')
   if f then BOT.on = true; BOT.from = tonumber(f); return end
@@ -503,7 +507,7 @@ function BOT.tick(fr)
     if (BOT.stable >= c.stable and since >= c.gap) or since >= c.max then
       local macro
       local btn = BOT.h and BOT.scene[BOT.h]
-      if fr - BOT.lastprog > c.stuck then if BOT.esc == 0 then BOT.snap(fr) end; local ms = (c.ext > 0) and BOT.macros2 or BOT.macros; macro = ms[(BOT.esc % #ms) + 1]; BOT.esc = BOT.esc + 1
+      if fr - BOT.lastprog > c.stuck then if BOT.esc == 0 then BOT.snap(fr) end; local ms = (c.ext > 1) and BOT.macros3 or ((c.ext > 0) and BOT.macros2 or BOT.macros); macro = ms[(BOT.esc % #ms) + 1]; BOT.esc = BOT.esc + 1
       elseif btn and BOT.stable >= 1 then macro = { { 0, btn, 4 } }
       elseif BOT.pflag == 5 and c.lowchakra > 0 and (BOT.ram[1] or 0) < c.lowchakra then  -- chakra B1 rendah DAN jendela menunggu masukan (RAM flag=5)
         -- satu episode flag=5: giliran 1 = DOWN, giliran berikut = CIRCLE. Kursor RAM hanya dicatat (layar pilih kartu tidak menggerakkannya; nilainya tetap 1 setelah prompt ditutup).
