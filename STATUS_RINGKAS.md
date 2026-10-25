@@ -9,7 +9,7 @@ Kerjakan berurutan:
  2. Pilih satu tuas (A/B/C/D di "Sesi x8"). Rekomendasi: C+A. Mulai dari run INSTRUMEN murah (angka saja; shots<=3 terenkripsi hanya bila perlu) untuk mengenali jenis prompt (RAM: flag 0x139F46=5 dan petak/pemilik/harga) sebelum mengubah aturan bot di redux/lua_mine/probe.lua.
  3. Evaluasi dengan 16 dadu: x8g{30m110,30m130,35m100,35m120,40m140,45m130,50m140,50m170,55m160,60m150,60m190,70m200,80m240} + x7_n0a + x7_n0b (jadwal = salinan x7_n0a dengan BOTCFG gap/max beda; kirim `PK= OPK= bash alat/kerja.sh jalan LABEL JADWAL 165000 svs`). WAJIB modus svs (tanpa svs HSH memenuhi batas 5000 baris chg.log). Baca: alat/menang.py (nilai >=2^31 = negatif).
  4. Jangan ubah workflow/skrip yang memakai secret tanpa persetujuan; jangan aktifkan loop tanpa pengawasan (usulkan dulu berkas STOP, batas run harian/total).
-Keputusan menunggu pengguna: tuas mana yang dikejar (A/B/C/D) dan apakah ambang >=12/16 dadu cukup.
+[KEPUTUSAN PENGGUNA] Ikut rekomendasi: tuas C lalu A, diawali run instrumen murah; ambang >=12/16 dadu tetap. Prompt siap pakai untuk chat baru: PROMPT_CHAT_X9.md (ganti <ISI_TOKEN>; token TIDAK ada di repo).
 
 ## Sesi x8 - hasil gelombang 6 (12 run TANPA poke, ext=2) dan bukti ulang
 - [TERAMATI] Kunci RSA 3072 baru: ci/shot_pub.pem di origin (1d78c5f); kunci privat hanya di sandbox chat x8, di luar repo. Gelombang 6 tidak bisa dibaca gambarnya (shot_45000/54000 memakai kunci lama).

@@ -1,0 +1,18 @@
+# Prompt chat baru (Sesi x9). Ganti <ISI_TOKEN> dengan token GitHub fine-grained; JANGAN commit token.
+
+Aku melanjutkan riset game PS1 "Naruto: Shinobi no Sato no Jintori Gassen" (referensi TileDuel). TUJUAN: BOT ATURAN TETAP (Lua di emulator, tanpa LLM/API key) yang menamatkan PAPAN 1 secara MANDIRI lewat STRATEGI UMUM (bukan rute atau variasi waktu yang kebetulan menang), TANPA poke RAM. Story mode penuh ditunda.
+
+Repo (PUBLIK): halsuntech777-beep/riset-naruto
+TOKEN: <ISI_TOKEN>
+(fine-grained, hanya repo itu; Contents + Workflows + Actions read/write; tanpa Administration dan Secrets). Pakai git -c "http.extraheader=Authorization: Basic <base64 x-access-token:TOKEN>"; JANGAN simpan token di disk, repo, env antar-perintah, atau memori; sisipkan inline tiap perintah (alat/kerja.sh membaca env T hanya untuk satu perintah: `T=<token> bash alat/kerja.sh ...`). Pakai git clone, bukan raw.githubusercontent.com. Hanya chat ini yang menulis ke repo (chat sebelumnya sudah berhenti).
+
+KEADAAN (rinci di STATUS_RINGKAS.md bagian "Serah-terima Sesi x9" dan "Sesi x8"): determinisme TERBUKTI (jadwal+cfg sama = log identik). Aturan baku (lowchakra=0, ext=2) hanya menang 9/16 dadu (56%); ambang strategi umum >=12/16. Kalah = sewa dibayar ke COM besar + bonus start kecil. Bot belum mengenali jenis prompt (beli/level-up/serang), kartu, atau persimpangan. Modus svs WAJIB untuk setiap run (tanpa svs, HSH memenuhi batas 5000 baris chg.log).
+
+LANGKAH AWAL (hemat panggilan alat; gabungkan langkah dalam satu panggilan bash):
+(1) git clone, lalu WAJIB `git config user.name claude; git config user.email claude@users.noreply.github.com`. Baca README.md dan STATUS_RINGKAS.md bagian "Serah-terima Sesi x9", "Sesi x8" dan "Batas tetap".
+(2) Tuas yang kupilih: C lalu A. C = bot mengenali jenis prompt/harga/pemilik petak dari RAM (penanda flag 0x139F46=5, posisi pemain, data/tabel_papan.json) agar menolak beli hanya bila mahal dan chakra tipis. A = level-up barrier (pilih "Ya" sekarang macet). Mulai dengan run INSTRUMEN murah (hanya angka; gambar terenkripsi hanya bila perlu: buat kunci RSA 3072 baru di sandbox DI LUAR repo, chmod 600, commit hanya ci/shot_pub.pem). Usulkan rancangan aturan baru kepadaku sebelum mengubah redux/lua_mine/probe.lua secara besar.
+(3) Evaluasi aturan baru pada 16 dadu yang sama (daftar di "Serah-terima Sesi x9"), modus svs, tanpa poke (`PK= OPK=`), maxf 165000; baca dengan `python3 alat/menang.py LABEL...`; bandingkan dengan baseline 9/16; ambang >=12/16.
+
+BATAS: ikuti "Batas tetap" di STATUS_RINGKAS.md (hanya angka, gambar terenkripsi, tanpa dump RAM/ROM). Jangan ubah workflow/skrip yang memakai secret tanpa persetujuanku; jangan aktifkan loop tanpa pengawasan (usulkan dulu cara berhenti: berkas STOP, batas run harian/total). Sebelum menjalankan run, VERIFIKASI kode sudah di origin/main (`git show origin/main:berkas | grep penanda`); setelah dorong, verifikasi isi origin dan clone ulang tanpa token. Catat modus dan id run tiap gelombang di STATUS_RINGKAS.md.
+
+ATURAN: hemat token dan batas 5 jam; yang lama jalankan di runner; minta hasil berupa angka, hindari membaca gambar kecuali perlu; satu panggilan tunggu maks ~285 dtk, jangan polling berkali-kali; bila run panjang masih jalan, akhiri giliran dengan laporan singkat DAN beri tahu jam perkiraan selesai (UTC dan WIB) serta jam aman untuk membaca hasilnya. Tandai tiap temuan [TERBUKTI]/[TERAMATI]/[DUGAAN]/[BELUM]. Push dan perbarui STATUS.md serta STATUS_RINGKAS.md sesering mungkin. Bila chat sudah sangat panjang: hentikan, perbarui berkas, ingatkan aku membuka chat baru. Ingatkan aku merevoke token di akhir sesi. Jawab dalam bahasa Indonesia yang ringkas.
