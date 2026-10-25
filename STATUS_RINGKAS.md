@@ -13,6 +13,8 @@ Repo PUBLIK halsuntech777-beep/riset-naruto. Tujuan: bot aturan tetap (Lua, tanp
 - alat/kerja.sh: env PK= OPK= (kosong) = tanpa poke. probe.lua: cfg ext=1 = makro eskalasi arah/bahu(R1,L1,R2,L2) -> CIRCLE.
 - Gelombang 2 (lanjut dari e2 f148000, maxf 190000; tanpa poke maxf 110000 untuk c2/c3): x7f1=40176978103 x7f2=40176985516 x7f3=40176992346 x7f4=40176999477 x7f5=40177006757 x7c2=40177013765 x7c3=40177020598
 - Gelombang 3 (rute x6q1 <= f128000, ext=1, maxf 150000): x7g1=40177145272 x7g2=40177152581
+- [KEPUTUSAN PENGGUNA] Fokus dulu: bot menamatkan PAPAN 1 secara mandiri (tanpa poke); story mode penuh terlalu besar.
+- Gelombang 4 (tanpa poke, jadwal x6_p6, maxf 110000): k600/k900/k1200/k1500/k2000/k3000 = lowchakra tsb (PK= OPK=); h1 = hanya poke chakra B1 (OPK=), h2 = hanya bendera kristal (PK=). Id: x7k600=40177519927 x7k900=40177528073 x7k1200=40177536080 x7k1500=40177543468 x7k2000=40177550674 x7k3000=40177557636 x7h1=40177564658 x7h2=40177571835
 
 ## Sesi x6 - penanda fase RAM, aturan いいえ, perbaikan alat, serah-terima ke Sesi x7
 - [TERAMATI] Penanda RAM 0x139F46 = "jendela menunggu masukan": saat jendela terbuka berjalan 2,3,4,5 (tiap 2 frame), 5 = menunggu, 0 = tutup/tidak ada. Bernilai 5 di prompt Ya/Tidak (f24100-24800, f27400-27530) DAN di layar pilih kartu chance "ゲットする札をえらべ！" (x6p1 f39801); bernilai 0 di menu giliran, dialog teks, transisi, pilih kartu duel, menu duel (dump 40 frame, x6v1/x6v2). Ditemukan dengan fitur DISC (x6d1: kelas prompt vs bukan), lalu DIKOREKSI: bukan khusus Ya/Tidak. Prompt kartu duel (この札, f~28500) tidak menyalakannya.
