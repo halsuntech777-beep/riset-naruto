@@ -468,6 +468,38 @@ function BOT.finish(fr, why)
   if why == 'MACET' then BOT.snap(fr) end
   if why ~= 'MAXF' then PCSX.nextTick(function() PCSX.quit(0) end) end
 end
+-- INSTRUMEN Sesi x10 (HANYA cetak angka; tidak mengubah keputusan/penekanan bot; dipanggil lewat pcall). Rekaman tampilan petak RAM (catatan_riset 11.1): pasangan harga,sewa u16 di 0x13BA6E + 0x124*i; level di -4 (256 = level 1); pemilik di +44 (242 kosong, 245 P1, 246 P2). Hanya dibaca.
+-- Keluaran: "BOT# I0 f= hs=harga/sewa x22" (validasi pemetaan), "BOT# Q f= pos=P1..P4 c=B1..B4(bertanda) cur= own=22 huruf lev=22 digit" saat flag 0x139F46 masuk 5, "BOT# R f= c=..." saat keluar dari 5.
+BOT.tb = 0x13BA6E; BOT.nq = 0; BOT.prevpf = 0; BOT.t0 = false
+function BOT.u16(a) return ffi.cast('uint16_t*', mem + (a % 0x200000))[0] end
+function BOT.sg32(v) if v >= 2147483648 then return v - 4294967296 end return v end
+function BOT.tiles()
+  local o, l = {}, {}
+  for i = 0, 21 do
+    local a = BOT.tb + 0x124 * i
+    local ow, lv = BOT.u16(a + 44), BOT.u16(a - 4)
+    if ow == 242 then o[#o + 1] = '.' elseif ow >= 245 and ow <= 248 then o[#o + 1] = tostring(ow - 244) else o[#o + 1] = '?' end
+    if lv % 256 == 0 and lv <= 2304 then l[#l + 1] = tostring(math.floor(lv / 256)) else l[#l + 1] = '?' end
+  end
+  return table.concat(o), table.concat(l)
+end
+function BOT.inst(fr)
+  local pf = BOT.pflag
+  if not BOT.t0 then
+    BOT.t0 = true
+    local pr = {}
+    for i = 0, 21 do local a = BOT.tb + 0x124 * i; pr[#pr + 1] = BOT.u16(a) .. '/' .. BOT.u16(a + 2) end
+    print(string.format('BOT# I0 f=%d hs=%s', fr, table.concat(pr, ',')))
+  end
+  if pf == 5 and BOT.prevpf ~= 5 and BOT.nq < 500 then
+    BOT.nq = BOT.nq + 1
+    local o, l = BOT.tiles()
+    print(string.format('BOT# Q f=%d pos=%d,%d,%d,%d c=%d,%d,%d,%d cur=%d own=%s lev=%s', fr, u32(0x70F28), u32(0x70F2C), u32(0x70FDC), u32(0x70FE0), BOT.sg32(u32(0x70EB8)), BOT.sg32(u32(0x70F6C)), BOT.sg32(u32(0x71020)), BOT.sg32(u32(0x710D4)), BOT.pcur, o, l))
+  elseif pf ~= 5 and BOT.prevpf == 5 and BOT.nq <= 500 then
+    print(string.format('BOT# R f=%d c=%d,%d,%d,%d', fr, BOT.sg32(u32(0x70EB8)), BOT.sg32(u32(0x70F6C)), BOT.sg32(u32(0x71020)), BOT.sg32(u32(0x710D4))))
+  end
+  BOT.prevpf = pf
+end
 function BOT.tick(fr)
   if BOT.done then return end
   local c = BOT.cfg
@@ -486,6 +518,7 @@ function BOT.tick(fr)
   do local pb = ffi.cast('uint8_t*', mem); BOT.pflag = pb[0x139F46]; BOT.pcur = pb[0x1CECF0]; if BOT.pflag ~= 5 then BOT.ep = 0 end end
   local pk = BOT.pflag * 256 + BOT.pcur
   if pk ~= BOT.lastpk then BOT.lastpk = pk; BOT.np = BOT.np + 1; if BOT.np <= 600 then print(string.format('BOT# P f=%d pf=%d cur=%d b1=%d', fr, BOT.pflag, BOT.pcur, BOT.ram[1] or 0)) end end
+  pcall(BOT.inst, fr)  -- INSTRUMEN Sesi x10 (hanya cetak)
   if fr % 500 == 0 then if BOT.nh >= c.hashrate then BOT.lastprog = fr end; BOT.nh = 0 end  -- kemajuan = RAM pantau berubah ATAU >= hashrate hash layar baru per 500 frame
   if fr >= MAXF then BOT.finish(fr, 'MAXF'); return end
   if BOT.nlog >= c.maxlog then BOT.finish(fr, 'LOG_PENUH'); return end
