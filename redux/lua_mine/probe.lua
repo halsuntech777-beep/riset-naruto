@@ -435,8 +435,10 @@ end
 -- INSTRUMEN v3 (hanya hitung/cetak; tidak mengubah keputusan): pengenal prompt Ya/Tidak lewat piksel tetap (data/sig_piksel_prompt.json; layar 320x240, PS1 555: R bit0-4, G bit5-9, B bit10-14). m = jumlah titik yang cocok (toleransi 8); t2 = piksel terang di baris teks ke-2 (x30-149, y188-205): >100 = prompt beli (必要チャクラ), ~0 = prompt serang.
 BOT.SIG = { {241,164,255,238,139}, {252,164,49,24,0}, {241,168,255,238,139}, {263,171,172,57,41}, {268,170,164,49,32}, {280,170,164,49,32}, {241,182,230,197,57}, {252,182,172,57,32}, {266,182,0,8,74}, {280,182,0,8,74}, {241,196,230,180,41}, {255,196,0,8,74}, {266,196,0,8,74}, {280,196,0,8,74}, {232,210,180,106,0}, {238,210,189,139,8}, {252,210,189,139,8}, {266,210,189,139,8}, {280,210,189,139,8}, {294,210,197,148,8} }
 BOT.sm, BOT.st2, BOT.sigf, BOT.yon, BOT.ny, BOT.t2max = 0, 0, 0, 0, 0, 0
+BOT.sbx, BOT.sxr, BOT.bxmax, BOT.xrmax, BOT.lc = 0, 0, 0, 0, {}  -- INSTRUMEN v4 (hanya cetak): bx = kecocokan kotak-serang, xr = ujung kanan teks baris-1, mv = pemain yang terakhir bergerak (1=P1, 3=0x70FDC)
+BOT.SIGB = { {20,106,172,123,32}, {20,114,74,49,16}, {20,122,74,49,16}, {20,130,74,49,16}, {20,138,74,49,16}, {20,146,98,65,16}, {20,154,74,49,16}, {28,106,131,0,0}, {28,114,98,123,82}, {28,122,90,115,74}, {28,130,222,222,222}, {28,138,82,106,74}, {28,146,222,222,222}, {28,154,90,115,74}, {36,106,115,74,16}, {36,114,82,106,65}, {36,122,90,115,74}, {36,130,82,106,65}, {36,138,82,106,74}, {36,146,82,106,74}, {36,154,82,98,65}, {44,106,115,74,16}, {44,114,82,106,74}, {44,122,82,106,65}, {44,130,222,222,222}, {44,138,82,115,74}, {44,146,222,222,222}, {44,154,82,106,65}, {52,106,131,82,16}, {52,114,222,222,222}, {52,122,82,106,65}, {52,130,0,0,8}, {52,138,82,106,65}, {52,146,0,0,8}, {52,154,82,106,65}, {60,106,115,74,16}, {60,114,82,98,65}, {60,122,82,106,65}, {60,130,222,222,222}, {60,138,90,115,74}, {60,146,0,0,8}, {60,154,82,106,74}, {68,106,115,74,16}, {68,114,90,115,74}, {68,122,90,115,74}, {68,130,222,222,222}, {68,138,82,106,65}, {68,146,90,115,74}, {68,154,82,106,74}, {76,106,115,74,16}, {76,114,82,115,74}, {76,122,98,123,82}, {76,130,74,98,57}, {76,138,82,106,65}, {76,146,90,115,74}, {76,154,82,106,65}, {84,106,115,74,16}, {84,114,82,98,65}, {84,122,82,106,65}, {84,130,82,106,65}, {84,138,106,131,90}, {84,146,65,90,57}, {84,154,82,106,65}, {92,106,115,74,16}, {92,114,98,123,82}, {92,122,90,115,74}, {92,130,82,106,65}, {92,138,82,106,74}, {92,146,82,106,74}, {92,154,90,115,74}, {100,106,115,74,16}, {100,114,82,106,65}, {100,122,90,115,74}, {100,130,82,106,65}, {100,138,82,106,74}, {100,146,0,49,156}, {100,154,82,98,65}, {108,106,131,82,16}, {108,114,82,106,74}, {108,122,82,106,65}, {108,130,255,255,255}, {108,138,82,115,74}, {108,146,49,172,222}, {108,154,82,106,65}, {116,106,98,65,16}, {116,114,24,115,189}, {116,122,82,106,65}, {116,130,0,0,8}, {116,138,82,106,65}, {116,146,0,49,156}, {116,154,82,106,65} }
 function BOT.sig(str)
-  if #str ~= 153600 then BOT.sm = -1; BOT.st2 = 0; BOT.sigf = 1; return end
+  if #str ~= 153600 then BOT.sm = -1; BOT.st2 = 0; BOT.sigf = 1; BOT.sbx = 0; BOT.sxr = 0; return end
   local px = ffi.cast('const uint16_t*', str)
   local band, rsh = bit.band, bit.rshift
   local m = 0
@@ -457,6 +459,23 @@ function BOT.sig(str)
     if r + g + b > 600 then t = t + 1 end
   end end
   BOT.sm, BOT.st2, BOT.sigf = m, t, 1
+  local bx, xr = 0, 0  -- v4: dihitung SETELAH hasil v3 diisi (kegagalan di sini tak mengubah v3)
+  for i = 1, #BOT.SIGB do
+    local q = BOT.SIGB[i]
+    local p = px[q[2] * 320 + q[1]]
+    local r = math.floor(band(p, 31) * 255 / 31)
+    local g = math.floor(band(rsh(p, 5), 31) * 255 / 31)
+    local b = math.floor(band(rsh(p, 10), 31) * 255 / 31)
+    if math.abs(r - q[3]) <= 24 and math.abs(g - q[4]) <= 24 and math.abs(b - q[5]) <= 24 then bx = bx + 1 end
+  end
+  for y = 172, 182 do for x = 30, 239 do
+    local p = px[y * 320 + x]
+    local r = math.floor(band(p, 31) * 255 / 31)
+    local g = math.floor(band(rsh(p, 5), 31) * 255 / 31)
+    local b = math.floor(band(rsh(p, 10), 31) * 255 / 31)
+    if r + g + b > 600 and x > xr then xr = x end
+  end end
+  BOT.sbx, BOT.sxr = bx, xr
 end
 function BOT.shot()
   local ss = PCSX.GPU.takeScreenShot()
@@ -535,14 +554,17 @@ function BOT.inst(fr)
     BOT.sigf = 0
     local on = (BOT.sm >= 16) and 1 or 0
     if on == 1 and BOT.st2 > BOT.t2max then BOT.t2max = BOT.st2 end
+    if on == 1 then if BOT.sbx > BOT.bxmax then BOT.bxmax = BOT.sbx end; if BOT.sxr > BOT.xrmax then BOT.xrmax = BOT.sxr end end
     if on ~= BOT.yon and BOT.ny < 700 then
       BOT.ny = BOT.ny + 1
       if on == 1 then
-        BOT.t2max = BOT.st2
+        BOT.t2max = BOT.st2; BOT.bxmax = BOT.sbx; BOT.xrmax = BOT.sxr
         local o = BOT.tiles()
-        print(string.format('BOT# Y f=%d on=1 m=%d t2=%d pf=%d cur=%d pos=%d c=%d,%d own=%s', fr, BOT.sm, BOT.st2, pf, BOT.pcur, u32(0x70F28) % 65536, BOT.sg32(u32(0x70EB8)), BOT.sg32(u32(0x70F6C)), o))
+        local mv = ((BOT.lc[5] or 0) >= (BOT.lc[6] or 0)) and 1 or 3
+        local pm = (BOT.ram[mv == 1 and 5 or 6] or 0) % 65536
+        print(string.format('BOT# Y f=%d on=1 m=%d t2=%d pf=%d cur=%d pos=%d c=%d,%d own=%s bx=%d xr=%d mv=%d pm=%d', fr, BOT.sm, BOT.st2, pf, BOT.pcur, u32(0x70F28) % 65536, BOT.sg32(u32(0x70EB8)), BOT.sg32(u32(0x70F6C)), o, BOT.sbx, BOT.sxr, mv, pm))
       else
-        print(string.format('BOT# Y f=%d on=0 m=%d t2max=%d pf=%d cur=%d c=%d,%d', fr, BOT.sm, BOT.t2max, pf, BOT.pcur, BOT.sg32(u32(0x70EB8)), BOT.sg32(u32(0x70F6C))))
+        print(string.format('BOT# Y f=%d on=0 m=%d t2max=%d pf=%d cur=%d c=%d,%d bxmax=%d xrmax=%d', fr, BOT.sm, BOT.t2max, pf, BOT.pcur, BOT.sg32(u32(0x70EB8)), BOT.sg32(u32(0x70F6C)), BOT.bxmax, BOT.xrmax))
       end
     end
     BOT.yon = on
@@ -562,7 +584,7 @@ function BOT.tick(fr)
   end
   for i, a in ipairs(BOT.watch) do
     local v = u32(a)
-    if BOT.ram[i] ~= v then BOT.ram[i] = v; BOT.lastprog = fr end
+    if BOT.ram[i] ~= v then BOT.ram[i] = v; BOT.lastprog = fr; BOT.lc[i] = fr end
   end
   do local pb = ffi.cast('uint8_t*', mem); BOT.pflag = pb[0x139F46]; BOT.pcur = pb[0x1CECF0]; if BOT.pflag ~= 5 then BOT.ep = 0 end end
   local pk = BOT.pflag * 256 + BOT.pcur
