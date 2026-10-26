@@ -432,9 +432,36 @@ function BOT.parse(line)
   local h, b = line:match('^#%s*BOTSCENE%s+(%d+)%s+(%u+)')
   if h and B[b] then BOT.scene[tonumber(h)] = b end
 end
+-- INSTRUMEN v3 (hanya hitung/cetak; tidak mengubah keputusan): pengenal prompt Ya/Tidak lewat piksel tetap (data/sig_piksel_prompt.json; layar 320x240, PS1 555: R bit0-4, G bit5-9, B bit10-14). m = jumlah titik yang cocok (toleransi 8); t2 = piksel terang di baris teks ke-2 (x30-149, y188-205): >100 = prompt beli (必要チャクラ), ~0 = prompt serang.
+BOT.SIG = { {241,164,255,238,139}, {252,164,49,24,0}, {241,168,255,238,139}, {263,171,172,57,41}, {268,170,164,49,32}, {280,170,164,49,32}, {241,182,230,197,57}, {252,182,172,57,32}, {266,182,0,8,74}, {280,182,0,8,74}, {241,196,230,180,41}, {255,196,0,8,74}, {266,196,0,8,74}, {280,196,0,8,74}, {232,210,180,106,0}, {238,210,189,139,8}, {252,210,189,139,8}, {266,210,189,139,8}, {280,210,189,139,8}, {294,210,197,148,8} }
+BOT.sm, BOT.st2, BOT.sigf, BOT.yon, BOT.ny, BOT.t2max = 0, 0, 0, 0, 0, 0
+function BOT.sig(str)
+  if #str ~= 153600 then BOT.sm = -1; BOT.st2 = 0; BOT.sigf = 1; return end
+  local px = ffi.cast('const uint16_t*', str)
+  local band, rsh = bit.band, bit.rshift
+  local m = 0
+  for i = 1, #BOT.SIG do
+    local s = BOT.SIG[i]
+    local p = px[s[2] * 320 + s[1]]
+    local r = math.floor(band(p, 31) * 255 / 31)
+    local g = math.floor(band(rsh(p, 5), 31) * 255 / 31)
+    local b = math.floor(band(rsh(p, 10), 31) * 255 / 31)
+    if math.abs(r - s[3]) <= 8 and math.abs(g - s[4]) <= 8 and math.abs(b - s[5]) <= 8 then m = m + 1 end
+  end
+  local t = 0
+  for y = 188, 205 do for x = 30, 149 do
+    local p = px[y * 320 + x]
+    local r = math.floor(band(p, 31) * 255 / 31)
+    local g = math.floor(band(rsh(p, 5), 31) * 255 / 31)
+    local b = math.floor(band(rsh(p, 10), 31) * 255 / 31)
+    if r + g + b > 600 then t = t + 1 end
+  end end
+  BOT.sm, BOT.st2, BOT.sigf = m, t, 1
+end
 function BOT.shot()
   local ss = PCSX.GPU.takeScreenShot()
   local str = tostring(ss.data)
+  pcall(BOT.sig, str)  -- INSTRUMEN v3 (efek samping hanya mengisi BOT.sm/st2)
   local p = ffi.cast('const uint32_t*', str)
   local h = 0
   for i = 0, math.floor(#str / 4) - 1 do h = bit.tobit(bit.rol(bit.bxor(h, p[i]), 5) + 40503) end
@@ -504,6 +531,22 @@ function BOT.inst(fr)
     print(string.format('BOT# H f=%d h=%d p1=%d cur=%d', fr, BOT.h, u32(0x70F28) % 65536, BOT.pcur))
   end
   if pf ~= 5 then BOT.lh5 = nil end
+  if BOT.sigf == 1 then
+    BOT.sigf = 0
+    local on = (BOT.sm >= 16) and 1 or 0
+    if on == 1 and BOT.st2 > BOT.t2max then BOT.t2max = BOT.st2 end
+    if on ~= BOT.yon and BOT.ny < 700 then
+      BOT.ny = BOT.ny + 1
+      if on == 1 then
+        BOT.t2max = BOT.st2
+        local o = BOT.tiles()
+        print(string.format('BOT# Y f=%d on=1 m=%d t2=%d pf=%d cur=%d pos=%d c=%d,%d own=%s', fr, BOT.sm, BOT.st2, pf, BOT.pcur, u32(0x70F28) % 65536, BOT.sg32(u32(0x70EB8)), BOT.sg32(u32(0x70F6C)), o))
+      else
+        print(string.format('BOT# Y f=%d on=0 m=%d t2max=%d pf=%d cur=%d c=%d,%d', fr, BOT.sm, BOT.t2max, pf, BOT.pcur, BOT.sg32(u32(0x70EB8)), BOT.sg32(u32(0x70F6C))))
+      end
+    end
+    BOT.yon = on
+  end
   BOT.prevpf = pf
 end
 function BOT.tick(fr)
