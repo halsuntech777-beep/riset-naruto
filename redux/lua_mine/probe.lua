@@ -537,7 +537,7 @@ end
 --     Untuk episode BELI (xrmax 160-189), d = turunnya chakra pelaku (giliran Naruto -> B1, giliran COM -> B2) 90 frame setelah panel hilang; kandidat bernilai d mendapat skor +1.
 --     Keluaran: BOT# V (per episode, angka), BOT# V5 (puncak skor per grup g=1 Naruto/B1, g=2 COM/B2 dan jendela w=1 saat muncul/w=2 saat hilang; alamat hex byte RAM:skor).
 -- (b) Episode LEVEL-UP (t=U) dan SERANG (t=S): BOT# L = chakra B1..B4 dan 22 digit level sebelum/sesudah, jumlah tekan bot dalam jendela, durasi, kursor.
-BOT.v5 = { buf = ffi.new('uint8_t[?]', 0x200000), snf = -100000, on = 0, ep = nil, pq = {}, nv = 0, nl = 0, nerr = 0, nobuy = { 0, 0 }, n = { 0, 0 }, sc = { { {}, {} }, { {}, {} } } }
+BOT.v5 = { buf = ffi.new('uint8_t[?]', 0x200000), snf = -100000, on = 0, ep = nil, pq = {}, pq6 = {}, nw = 0, nv = 0, nl = 0, nerr = 0, nobuy = { 0, 0 }, n = { 0, 0 }, sc = { { {}, {} }, { {}, {} } } }
 function BOT.v5w(fn, a, b)
   local ok, er = pcall(fn, a, b)
   if not ok and BOT.v5.nerr < 3 then BOT.v5.nerr = BOT.v5.nerr + 1; print('BOT# V5ERR ' .. tostring(er):gsub('[^%w%s_%.:]', ''):sub(1, 90)) end
@@ -561,12 +561,13 @@ function BOT.v5f(fr, on)
   if on == 1 and V.on == 0 then
     local mv = ((BOT.lc[5] or 0) >= (BOT.lc[6] or 0)) and 1 or 3
     local _, lv = BOT.tiles()
-    local e = { f0 = fr, c = BOT.v5c(), mv = mv, n0 = BOT.nlog, lv0 = lv, cp = BOT.pcur, n1 = -1, n2 = -1 }
+    local e = { f0 = fr, c = BOT.v5c(), mv = mv, n0 = BOT.nlog, lv0 = lv, cp = BOT.pcur, n1 = -1, n2 = -1, r0 = BOT.v6r() }
     if fr - V.snf <= 40 then e.a1, e.n1 = BOT.v5diff(400) end
     V.ep = e
   elseif on == 0 and V.on == 1 and V.ep then
     local e = V.ep
     e.f1, e.np, e.bx, e.xr = fr, BOT.nlog - e.n0, BOT.bxmax, BOT.xrmax
+    e.r2 = BOT.v6r()
     if fr - V.snf <= 300 then e.a2, e.n2 = BOT.v5diff(400) end
     e.dl = fr + 90
     V.pq[#V.pq + 1] = e; V.ep = nil
@@ -574,13 +575,31 @@ function BOT.v5f(fr, on)
   V.on = on
   if on == 0 and BOT.pflag == 5 then ffi.copy(V.buf, mem, 0x200000); V.snf = fr end
 end
+-- v6 (log-only): baca langsung kata u16 di 0x1FFB8E/90/92 dan 0x1EEE06/08 (muncul r0, +20 frame r1, hilang r2); hasil 1200 frame sesudah episode (BOT# L6).
+function BOT.v6r()
+  local function w(a) return ffi.cast('const uint16_t*', mem + a)[0] end
+  return { w(0x1FFB8E), w(0x1FFB90), w(0x1FFB92), w(0x1EEE06), w(0x1EEE08) }
+end
+function BOT.v6s(r) if not r then return '-' end return table.concat(r, ',') end
 function BOT.v5t(fr)
   local V = BOT.v5
+  if V.ep and not V.ep.r1 and fr >= V.ep.f0 + 20 then V.ep.r1 = BOT.v6r() end
+  while #V.pq6 > 0 and fr >= V.pq6[1].dl6 do
+    local e = table.remove(V.pq6, 1)
+    local c = BOT.v5c()
+    local _, lv = BOT.tiles()
+    print(string.format('BOT# L6 f=%d t=%s mv=%d c=%d,%d,%d,%d lv=%s', e.f0, e.typ, e.mv, c[1], c[2], c[3], c[4], lv))
+  end
   while #V.pq > 0 and fr >= V.pq[1].dl do
     local e = table.remove(V.pq, 1)
     local c1 = BOT.v5c()
     local typ = (e.bx >= 45) and 'S' or ((e.xr >= 190) and 'U' or ((e.xr >= 160) and 'B' or 'L'))
     local g = (e.mv == 1) and 1 or 2
+    if V.nw < 400 then
+      V.nw = V.nw + 1
+      print(string.format('BOT# W f=%d t=%s mv=%d d=%d dur=%d r0=%s r1=%s r2=%s', e.f0, typ, e.mv, e.c[g] - c1[g], e.f1 - e.f0, BOT.v6s(e.r0), BOT.v6s(e.r1), BOT.v6s(e.r2)))
+    end
+    if typ ~= 'L' then e.typ = typ; e.dl6 = e.f1 + 1200; V.pq6[#V.pq6 + 1] = e end
     if typ == 'B' then
       local d = e.c[g] - c1[g]
       if d > 0 and d <= 1000 and V.nv < 150 then
