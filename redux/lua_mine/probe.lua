@@ -510,6 +510,7 @@ end
 function BOT.finish(fr, why)
   if BOT.done then return end
   BOT.done = true
+  BOT.v5w(BOT.v5end)  -- INSTRUMEN v5 (hanya cetak)
   print(string.format('BOT# END f=%d why=%s', fr, why))
   if why == 'MACET' then BOT.snap(fr) end
   if why ~= 'MAXF' then PCSX.nextTick(function() PCSX.quit(0) end) end
@@ -529,8 +530,95 @@ function BOT.tiles()
   end
   return table.concat(o), table.concat(l)
 end
+-- V5_BEGIN
+-- INSTRUMEN v5 (HANYA cetak angka; tidak mengubah keputusan/penekanan bot; semua dipanggil lewat pcall via BOT.v5w).
+-- (a) Mencari alamat RAM harga beli: tiap episode panel Ya/Tidak (pengenal v4) membandingkan RAM sebelum (sampel <=40 frame sebelum panel, hanya saat flag=5)
+--     dengan RAM saat panel muncul (a1) dan saat panel hilang (a2); kandidat = kata u16 yang berubah, nilai kelipatan 10 di 10..1000 (maks 400, n1/n2 = jumlah sebenarnya).
+--     Untuk episode BELI (xrmax 160-189), d = turunnya chakra pelaku (giliran Naruto -> B1, giliran COM -> B2) 90 frame setelah panel hilang; kandidat bernilai d mendapat skor +1.
+--     Keluaran: BOT# V (per episode, angka), BOT# V5 (puncak skor per grup g=1 Naruto/B1, g=2 COM/B2 dan jendela w=1 saat muncul/w=2 saat hilang; alamat hex byte RAM:skor).
+-- (b) Episode LEVEL-UP (t=U) dan SERANG (t=S): BOT# L = chakra B1..B4 dan 22 digit level sebelum/sesudah, jumlah tekan bot dalam jendela, durasi, kursor.
+BOT.v5 = { buf = ffi.new('uint8_t[?]', 0x200000), snf = -100000, on = 0, ep = nil, pq = {}, nv = 0, nl = 0, nerr = 0, nobuy = { 0, 0 }, n = { 0, 0 }, sc = { { {}, {} }, { {}, {} } } }
+function BOT.v5w(fn, a, b)
+  local ok, er = pcall(fn, a, b)
+  if not ok and BOT.v5.nerr < 3 then BOT.v5.nerr = BOT.v5.nerr + 1; print('BOT# V5ERR ' .. tostring(er):gsub('[^%w%s_%.:]', ''):sub(1, 90)) end
+end
+function BOT.v5diff(cap)
+  local a = ffi.cast('const uint16_t*', BOT.v5.buf)
+  local b = ffi.cast('const uint16_t*', mem)
+  local res, n = {}, 0
+  for i = 0, 0xFFFFF do
+    local v = b[i]
+    if v ~= a[i] and v >= 10 and v <= 1000 and v % 10 == 0 then
+      n = n + 1
+      if n <= cap then res[n] = i * 1024 + v end
+    end
+  end
+  return res, n
+end
+function BOT.v5c() return { BOT.sg32(u32(0x70EB8)), BOT.sg32(u32(0x70F6C)), BOT.sg32(u32(0x71020)), BOT.sg32(u32(0x710D4)) } end
+function BOT.v5f(fr, on)
+  local V = BOT.v5
+  if on == 1 and V.on == 0 then
+    local mv = ((BOT.lc[5] or 0) >= (BOT.lc[6] or 0)) and 1 or 3
+    local _, lv = BOT.tiles()
+    local e = { f0 = fr, c = BOT.v5c(), mv = mv, n0 = BOT.nlog, lv0 = lv, cp = BOT.pcur, n1 = -1, n2 = -1 }
+    if fr - V.snf <= 40 then e.a1, e.n1 = BOT.v5diff(400) end
+    V.ep = e
+  elseif on == 0 and V.on == 1 and V.ep then
+    local e = V.ep
+    e.f1, e.np, e.bx, e.xr = fr, BOT.nlog - e.n0, BOT.bxmax, BOT.xrmax
+    if fr - V.snf <= 300 then e.a2, e.n2 = BOT.v5diff(400) end
+    e.dl = fr + 90
+    V.pq[#V.pq + 1] = e; V.ep = nil
+  end
+  V.on = on
+  if on == 0 and BOT.pflag == 5 then ffi.copy(V.buf, mem, 0x200000); V.snf = fr end
+end
+function BOT.v5t(fr)
+  local V = BOT.v5
+  while #V.pq > 0 and fr >= V.pq[1].dl do
+    local e = table.remove(V.pq, 1)
+    local c1 = BOT.v5c()
+    local typ = (e.bx >= 45) and 'S' or ((e.xr >= 190) and 'U' or ((e.xr >= 160) and 'B' or 'L'))
+    local g = (e.mv == 1) and 1 or 2
+    if typ == 'B' then
+      local d = e.c[g] - c1[g]
+      if d > 0 and d <= 1000 and V.nv < 150 then
+        V.nv = V.nv + 1; V.n[g] = V.n[g] + 1
+        local h = { 0, 0 }
+        for w = 1, 2 do
+          for _, p in ipairs((w == 1) and (e.a1 or {}) or (e.a2 or {})) do
+            local v = p % 1024
+            if v == d then
+              local ad = ((p - v) / 1024) * 2
+              V.sc[g][w][ad] = (V.sc[g][w][ad] or 0) + 1; h[w] = h[w] + 1
+            end
+          end
+        end
+        print(string.format('BOT# V f=%d mv=%d d=%d c0=%d n1=%d n2=%d h1=%d h2=%d np=%d dur=%d xr=%d', e.f0, e.mv, d, e.c[g], e.n1, e.n2, h[1], h[2], e.np, e.f1 - e.f0, e.xr))
+      elseif d <= 0 then V.nobuy[g] = V.nobuy[g] + 1 end
+    elseif (typ == 'U' or typ == 'S') and V.nl < 220 then
+      V.nl = V.nl + 1
+      local _, lv1 = BOT.tiles()
+      print(string.format('BOT# L f=%d t=%s mv=%d c0=%d,%d,%d,%d c1=%d,%d,%d,%d lv0=%s lv1=%s np=%d dur=%d cp=%d xr=%d', e.f0, typ, e.mv, e.c[1], e.c[2], e.c[3], e.c[4], c1[1], c1[2], c1[3], c1[4], e.lv0, lv1, e.np, e.f1 - e.f0, e.cp, e.xr))
+    end
+  end
+end
+function BOT.v5end()
+  local V = BOT.v5
+  for g = 1, 2 do for w = 1, 2 do
+    local t = {}
+    for ad, c in pairs(V.sc[g][w]) do t[#t + 1] = { ad, c } end
+    table.sort(t, function(x, y) if x[2] ~= y[2] then return x[2] > y[2] end return x[1] < y[1] end)
+    local o = {}
+    for i = 1, math.min(40, #t) do o[#o + 1] = string.format('%X:%d', t[i][1], t[i][2]) end
+    print(string.format('BOT# V5 g=%d w=%d n=%d nobuy=%d top=%s', g, w, V.n[g], V.nobuy[g], table.concat(o, ',')))
+  end end
+end
+-- V5_END
 function BOT.inst(fr)
   local pf = BOT.pflag
+  BOT.v5w(BOT.v5t, fr)  -- INSTRUMEN v5 (hanya cetak)
   if not BOT.t0 then
     BOT.t0 = true
     local pr = {}
@@ -567,6 +655,7 @@ function BOT.inst(fr)
         print(string.format('BOT# Y f=%d on=0 m=%d t2max=%d pf=%d cur=%d c=%d,%d bxmax=%d xrmax=%d', fr, BOT.sm, BOT.t2max, pf, BOT.pcur, BOT.sg32(u32(0x70EB8)), BOT.sg32(u32(0x70F6C)), BOT.bxmax, BOT.xrmax))
       end
     end
+    BOT.v5w(BOT.v5f, fr, on)  -- INSTRUMEN v5 (hanya cetak)
     BOT.yon = on
   end
   BOT.prevpf = pf
