@@ -1,6 +1,6 @@
 # STATUS (baca ini dulu)
 
-> Terbaru (chat x10 selesai): lihat STATUS_RINGKAS.md bagian "Serah-terima chat x11" (pengenal prompt lewat piksel, koreksi tuas C, rencana v3). Prompt chat baru: PROMPT_CHAT_X10.md.
+> Terbaru (chat x10 selesai): lihat STATUS_RINGKAS.md bagian "Hasil gelombang x14" lalu "Serah-terima chat x11" (pengenal prompt lewat piksel sudah jalan, koreksi tuas C, lever A level-up). Prompt chat baru: PROMPT_CHAT_X10.md.
 
 Keadaan terakhir riset game PS1 *Naruto: Shinobi no Sato no Jintori Gassen* untuk TileDuel. Detail: `catatan_riset.md`. Riwayat chat: `riwayat/kronologi_chat.md`.
 
