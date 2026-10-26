@@ -1,0 +1,15 @@
+jadwal=inputs/x8_g70m200.txt maxf=165000 pokes= orpokes= dumps=
+rc_emulator=0 (0=selesai MAXF, 124=timeout) detik=568 baris_emu_log=264482
+md5_chg_log=ede42d863454e9a30e3153c76c3bfb5f jumlah_CHG=739
+--- nilai terakhir per alamat pantau ---
+CHG f=27985 A1: 0 -> 2030520 
+CHG f=27985 A2: 0 -> 2030664 
+CHG f=30218 A3: 13304052 -> 13304042 
+CHG f=30318 A4: 12320703 -> 12320701 
+CHG f=67527 P4: 65536 -> 0 
+CHG f=94925 B1: 3453 -> 2000 
+CHG f=94925 B2: 926 -> 2000 
+CHG f=94925 B3: 0 -> 2000 
+CHG f=94925 P1: 131138 -> 0 
+CHG f=94925 P2: 196608 -> 0 
+CHG f=94925 P3: 63 -> 0 
