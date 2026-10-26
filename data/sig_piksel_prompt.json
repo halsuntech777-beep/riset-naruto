@@ -1,0 +1,185 @@
+{
+"catatan": "ANGKA SAJA (bukan gambar). Titik piksel tetap pada panel Ya/Tidak (はい/いいえ) di tangkapan layar 320x240 (koordinat PNG hasil ci/dekripsi_shot.py, RGB 8-bit). Syarat: warna sama (toleransi 8) pada 4 jendela prompt (beli 260, beli 140, serang, beli 220) dan beda >40 pada 8 jendela non-prompt (kartu, pesan, dialog, animasi). Cocok 10/10 pada prompt dan 0/10 pada non-prompt (12 sampel, satu dadu x10g55m160; BELUM divalidasi pada 16 dadu). Pembeda beli vs serang: baris teks ke-2 (y 188-206, x 30-150) berisi teks terang pada prompt beli (必要チャクラ N, >160 piksel terang), kosong pada prompt serang.",
+"titik": [
+{
+"x": 241,
+"y": 164,
+"rgb": [
+255,
+238,
+139
+]
+},
+{
+"x": 252,
+"y": 164,
+"rgb": [
+49,
+24,
+0
+]
+},
+{
+"x": 241,
+"y": 168,
+"rgb": [
+255,
+238,
+139
+]
+},
+{
+"x": 263,
+"y": 171,
+"rgb": [
+172,
+57,
+41
+]
+},
+{
+"x": 268,
+"y": 170,
+"rgb": [
+164,
+49,
+32
+]
+},
+{
+"x": 280,
+"y": 170,
+"rgb": [
+164,
+49,
+32
+]
+},
+{
+"x": 241,
+"y": 182,
+"rgb": [
+230,
+197,
+57
+]
+},
+{
+"x": 252,
+"y": 182,
+"rgb": [
+172,
+57,
+32
+]
+},
+{
+"x": 266,
+"y": 182,
+"rgb": [
+0,
+8,
+74
+]
+},
+{
+"x": 280,
+"y": 182,
+"rgb": [
+0,
+8,
+74
+]
+},
+{
+"x": 241,
+"y": 196,
+"rgb": [
+230,
+180,
+41
+]
+},
+{
+"x": 255,
+"y": 196,
+"rgb": [
+0,
+8,
+74
+]
+},
+{
+"x": 266,
+"y": 196,
+"rgb": [
+0,
+8,
+74
+]
+},
+{
+"x": 280,
+"y": 196,
+"rgb": [
+0,
+8,
+74
+]
+},
+{
+"x": 232,
+"y": 210,
+"rgb": [
+180,
+106,
+0
+]
+},
+{
+"x": 238,
+"y": 210,
+"rgb": [
+189,
+139,
+8
+]
+},
+{
+"x": 252,
+"y": 210,
+"rgb": [
+189,
+139,
+8
+]
+},
+{
+"x": 266,
+"y": 210,
+"rgb": [
+189,
+139,
+8
+]
+},
+{
+"x": 280,
+"y": 210,
+"rgb": [
+189,
+139,
+8
+]
+},
+{
+"x": 294,
+"y": 210,
+"rgb": [
+197,
+148,
+8
+]
+}
+]
+}
