@@ -1,0 +1,3 @@
+ghidra=Ghidra_12.2_build
+mkpsxiso=v2.30
+m2c=c632946b8cfbe8fce442b522dba92dfa72f1f317
