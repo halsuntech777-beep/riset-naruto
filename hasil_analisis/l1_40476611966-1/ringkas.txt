@@ -1,0 +1,17 @@
+game.bin ok, 325989552 byte
+dumpsxiso: Unknown parameter: --version
+LANGKAH1: berkas=7 total=306929272 byte
+  DATA2.BIN                    189832704  PSXEXE=False
+  DATA.BIN                      66015232  PSXEXE=False
+  DUMMY.BIN                     50667520  PSXEXE=False
+  SLPS_035.53                     385024  PSXEXE=True
+  license_data.dat                 28032  PSXEXE=False
+  XASECT.BIN                         692  PSXEXE=False
+  SYSTEM.CNF                          68  PSXEXE=False
+  CNF: BOOT = cdrom:\SLPS_035.53;1
+  CNF: TCB = 4
+  CNF: EVENT = 16
+  CNF: STACK = 801fff00
+LANGKAH2: exe utama=SLPS_035.53
+  SLPS_035.53: muat=0x80010000 entry=0x80011448 gp=0x00000000 ukuran_teks=382976 (0x5D800) sp=0x801FFFF0 ukuran_berkas=385024 header+teks_cocok=True akhir=0x8006D800
+INVENTARIS: berkas=7 baris=26

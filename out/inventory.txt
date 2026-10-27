@@ -1,0 +1,26 @@
+# Inventaris disc SLPS-03553 (dibuat ci/inventaris.py, run 40476611966-1; hanya metadata/angka, tanpa isi berkas)
+# nama | ukuran(byte) | sha256 | atribut dari disc.xml (lba dsb)
+DATA2.BIN | 189832704 | c1915a3d242e51d2ec4a643bfdbbab1a85ef5b53abd8a9849621b3271931b707 | {'name': 'DATA2.BIN', 'type': 'mixed', 'date': '20030411195604'}
+DATA.BIN | 66015232 | 69df081aaeb5dd0cff13a177693f6ef6d62aa2b36417c63f031ec7ee4de51822 | {'name': 'DATA.BIN', 'type': 'data', 'date': '20030514114206'}
+DUMMY.BIN | 50667520 | cac5c852e95c90475a2879f51b6b949afea2df0cb540b2a2743bd791af4c47a2 | {'name': 'DUMMY.BIN', 'type': 'data', 'date': '20021128114208'}
+SLPS_035.53 | 385024 | a97b3ebea329b267c186ae52fd21edb1891d66377d475cef32db5f133c296569 | {'name': 'SLPS_035.53', 'type': 'data', 'date': '20030514114118'}
+license_data.dat | 28032 | 134a8c0e6bacce1ea0ffc3daf23d1d97257a9b0d9ac4f1e64216ec029ea0a6cf | {}
+XASECT.BIN | 692 | df257fbdabdb848f845466246abf4a36fdb6cf17815fc3a76ff7d7585d1953f0 | {'name': 'XASECT.BIN', 'type': 'data', 'date': '20030411195604'}
+SYSTEM.CNF | 68 | e5ffa72c5845508ae48b07140c712c9423ff6af733164b57628d1d9cece9ae71 | {'name': 'SYSTEM.CNF', 'type': 'data', 'date': '20030409065746'}
+total_berkas=7 total_byte=306929272
+SYSTEM.CNF: BOOT = cdrom:\SLPS_035.53;1 ; TCB = 4 ; EVENT = 16 ; STACK = 801fff00
+exe_utama_dari_BOOT=SLPS_035.53; berheader_PS-X_EXE=True
+## Bukti calon overlay / berkas besar (angka)
+DATA2.BIN: ukuran=189832704 magic16=01006400010064000c0c0c0c0c0c0c0c nol=28.5% entropi_sampel=6.06b/byte sektor=92691 sektor_nol=0 sektor_unik_sampel=1444/1449
+   jr_ra_total=1 (0.0/MB) magic_sektor={'TIM': 2} PS-X_EXE_sektor=0 tabel_offset_naik=0/511
+DATA.BIN: ukuran=66015232 magic16=040000000b80023c94d44224002f4324 nol=30.0% entropi_sampel=6.18b/byte sektor=32234 sektor_nol=478 sektor_unik_sampel=495/504
+   jr_ra_total=1577 (25.0/MB) magic_sektor={'TIM': 269} PS-X_EXE_sektor=0 tabel_offset_naik=0/511
+DUMMY.BIN: ukuran=50667520 magic16=00000000000000000000000000000000 nol=100.0% entropi_sampel=-0.00b/byte sektor=24740 sektor_nol=24740 sektor_unik_sampel=1/387
+   jr_ra_total=0 (0.0/MB) magic_sektor={} PS-X_EXE_sektor=0 tabel_offset_naik=0/511
+pembanding EXE utama: jr_ra_total=1772 (4826/MB)
+## String nama berkas di EXE utama (offset berkas -> alamat RAM, string)
+  0x83D -> 0x8001003D: \DATA2.BIN;1
+  0x1B70 -> 0x80011370: This is not SEQ Data.
+  0x1B8B -> 0x8001138B: This is an old SEQ Data Format.
+  0x84D -> 0x8001004D: \XASECT.BIN;1
+  0x1650 -> 0x80010E50: CDROM: unknown intr
