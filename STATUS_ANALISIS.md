@@ -4,6 +4,14 @@ Jalur terpisah dari jalur bot (STATUS_RINGKAS.md). Catat semua kemajuan jalur in
 
 
 ## RINGKASAN TERKINI (serah-terima ke chat baru, 27 Okt 2026) - BACA INI DULU
+
+**SERAH-TERIMA (27 Okt 2026, akhir chat 2):** langkah 0-4 belum semua tuntas (1, 2, 3 TUNTAS; 0 dan 4 SEBAGIAN; 5-10 belum). Berikutnya: langkah 5 (buat kunci RSA baru dulu).
+- Kunci privat RSA lama ada di sandbox chat lama dan HILANG. Ekspor terenkripsi hasil_analisis/l3_40514439054-1/*.enc.txt tak terbaca lagi. Bila perlu membacanya, buat kunci baru (privat di /home/claude/.kunci/, chmod 600; publik ke ci/shot_pub.pem), lalu jalankan ulang `alat/analisis.sh 3`; hash polos di out/ghidra_ekspor_manifest.txt untuk verifikasi (dekripsi: ci/dekripsi_berkas.py).
+- Alat satu panggilan: `T=<token> bash alat/analisis.sh LANGKAH [DETIK<=280] [ALAMAT]` (dispatch + tunggu + tarik + ringkasan); `T=<token> bash alat/kerja.sh dorong "pesan"`.
+- Ghidra 12.2 butuh JDK 25 (kelas versi 69). Uji kompilasi skrip lokal: apt-get update; apt-get install openjdk-25-jdk-headless; ambil jar dari rilis publik Ghidra_12.2_build (unzip '*.jar'), lalu javac -proc:none -cp <jar> skrip.java. Mencegah putaran runner yang sia-sia.
+- Temuan penting L3 untuk langkah berikutnya: pemuat berkas kandidat = fungsi 0x800172EC (merujuk \\DATA2.BIN;1 dan \\XASECT.BIN;1); teks dialog Jepang tidak di EXE (cari di DATA.BIN/DATA2.BIN, langkah 7).
+- Langkah 4(b)(d) dan 6 BLOKIR: butuh emulator/alamat RAM dari pemilik.
+
 Aturan kerja ada di PROMPT_RISET.md (kriteria TUNTAS ketat, keyakinan PASTI/MUNGKIN/TEBAKAN, satu langkah per putaran, laporan 4 bagian). Bagian lama di bawah memakai label [TERBUKTI]/[TERAMATI]/[DUGAAN]/[BELUM] dan klaim "SELESAI" untuk langkah 3-4: abaikan klaim itu, pakai tabel ini.
 
 | Langkah | Status | Ada (bukti) | Kurang |
