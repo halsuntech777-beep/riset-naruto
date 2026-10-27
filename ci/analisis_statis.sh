@@ -26,7 +26,7 @@ pasang_mkpsxiso(){
 if has 0; then
   mkdir -p "$R/out"; V="$D/versions.txt"; : > "$V"
   v(){ echo "$*" | tee -a "$V"; }
-  pin(){ sed -n "s/^$1=//p" "$R/ci/versi_pin.txt" 2>/dev/null | head -1; }
+  pin(){ [ -f "$R/ci/versi_pin.txt" ] && sed -n "s/^$1=//p" "$R/ci/versi_pin.txt" | head -1 || true; }
   v "tanggal_utc=$(date -u +%FT%TZ)"; v "runner=$(. /etc/os-release; echo "$PRETTY_NAME")"; v "python=$(python3 --version 2>&1)"
   J="${JAVA_HOME_21_X64:-}"; if [ -z "$J" ] || [ ! -x "$J/bin/javac" ]; then sudo apt-get install -y -qq openjdk-21-jdk-headless >/dev/null 2>&1; J=/usr/lib/jvm/java-21-openjdk-amd64; fi
   export JAVA_HOME="$J" PATH="$J/bin:$PATH"; v "java=$(java -version 2>&1 | head -1 | cut -c1-70)"; v "javac=$(javac -version 2>&1 | head -1)"
