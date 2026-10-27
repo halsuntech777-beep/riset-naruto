@@ -1,0 +1,32 @@
+HEADER PS-X EXE (langkah 2) - run 40477280135-1
+Sumber: 0x800 byte pertama berkas executable utama (SLPS_035.53). Isi kode tidak dicetak, hanya angka header.
+Keyakinan semua angka di bawah: PASTI (dibaca langsung dari byte header; aritmetika dicek oleh skrip ci/header_exe.py).
+
+Magic (0x00): PS-X EXE; byte 0x08-0x0F nol semua: True
+PC awal / entry (0x10): 0x80011448
+GP awal (0x14): 0x00000000 (nol = GP tidak diatur oleh header)
+Alamat muat teks (0x18): 0x80010000
+Ukuran teks (0x1C): 382976 byte (0x5D800)
+Data tambahan d_addr/d_size (0x20/0x24): 0x00000000 / 0
+BSS b_addr/b_size (0x28/0x2C): 0x00000000 / 0
+SP dasar / offset (0x30/0x34): 0x801FFFF0 / 0x0
+SP awal (dasar+offset): 0x801FFFF0
+Kata 0x38-0x4B (area simpan register oleh BIOS): 0x00000000 0x00000000 0x00000000 0x00000000 0x00000000
+String wilayah (0x4C): panjang 47, ASCII tercetak=True, isi: Sony Computer Entertainment Inc. for Japan area
+Byte bukan-nol setelah string sampai 0x7FF: 0
+
+PEMERIKSAAN
+Ukuran berkas: 385024 byte (0x5E000)
+0x800 + ukuran teks = 385024 byte (0x5E000)
+Selisih ukuran berkas - (0x800 + ukuran teks) = 0 byte
+Penjelasan selisih: nol. Berkas = header 0x800 byte + teks tepat; tidak ada data sisa/trailer. Header menempati satu sektor CD (2048 byte) sendiri.
+Entry di dalam rentang teks [0x80010000, 0x8006D800): True
+Entry sejajar 4 byte: True; alamat muat sejajar 4 byte: True
+Ukuran teks kelipatan 0x800 (aturan psx-spx): True
+Alamat muat di KSEG0 (0x80000000-0x9FFFFFFF): True; alamat fisik awal 0x00010000, akhir 0x0006D800
+Offset berkas instruksi entry: 0x1C48 (= 0x800 + entry - muat)
+Akhir teks di RAM: 0x8006D800. Alamat chakra/posisi lama (0x80070EB8.., 0x80070F28) = akhir + 0x36B8, di atas teks EXE.
+
+DAMPAK UNTUK LANGKAH 3 (Ghidra)
+Impor memakai berkas tanpa 0x800 byte pertama, basis = alamat muat di atas, entry = PC awal di atas: konsisten dengan header jika pemeriksaan di atas semua benar.
+Header tidak mendeklarasikan BSS/data terpisah: True
