@@ -5,3 +5,4 @@
 *.img
 *.AppImage
 *.mp4
+*priv*.pem

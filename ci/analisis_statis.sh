@@ -102,6 +102,7 @@ if has 1; then mkdir -p "$R/out"; python3 "$R/ci/inventaris.py" "$W/disc" "$W/di
 if has 3 || has 4; then
   EXE=$(find "$W/disc" -iname "SLPS_035.53" | head -1); [ -n "$EXE" ] || gagal "exe tak ketemu"
   tail -c +2049 "$EXE" > "$W/exe.bin"
+  if has 3; then mkdir -p "$W/raw"; python3 "$R/ci/cari_string.py" "$W/exe.bin" "$W/str.txt" | tee -a "$D/ringkas.txt" > "$W/cari.txt"; fi
   mkdir -p "$W/gh"
   GH_TOKEN="${GITHUB_TOKEN:-}" gh release download -R NationalSecurityAgency/ghidra -D "$W/gh" -p "ghidra_*_PUBLIC_*.zip" >/dev/null 2>&1 || gagal "unduh ghidra gagal"
   (cd "$W/gh" && unzip -q -o ./ghidra_*.zip); GD=$(find "$W/gh" -maxdepth 1 -type d -name "ghidra_*" | head -1)
@@ -109,20 +110,23 @@ if has 3 || has 4; then
   J="${JAVA_HOME_21_X64:-}"; if [ -z "$J" ] || [ ! -x "$J/bin/javac" ]; then sudo apt-get install -y -qq openjdk-21-jdk-headless >/dev/null 2>&1; J=/usr/lib/jvm/java-21-openjdk-amd64; fi
   export JAVA_HOME="$J" PATH="$J/bin:$PATH"
   echo "ghidra: $(basename "$GD"); $(java -version 2>&1 | head -1 | cut -c1-60)" | tee -a "$D/ringkas.txt"
-  O3="$D/ghidra_stat.txt"; O4="$D/rng.txt"; OK=0
+  O3="$D/ghidra_stat.txt"; O4="$D/rng.txt"; O3B="$W/l3_lengkap.txt"; OK=0
   for BA in 0x80010000 80010000; do
-    rm -rf "$W/gproj"; mkdir -p "$W/gproj"; rm -f "$O3" "$O4"
+    rm -rf "$W/gproj"; mkdir -p "$W/gproj"; rm -f "$O3" "$O4" "$O3B"
     PS=()
-    if has 3; then PS+=(-postScript StatFungsi.java "$O3" "$W/seed.txt"); fi
+    if has 3; then PS+=(-postScript StatFungsi.java "$O3" "$W/seed.txt" -postScript ExportLangkah3.java "$W/raw" "$O3B" "$W/str.txt"); fi
     if has 4; then PS+=(-postScript FindRng.java "$O4"); fi
     "$GD/support/analyzeHeadless" "$W/gproj" naruto -import "$W/exe.bin" -processor "MIPS:LE:32:default" -loader BinaryLoader -loader-baseAddr "$BA" -scriptPath "$R/ci/ghidra" -preScript SeedJal.java "$W/seed.txt" "${PS[@]}" > "$W/gh.log" 2>&1 || true
     OK=1
-    if has 3 && [ ! -s "$O3" ]; then OK=0; fi
+    if has 3 && { [ ! -s "$O3" ] || [ ! -s "$O3B" ]; }; then OK=0; fi
     if has 4 && [ ! -s "$O4" ]; then OK=0; fi
     [ $OK = 1 ] && break
   done
   [ $OK = 1 ] || { grep -aE "ERROR|Exception|rror" "$W/gh.log" | head -8 | cut -c1-170 | tr -cd "\11\12\40-\176"; gagal "ghidra tak menghasilkan keluaran"; }
-  if has 3; then cat "$O3" | tee -a "$D/ringkas.txt"; fi
+  if has 3; then cat "$O3" "$O3B" | tee -a "$D/ringkas.txt"
+    { echo "GHIDRA langkah 3 lengkap - run $ID (hanya angka/alamat; mentah hanya terenkripsi di hasil_analisis/$(basename "$D")/)"; cat "$W/cari.txt" "$O3" "$O3B"; } > "$R/out/ghidra_ringkas.txt"
+    if [ -s "$W/raw/fungsi.txt" ]; then python3 "$R/ci/enkripsi_berkas.py" "$R/ci/shot_pub.pem" "$D" "$R/out/ghidra_ekspor_manifest.txt" "$ID" "$W/raw/fungsi.txt" "$W/raw/string_xref.txt" "$W/raw/gagal_disasm.txt" | tee -a "$D/ringkas.txt"; fi
+  fi
   if has 4; then cat "$O4" | tee -a "$D/ringkas.txt"; fi
 fi
 for l in 5 6 7 8 9 10; do has $l && echo "langkah $l belum diimplementasikan di skrip ini" | tee -a "$D/ringkas.txt"; done
