@@ -1,0 +1,35 @@
+GHIDRA langkah 3 lengkap - run 40514439054-1 (hanya angka/alamat; mentah hanya terenkripsi di hasil_analisis/l3_40514439054-1/)
+CARI_STRING: berkas=382976 byte basis=0x80010000
+  string_ascii=68 string_sjis=10 (ditandai kata kunci: 0)
+  pencarian kata kunci di SELURUH berkas (jumlah kemunculan per pengkodean; alamat pertama):
+   kekkai    shift_jis=0  euc_jp=0  utf-8=0
+   chakra    shift_jis=0  euc_jp=0  utf-8=0
+   kougeki   shift_jis=0  euc_jp=0  utf-8=0
+   reberu    shift_jis=0  euc_jp=0  utf-8=0
+   hari      shift_jis=0  euc_jp=0  utf-8=0
+   taikyu    shift_jis=0  euc_jp=0  utf-8=0
+   nanjutsu  shift_jis=0  euc_jp=0  utf-8=0
+   hissu     shift_jis=0  euc_jp=0  utf-8=0
+LANGKAH3: Ghidra MIPS:LE:32:default basis=80010000 blok=382976 byte
+  seed: jal_total=4265
+  seed: jal_target_unik_dalam_rentang=899
+  seed: benih_berhasil=899
+  fungsi_total=1209 entry_0x80011448_fungsi=true
+  cakupan_fungsi_byte=252780 (66% blok)
+  instruksi=64418
+  ukuran_fungsi min=8 median=100 p90=512 maks=3816 >=1000B:36 <=8B:3
+LANGKAH3-LENGKAP: Ghidra MIPS:LE:32:default basis=0x80010000 blok=382976 byte; instruksi=64418
+  GTE cop2_perintah: kata_total=13 terdisassemble_sebagai_instruksi=6 di_dalam_fungsi=6
+  GTE mfc2/cfc2/mtc2/ctc2: kata_total=56 terdisassemble_sebagai_instruksi=55 di_dalam_fungsi=55
+  GTE lwc2/swc2: kata_total=29 terdisassemble_sebagai_instruksi=19 di_dalam_fungsi=19
+  fungsi_yang_memuat_kata_GTE=11
+  fungsi=1209 tanpa_pemanggil_langsung(selain_entry)=304 konstanta_alamat_unik_hasil_pola=632
+  string_dipindai=78 (ascii=68 dengan_xref=57; sjis=10 dengan_xref=0) xref_ghidra>0=56 xref_pola_tepat>0=24 salah_satu=57
+  string_terdefinisi_oleh_Ghidra=145 dengan_xref=113
+  wilayah_tak_tercakup: jumlah=535 total_byte=118352 (30% blok) byte_kata_nol=62532
+  wilayah_dengan_prolog_fungsi(addiu sp,sp,-N)=6 (1308 byte) kata_prolog_total=6 wilayah_dengan_jr_ra=117  [MUNGKIN: kode yang tak terdisassemble atau tak jadi fungsi]
+    terbesar #1 @0x80055CF0 ukuran=61320 prolog=0
+    terbesar #2 @0x80068940 ukuran=16844 prolog=0
+    terbesar #3 @0x80065DF4 ukuran=4136 prolog=0
+    terbesar #4 @0x8001491C ukuran=3000 prolog=0
+    terbesar #5 @0x80067D94 ukuran=2560 prolog=0

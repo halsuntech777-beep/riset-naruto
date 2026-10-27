@@ -1,0 +1,5 @@
+MANIFEST berkas terenkripsi - run 40514439054-1 (kunci privat TIDAK ada di repo; dekripsi hanya di sandbox pemilik kunci)
+format: nama_polos ukuran_polos baris sha256_polos -> potongan:ukuran_enc
+fungsi.txt 38302 1210 d61e202a06512cf4cfe1fb417a251cb375155720e5da644846a43c39ff6f6c44 -> fungsi.p01.enc.txt:14899
+string_xref.txt 3386 79 617e23c8d4e9c92798df8cf5f2cf9eccc6a6429591aea78316654c68071edab9 -> string_xref.p01.enc.txt:2207
+gagal_disasm.txt 9553 536 2f27473e98be0ccc33fdf4453d16cd58a149d25b3e4190d5ce3087f2deeb769d -> gagal_disasm.p01.enc.txt:3655

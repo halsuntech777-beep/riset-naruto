@@ -1,0 +1,56 @@
+game.bin ok, 325989552 byte
+dumpsxiso: Unknown parameter: --version
+LANGKAH1: berkas=7 total=306929272 byte
+  DATA2.BIN                    189832704  PSXEXE=False
+  DATA.BIN                      66015232  PSXEXE=False
+  DUMMY.BIN                     50667520  PSXEXE=False
+  SLPS_035.53                     385024  PSXEXE=True
+  license_data.dat                 28032  PSXEXE=False
+  XASECT.BIN                         692  PSXEXE=False
+  SYSTEM.CNF                          68  PSXEXE=False
+  CNF: BOOT = cdrom:\SLPS_035.53;1
+  CNF: TCB = 4
+  CNF: EVENT = 16
+  CNF: STACK = 801fff00
+LANGKAH2: exe utama=SLPS_035.53
+  SLPS_035.53: muat=0x80010000 entry=0x80011448 gp=0x00000000 ukuran_teks=382976 (0x5D800) sp=0x801FFFF0 ukuran_berkas=385024 header+teks_cocok=True akhir=0x8006D800
+CARI_STRING: berkas=382976 byte basis=0x80010000
+  string_ascii=68 string_sjis=10 (ditandai kata kunci: 0)
+  pencarian kata kunci di SELURUH berkas (jumlah kemunculan per pengkodean; alamat pertama):
+   kekkai    shift_jis=0  euc_jp=0  utf-8=0
+   chakra    shift_jis=0  euc_jp=0  utf-8=0
+   kougeki   shift_jis=0  euc_jp=0  utf-8=0
+   reberu    shift_jis=0  euc_jp=0  utf-8=0
+   hari      shift_jis=0  euc_jp=0  utf-8=0
+   taikyu    shift_jis=0  euc_jp=0  utf-8=0
+   nanjutsu  shift_jis=0  euc_jp=0  utf-8=0
+   hissu     shift_jis=0  euc_jp=0  utf-8=0
+ghidra: ghidra_12.2_PUBLIC; openjdk version "21.0.12.1" 2026-08-18 LTS
+LANGKAH3: Ghidra MIPS:LE:32:default basis=80010000 blok=382976 byte
+  seed: jal_total=4265
+  seed: jal_target_unik_dalam_rentang=899
+  seed: benih_berhasil=899
+  fungsi_total=1209 entry_0x80011448_fungsi=true
+  cakupan_fungsi_byte=252780 (66% blok)
+  instruksi=64418
+  ukuran_fungsi min=8 median=100 p90=512 maks=3816 >=1000B:36 <=8B:3
+LANGKAH3-LENGKAP: Ghidra MIPS:LE:32:default basis=0x80010000 blok=382976 byte; instruksi=64418
+  GTE cop2_perintah: kata_total=13 terdisassemble_sebagai_instruksi=6 di_dalam_fungsi=6
+  GTE mfc2/cfc2/mtc2/ctc2: kata_total=56 terdisassemble_sebagai_instruksi=55 di_dalam_fungsi=55
+  GTE lwc2/swc2: kata_total=29 terdisassemble_sebagai_instruksi=19 di_dalam_fungsi=19
+  fungsi_yang_memuat_kata_GTE=11
+  fungsi=1209 tanpa_pemanggil_langsung(selain_entry)=304 konstanta_alamat_unik_hasil_pola=632
+  string_dipindai=78 (ascii=68 dengan_xref=57; sjis=10 dengan_xref=0) xref_ghidra>0=56 xref_pola_tepat>0=24 salah_satu=57
+  string_terdefinisi_oleh_Ghidra=145 dengan_xref=113
+  wilayah_tak_tercakup: jumlah=535 total_byte=118352 (30% blok) byte_kata_nol=62532
+  wilayah_dengan_prolog_fungsi(addiu sp,sp,-N)=6 (1308 byte) kata_prolog_total=6 wilayah_dengan_jr_ra=117  [MUNGKIN: kode yang tak terdisassemble atau tak jadi fungsi]
+    terbesar #1 @0x80055CF0 ukuran=61320 prolog=0
+    terbesar #2 @0x80068940 ukuran=16844 prolog=0
+    terbesar #3 @0x80065DF4 ukuran=4136 prolog=0
+    terbesar #4 @0x8001491C ukuran=3000 prolog=0
+    terbesar #5 @0x80067D94 ukuran=2560 prolog=0
+MANIFEST berkas terenkripsi - run 40514439054-1 (kunci privat TIDAK ada di repo; dekripsi hanya di sandbox pemilik kunci)
+format: nama_polos ukuran_polos baris sha256_polos -> potongan:ukuran_enc
+fungsi.txt 38302 1210 d61e202a06512cf4cfe1fb417a251cb375155720e5da644846a43c39ff6f6c44 -> fungsi.p01.enc.txt:14899
+string_xref.txt 3386 79 617e23c8d4e9c92798df8cf5f2cf9eccc6a6429591aea78316654c68071edab9 -> string_xref.p01.enc.txt:2207
+gagal_disasm.txt 9553 536 2f27473e98be0ccc33fdf4453d16cd58a149d25b3e4190d5ce3087f2deeb769d -> gagal_disasm.p01.enc.txt:3655
