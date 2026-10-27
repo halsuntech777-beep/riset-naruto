@@ -97,6 +97,7 @@ for n,s,p in files:
         print("  %s: muat=0x%08X entry=0x%08X gp=0x%08X ukuran_teks=%d (0x%X) sp=0x%08X ukuran_berkas=%d header+teks_cocok=%s akhir=0x%08X"%(n,dest,pc,gp,ts,ts,sp,s,s==0x800+ts,dest+ts))
 PY
 fi
+if has 2; then mkdir -p "$R/out"; EXE2=$(find "$W/disc" -iname "SLPS_035.53" | head -1); [ -n "$EXE2" ] || gagal "exe tak ketemu"; python3 "$R/ci/header_exe.py" "$EXE2" "$R/out/header.txt" "$ID" | tee -a "$D/ringkas.txt"; fi
 if has 1; then mkdir -p "$R/out"; python3 "$R/ci/inventaris.py" "$W/disc" "$W/disc.xml" "$R/out/inventory.txt" "$ID" | tee -a "$D/ringkas.txt"; fi
 if has 3 || has 4; then
   EXE=$(find "$W/disc" -iname "SLPS_035.53" | head -1); [ -n "$EXE" ] || gagal "exe tak ketemu"
