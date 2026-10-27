@@ -1,0 +1,2 @@
+LANGKAH4: kandidat_LCG=1 stub_BIOS_rand_srand=0
+  LCG const=0x41C64E6D @80035D84 fungsi=80035D78 ukuran=48 callsites=4 funcs_pemanggil=4 pemanggil=[80015ADC 80015B7C 8001A328 80020BF4]
