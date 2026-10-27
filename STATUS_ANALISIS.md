@@ -2,6 +2,29 @@
 
 Jalur terpisah dari jalur bot (STATUS_RINGKAS.md). Catat semua kemajuan jalur ini di berkas ini; sebelum dorong jalankan `git pull --rebase` (chat jalur bot mungkin menulis juga).
 
+
+## RINGKASAN TERKINI (serah-terima ke chat baru, 27 Okt 2026) - BACA INI DULU
+Aturan kerja ada di PROMPT_RISET.md (kriteria TUNTAS ketat, keyakinan PASTI/MUNGKIN/TEBAKAN, satu langkah per putaran, laporan 4 bagian). Bagian lama di bawah memakai label [TERBUKTI]/[TERAMATI]/[DUGAAN]/[BELUM] dan klaim "SELESAI" untuk langkah 3-4: abaikan klaim itu, pakai tabel ini.
+
+| Langkah | Status | Ada (bukti) | Kurang |
+|---|---|---|---|
+| 0 alat/workflow | SEBAGIAN | out/versions.txt, out/izin_workflow.txt, ci/versi_pin.txt, uji kosong ok (run 40475745620) | bukti "tak ada rahasia di log" (log tak terbaca dari sandbox); pin versi pip |
+| 1 inventaris disc | TUNTAS | out/inventory.txt (hash, BOOT, status calon overlay), cek repo bebas ISO | - |
+| 2 header PS-X EXE | SEBAGIAN | angka di hasil_analisis/l1_2_40446736859-1/ringkas.txt (muat 0x80010000, entry 0x80011448, teks 0x5D800, sp 0x801FFFF0, gp 0) | tulis out/header.txt + penjelasan selisih 0x800 |
+| 3 Ghidra | SEBAGIAN | impor ok, 1209 fungsi, entry ada (hasil_analisis/l3_*) | ekspor daftar fungsi/string/xref (terenkripsi), bukti xref string->kode, catatan area gagal + GTE |
+| 4 RNG | SEBAGIAN | kandidat 0x80035D78 (konstanta 0x41C64E6D, 48 B), pemanggil langsung di 0x80015ADC, 0x80015B7C, 0x8001A328, 0x80020BF4 (hasil_analisis/l4_*) | (a) state/RAM/seed, (b) uji determinisme, (d) verifikasi dinamis, (e) RNG ganda/non-fungsi, pemanggil tak langsung |
+| 5-10 | belum | ci/ghidra/DekompilFn.java ditulis tetapi BELUM diuji | semua |
+
+Temuan kunci: DATA.BIN [MUNGKIN] berisi kode MIPS (calon overlay; 16 byte awal = kata 4 + lui/addiu, 1577 jr ra, 269 sektor TIM, nama tak ada di EXE); DATA2.BIN [MUNGKIN] data/stream, dirujuk EXE (\DATA2.BIN;1 di RAM 0x8001003D); DUMMY.BIN [PASTI] pengisi nol. RAM chakra/posisi lama (0x70EB8.., 0x70F28) di atas akhir EXE (0x8006D800) => kode topik kemungkinan di overlay (langkah 7 penting). README memuat analisis/analisis_data_bin.py (pemindai tabel petak/TIM di DATA.BIN) sebagai bahan.
+
+Cara kerja yang terbukti:
+- Workflow: .github/workflows/analisis-statis.yml (salinan ci/analisis-statis.yml), hanya workflow_dispatch, input `langkah` (mis. "0", "1", "3,4") dan `alamat`. Skrip: ci/analisis_statis.sh (blok per langkah; Ghidra bersama untuk langkah 3/4; langkah 5+ belum). Skrip Ghidra: ci/ghidra/{SeedJal,StatFungsi,FindRng,DekompilFn}.java. Inventaris: ci/inventaris.py. Hasil angka dikomit runner ke hasil_analisis/l<langkah>_<runid>-1/ dan out/.
+- Dispatch + tunggu (satu panggilan bash): POST /repos/.../actions/workflows/analisis-statis.yml/dispatches {"ref":"main","inputs":{"langkah":"N"}}, tunggu 8 dtk, ambil id run terbaru, loop status maks ~255 dtk, lalu `alat/kerja.sh tarik` dan baca berkas hasil. Run langkah 0-4 selesai 11-52 dtk.
+- Log run TIDAK terbaca dari sandbox (host log diblokir); diagnosa lewat API /actions/runs/ID/jobs (nama langkah gagal) dan nalar. Skrip memakai `set -euo pipefail`: hati-hati pipeline yang gagal di dalam $( ) pada assignment.
+- Jangan pakai `bash -c '...'` dengan tanda kutip tunggal di dalamnya; tulis skrip dengan create_file lalu jalankan.
+- Kunci RSA untuk hasil mentah terenkripsi BELUM dibuat (kunci lama hilang): buat baru di sandbox (privat di luar repo, chmod 600), komit hanya ci/shot_pub.pem; pola enkripsi hibrida ada di ci/enkripsi_shot.py (AES-256-CBC + RSA-OAEP via openssl), dekripsi ci/dekripsi_shot.py. Kunci hilang bila sandbox berakhir: selesaikan langkah yang butuh dekripsi dalam satu chat.
+- Pintu masuk cepat langkah 5: fungsi 0x80035D78 dan 4 pemanggilnya (maks ~8 fungsi per putaran).
+
 ## Tujuan dan persetujuan
 - Tujuan pemilik: mendapatkan logika game PS1 "Naruto: Shinobi no Sato no Jintori Kassen" (SLPS-03553) langsung dari ROM: roulette, klaim wilayah, biaya/rampas chakra, rumus battle, syarat menang, RNG.
 - [TERBUKTI] Persetujuan pemilik (27 Okt 2026, chat x13): BOLEH membuat workflow BARU `ci/analisis-statis.yml` (hanya `workflow_dispatch`) yang memakai secret PRIVATE_REPO dan PRIVATE_TOKEN (hanya baca) untuk mengunduh game.bin di runner. `ci/emulator-run.yml` dan `ci/run_remote.sh` TIDAK boleh diubah tanpa persetujuan baru. Tanpa loop tanpa pengawasan.

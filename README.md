@@ -19,3 +19,7 @@ Arsip hasil riset game PS1 *Naruto: Shinobi no Sato no Jintori Gassen* sebagai r
 | `arsip/` | Jadwal input dan log lama |
 
 Tidak berisi: file game, emulator, aset, screenshot, dump RAM.
+
+
+## Jalur analisis statis ROM
+Baca STATUS_ANALISIS.md (bagian RINGKASAN TERKINI) dan PROMPT_RISET.md (aturan kerja). Hasil: out/ dan hasil_analisis/.
