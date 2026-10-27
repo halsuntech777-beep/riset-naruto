@@ -1,0 +1,5 @@
+workflow: .github/workflows/analisis-statis.yml (salinan sumber ci/analisis-statis.yml), pemicu hanya workflow_dispatch
+izin GITHUB_TOKEN job: contents write (hanya untuk mengomit angka/metadata/berkas terenkripsi ke hasil_analisis/ dan out/); izin tingkat atas: contents read
+secret dipakai: PRIVATE_REPO dan PRIVATE_TOKEN, hanya-baca, hanya untuk mengunduh game.bin dari rilis aset repositori privat; langkah 0 tidak menyentuhnya
+tidak ada upload-artifact; berkas game dan hasil bongkar hanya di folder sementara runner
+log hanya memuat angka/metadata; hasil mentah (dekompilasi, listing) hanya sebagai berkas terenkripsi (kunci privat di luar repo)

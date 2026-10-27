@@ -1,0 +1,16 @@
+tanggal_utc=2026-10-27T08:45:40Z
+runner=Ubuntu 24.04.5 LTS
+python=Python 3.12.3
+java=openjdk version "21.0.12.1" 2026-08-18 LTS
+javac=javac 21.0.12.1
+ghidra_tag=Ghidra_12.2_build (pin=tidak)
+ghidra_dir=ghidra_12.2_PUBLIC
+mkpsxiso_tag=v2.30 (pin=tidak)
+dumpsxiso_bantuan=DUMPSXISO 2.30 - PlayStation ISO dumping tool
+m2c_commit=c632946b8cfbe8fce442b522dba92dfa72f1f317 (pin=tidak)
+objdump=GNU objdump (GNU Binutils for Ubuntu) 2.42
+pip_splat64=0.50.1
+pip_unicorn=2.1.4
+pip_capstone=5.0.9
+pip_pycparser=3.12
+uji_jalan_kosong=berhasil (impor 64 byte, tanpa analisis)
