@@ -23,7 +23,7 @@ pasang_mkpsxiso(){
   (cd "$W/mk" && unzip -q -o ./*.zip); DX=$(find "$W/mk" -type f -name dumpsxiso | head -1); [ -n "$DX" ] || gagal "dumpsxiso tak ketemu"; chmod +x "$DX"
   echo "dumpsxiso: $("$DX" --version 2>&1 | head -1 | tr -cd "\11\12\40-\176" | cut -c1-80)" | tee -a "$D/ringkas.txt"
 }
-if has 1 || has 2 || has 3; then
+if has 1 || has 2 || has 3 || has 4; then
   unduh_game; pasang_mkpsxiso
   CUE=$(ls "$W"/game/*.cue | head -1)
   "$DX" -x "$W/disc" -s "$W/disc.xml" "$CUE" > "$W/dump.log" 2>&1 || { tail -n 5 "$W/dump.log" | tr -cd "\11\12\40-\176" | cut -c1-160; gagal "dumpsxiso gagal"; }
