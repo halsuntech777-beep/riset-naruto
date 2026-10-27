@@ -33,5 +33,14 @@ Aturan pemilik: simpan hasil sebagai teks di out/; kerja per fungsi, jangan dump
 ## Rencana implementasi (usulan; belum dikerjakan)
 - ci/analisis-statis.yml: input `langkah` dan `alamat`; unduh game.bin (pola run_remote.sh), mkpsxiso/dumpsxiso (rilis GitHub Lameguy64/mkpsxiso), Ghidra (rilis NationalSecurityAgency/ghidra; butuh JDK 21, ada di runner ubuntu); cek loader PSX bawaan, bila tidak ada impor mentah MIPS:LE:32 di alamat muat dari header. Satu putaran = satu run; hasil angka ke hasil_analisis/, mentah terenkripsi.
 
+## Hasil kerja lama yang BOLEH dan SEBAIKNYA dipakai untuk 10 langkah (hanya bila membantu)
+- Alamat RAM terbukti (bagian di atas) = jangkar langkah 6: cari kode yang menulis/membaca alamat itu. Harga di prompt beli = u16 0x1FFB90 (tumpukan): cari fungsi yang menghitung harga lalu memasangnya sebagai argumen/lokal sebelum dialog tampil.
+- data/tabel_papan.json (harga, dan sewa bila ada, per petak) dan baris `BOT# I0 hs=` di STATUS: cari nilai-nilai ini sebagai tabel data statis di EXE/overlay (lokasi sumber tabel) lalu telusuri kode yang membacanya (klaim wilayah, sewa/biaya).
+- Teks dialog Jepang terbukti dari layar: 「ここに結界をはりますか？ 必要チャクラ N」, 「ここを攻撃しますか？」 (kotak kiri: nama pemilik, レベル/結界価値/耐久値), 「結界をレベルアップしますか？」, 「レベルアップする結界をえらんでください」 (○ けってい / ✕ もどる), 「結界レベルが2になりました。」. Cari tabel string ini di EXE/overlay (coba Shift-JIS dan pengkodean khusus game) lalu cari kode yang merujuknya = pintu masuk logika beli/serang/level-up.
+- Log emulator sebagai kunci jawaban rumus (langkah 9): hasil/*/chg.log (baris `CHG f= B1: a -> b` = perubahan chakra per frame, `P1:` posisi, serta `BOT# Q/R/Y/S/H`, `BOT# V/L/L6/W` untuk x17/x18) dari 16 dadu x beberapa gelombang. Petunjuk angka (BUKAN fakta, cocokkan dengan kode): harga beli teramati 60-260; chakra pelaku turun sekitar 50-150 pada level-up (COM 100-150); pada serang giliran COM chakra pelaku turun 60/72/84 pada banyak episode; level-up Naruto butuh dua langkah (pilih barrier lalu konfirmasi); serang giliran Naruto tak mengubah chakra dalam +1200 frame.
+- Alat: `python3 alat/menang.py LABEL...` (definisi menang/kalah dan puncak chakra), `alat/ringkas.py`, `alat/analisis_v5v6.py`, redux/lua_mine/probe.lua (BOT.tiles, pembaca RAM, alat selisih RAM wdiff/scanfind), ci/pbx.py dan ci/pbsplit.py (kemungkinan pembaca save state PCSX-Redux; cek isinya untuk langkah 9), ci/ekstrak_dump.py (cek isinya).
+- Pelajaran jalur bot yang relevan: run emulator deterministik pada v5 (16/16 identik) tetapi v6 menggeser hasil; untuk verifikasi langkah 9 pakai instrumen v5 (commit 53bf754) atau run tanpa instrumen tambahan, dan jangan menyimpulkan dari satu run.
+- Hal yang TIDAK tersedia: gambar shot lama (kunci hilang; teksnya sudah dicatat di atas dan di STATUS_RINGKAS.md).
+
 ## Status
 - Belum ada langkah dikerjakan (27 Okt 2026).
