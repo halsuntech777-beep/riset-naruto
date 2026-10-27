@@ -23,6 +23,46 @@ pasang_mkpsxiso(){
   (cd "$W/mk" && unzip -q -o ./*.zip); DX=$(find "$W/mk" -type f -name dumpsxiso | head -1); [ -n "$DX" ] || gagal "dumpsxiso tak ketemu"; chmod +x "$DX"
   echo "dumpsxiso: $("$DX" --version 2>&1 | head -1 | tr -cd "\11\12\40-\176" | cut -c1-80)" | tee -a "$D/ringkas.txt"
 }
+if has 0; then
+  mkdir -p "$R/out"; V="$D/versions.txt"; : > "$V"
+  v(){ echo "$*" | tee -a "$V"; }
+  pin(){ sed -n "s/^$1=//p" "$R/ci/versi_pin.txt" 2>/dev/null | head -1; }
+  v "tanggal_utc=$(date -u +%FT%TZ)"; v "runner=$(. /etc/os-release; echo "$PRETTY_NAME")"; v "python=$(python3 --version 2>&1)"
+  J="${JAVA_HOME_21_X64:-}"; if [ -z "$J" ] || [ ! -x "$J/bin/javac" ]; then sudo apt-get install -y -qq openjdk-21-jdk-headless >/dev/null 2>&1; J=/usr/lib/jvm/java-21-openjdk-amd64; fi
+  export JAVA_HOME="$J" PATH="$J/bin:$PATH"; v "java=$(java -version 2>&1 | head -1 | cut -c1-70)"; v "javac=$(javac -version 2>&1 | head -1)"
+  export GH_TOKEN="${GITHUB_TOKEN:-}"
+  # Ghidra
+  GP=$(pin ghidra); mkdir -p "$W/gh"
+  gh release download ${GP:+"$GP"} -R NationalSecurityAgency/ghidra -D "$W/gh" -p "ghidra_*_PUBLIC_*.zip" >/dev/null 2>&1 || gagal "unduh ghidra gagal"
+  GT=$(gh release view ${GP:+"$GP"} -R NationalSecurityAgency/ghidra --json tagName -q .tagName 2>/dev/null); v "ghidra_tag=$GT (pin=${GP:-tidak})"
+  (cd "$W/gh" && unzip -q -o ./ghidra_*.zip); GD=$(find "$W/gh" -maxdepth 1 -type d -name "ghidra_*" | head -1); chmod +x "$GD"/support/* "$GD"/*.sh 2>/dev/null || true
+  v "ghidra_dir=$(basename "$GD")"
+  # mkpsxiso
+  MP=$(pin mkpsxiso); mkdir -p "$W/mk"
+  gh release download ${MP:+"$MP"} -R Lameguy64/mkpsxiso -D "$W/mk" -p "*Linux*.zip" >/dev/null 2>&1 || gagal "unduh mkpsxiso gagal"
+  MT=$(gh release view ${MP:+"$MP"} -R Lameguy64/mkpsxiso --json tagName -q .tagName 2>/dev/null); v "mkpsxiso_tag=$MT (pin=${MP:-tidak})"
+  (cd "$W/mk" && unzip -q -o ./*.zip); DX=$(find "$W/mk" -type f -name dumpsxiso | head -1); chmod +x "$DX"; v "dumpsxiso_bantuan=$("$DX" -h 2>&1 | head -1 | tr -cd "\11\12\40-\176" | cut -c1-70)"
+  # m2c
+  M2=$(pin m2c); git clone -q https://github.com/matt-kempster/m2c "$W/m2c" >/dev/null 2>&1 || gagal "clone m2c gagal"
+  [ -z "$M2" ] || git -C "$W/m2c" checkout -q "$M2"; v "m2c_commit=$(git -C "$W/m2c" rev-parse HEAD) (pin=${M2:-tidak})"
+  # objdump MIPS + pip
+  sudo apt-get install -y -qq binutils-mipsel-linux-gnu >/dev/null 2>&1 || true
+  v "objdump=$(mipsel-linux-gnu-objdump --version 2>&1 | head -1 | cut -c1-70)"
+  python3 -m pip install -q --break-system-packages splat64 unicorn capstone pycparser >/dev/null 2>&1 || v "pip: ada paket gagal"
+  for pk in splat64 unicorn capstone pycparser; do v "pip_$pk=$(python3 -m pip show $pk 2>/dev/null | sed -n 's/^Version: //p')"; done
+  # uji jalan kosong: impor 64 byte nol, tanpa analisis
+  head -c 64 /dev/zero > "$W/kosong.bin"; rm -rf "$W/gp0"; mkdir -p "$W/gp0"
+  "$GD/support/analyzeHeadless" "$W/gp0" uji -import "$W/kosong.bin" -processor "MIPS:LE:32:default" -loader BinaryLoader -loader-baseAddr 0x80010000 -noanalysis > "$W/g0.log" 2>&1 || true
+  if grep -aq "IMPORT.*SUCCEEDED\|Import succeeded\|Saving file" "$W/g0.log"; then v "uji_jalan_kosong=berhasil (impor 64 byte, tanpa analisis)"; else v "uji_jalan_kosong=GAGAL"; grep -aE "ERROR|Exception" "$W/g0.log" | head -3 | cut -c1-150 | tr -cd "\11\12\40-\176"; fi
+  cp "$V" "$R/out/versions.txt"
+  cat > "$R/out/izin_workflow.txt" <<EOP
+workflow: .github/workflows/analisis-statis.yml (salinan sumber ci/analisis-statis.yml), pemicu hanya workflow_dispatch
+izin GITHUB_TOKEN job: contents write (hanya untuk mengomit angka/metadata/berkas terenkripsi ke hasil_analisis/ dan out/); izin tingkat atas: contents read
+secret dipakai: PRIVATE_REPO dan PRIVATE_TOKEN, hanya-baca, hanya untuk mengunduh game.bin dari rilis aset repositori privat; langkah 0 tidak menyentuhnya
+tidak ada upload-artifact; berkas game dan hasil bongkar hanya di folder sementara runner
+log hanya memuat angka/metadata; hasil mentah (dekompilasi, listing) hanya sebagai berkas terenkripsi (kunci privat di luar repo)
+EOP
+fi
 if has 1 || has 2 || has 3 || has 4; then
   unduh_game; pasang_mkpsxiso
   CUE=$(ls "$W"/game/*.cue | head -1)
@@ -86,5 +126,5 @@ fi
 for l in 5 6 7 8 9 10; do has $l && echo "langkah $l belum diimplementasikan di skrip ini" | tee -a "$D/ringkas.txt"; done
 bad=$(find "$D" -type f \( -size +300k -o -not -name "*.txt" \)) || true; [ -z "$bad" ] || gagal "berkas terlarang: $bad"
 git config user.name claude-runner; git config user.email actions@users.noreply.github.com
-git add "$D"; git commit -q -m "hasil analisis statis $ID (langkah $LANGKAH)"
+git add "$D"; [ -d "$R/out" ] && git add "$R/out"; git commit -q -m "hasil analisis statis $ID (langkah $LANGKAH)"
 for i in 1 2 3 4 5 6 7 8 9 10; do git pull --rebase -q origin "$GITHUB_REF_NAME" && git push -q origin "HEAD:$GITHUB_REF_NAME" && { echo "push ok"; break; }; sleep $((RANDOM % 9 + 3)); done
