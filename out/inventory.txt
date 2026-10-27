@@ -24,3 +24,12 @@ pembanding EXE utama: jr_ra_total=1772 (4826/MB)
   0x1B8B -> 0x8001138B: This is an old SEQ Data Format.
   0x84D -> 0x8001004D: \XASECT.BIN;1
   0x1650 -> 0x80010E50: CDROM: unknown intr
+
+## Status calon overlay (ditulis tangan setelah membaca angka di atas; bagian atas dibuat otomatis dan akan ditimpa bila dijalankan ulang)
+Keyakinan: PASTI = kode+verifikasi, MUNGKIN = kode/angka saja, TEBAKAN = tanpa bukti.
+- DATA.BIN (66015232 B): CALON OVERLAY KUAT, berisi kode MIPS. Keyakinan MUNGKIN. Alasan: (1) 16 byte pertama terbaca sebagai kata bernilai 4 lalu instruksi MIPS (lui v0,0x800B; addiu v0,v0,0xD494; addiu v1,v0,0x2F00); (2) 1577 kemunculan jr ra (25/MB; EXE utama 4826/MB; DATA2.BIN hanya 1); (3) 269 sektor berawalan TIM, jadi kemungkinan arsip campuran kode+gambar; (4) tak ada header PS-X EXE di sektor mana pun, jadi bila overlay ia berupa kode mentah/bagian arsip; (5) nama "DATA.BIN" TIDAK ditemukan sebagai string di EXE utama (pemuat mungkin memakai LBA/tabel). Belum diketahui: alamat muat, rutin pemuat, struktur arsip. Diuji di langkah 7.
+- DATA2.BIN (189832704 B): BUKAN kode (data/stream). Keyakinan MUNGKIN. Alasan: jr ra hanya 1 (0.0/MB), 2 sektor TIM, disc.xml bertipe "mixed" (campuran sektor Mode2), 28,5% byte nol, entropi sampel 6,06 b/byte, tabel offset awal tak ada. EXE utama punya string \DATA2.BIN;1 di RAM 0x8001003D, jadi berkas ini dipakai game. Isi sebenarnya (XA/video/data) belum diuji.
+- DUMMY.BIN (50667520 B): BUKAN overlay, berkas pengisi. Keyakinan PASTI (angka): 24740 dari 24740 sektor nol penuh, 0 jr ra, tak ada string nama di EXE.
+- XASECT.BIN (692 B): bukan kode, tabel kecil terkait XA. Keyakinan MUNGKIN. EXE punya string \XASECT.BIN;1 di RAM 0x8001004D. Isi belum dibaca.
+- license_data.dat (28032 B = 12 x 2336 B, kelipatan tepat sektor mentah): area lisensi/sistem disc, bukan kode. Keyakinan MUNGKIN. Tak ada atribut di disc.xml.
+- SLPS_035.53: executable utama; cocok baris BOOT di SYSTEM.CNF dan berheader PS-X EXE. Keyakinan PASTI.

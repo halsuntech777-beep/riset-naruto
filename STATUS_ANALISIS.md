@@ -58,3 +58,6 @@ Skala keyakinan sekarang PASTI/MUNGKIN/TEBAKAN (terpisah dari status langkah TUN
 - Langkah 3: SEBAGIAN. Impor MIPS LE ok, 1209 fungsi, entry ada. Kurang: ekspor daftar fungsi/string/xref, bukti string punya xref ke kode, catatan area gagal disassemble dan instruksi GTE.
 - Langkah 4: SEBAGIAN. Kandidat RNG 0x80035D78 (konstanta 0x41C64E6D) dan 4 pemanggil langsung. Kurang: (a) variabel state/alamat RAM/seed, (b) uji determinisme, (d) verifikasi dinamis (butuh emulator), (e) cek RNG ganda/sumber non-fungsi; pemanggil tak langsung belum ditandai.
 - Catatan kebijakan: prompt baru menyebut dekompilasi mentah "privat di out/", tetapi repo PUBLIC: kesepakatan lama dipertahankan (mentah hanya terenkripsi; out/ hanya angka, metadata, kata-kata sendiri).
+
+## Langkah 1 (27 Okt 2026, run 40476611966): TUNTAS
+Bukti: out/inventory.txt (7 berkas dengan nama, ukuran, sha256, atribut disc.xml; BOOT dibaca; exe utama dikonfirmasi; status calon overlay + alasan untuk berkas besar). Cek repo: tak ada ISO/BIN cakram di repo (lihat hasil cek di laporan putaran). Temuan kunci: DATA.BIN [MUNGKIN] berisi kode MIPS (calon overlay, tanpa string nama di EXE); DATA2.BIN [MUNGKIN] data/stream (dirujuk EXE); DUMMY.BIN [PASTI] pengisi nol; XASECT.BIN dan license_data.dat bukan kode [MUNGKIN].
