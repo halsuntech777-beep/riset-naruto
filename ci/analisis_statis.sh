@@ -23,7 +23,7 @@ pasang_mkpsxiso(){
   (cd "$W/mk" && unzip -q -o ./*.zip); DX=$(find "$W/mk" -type f -name dumpsxiso | head -1); [ -n "$DX" ] || gagal "dumpsxiso tak ketemu"; chmod +x "$DX"
   echo "dumpsxiso: $("$DX" --version 2>&1 | head -1 | tr -cd "\11\12\40-\176" | cut -c1-80)" | tee -a "$D/ringkas.txt"
 }
-if has 1 || has 2; then
+if has 1 || has 2 || has 3; then
   unduh_game; pasang_mkpsxiso
   CUE=$(ls "$W"/game/*.cue | head -1)
   "$DX" -x "$W/disc" -s "$W/disc.xml" "$CUE" > "$W/dump.log" 2>&1 || { tail -n 5 "$W/dump.log" | tr -cd "\11\12\40-\176" | cut -c1-160; gagal "dumpsxiso gagal"; }
@@ -57,7 +57,25 @@ for n,s,p in files:
         print("  %s: muat=0x%08X entry=0x%08X gp=0x%08X ukuran_teks=%d (0x%X) sp=0x%08X ukuran_berkas=%d header+teks_cocok=%s akhir=0x%08X"%(n,dest,pc,gp,ts,ts,sp,s,s==0x800+ts,dest+ts))
 PY
 fi
-for l in 3 4 5 6 7 8 9 10; do has $l && echo "langkah $l belum diimplementasikan di skrip ini" | tee -a "$D/ringkas.txt"; done
+if has 3; then
+  EXE=$(find "$W/disc" -iname "SLPS_035.53" | head -1); [ -n "$EXE" ] || gagal "exe tak ketemu"
+  tail -c +2049 "$EXE" > "$W/exe.bin"
+  mkdir -p "$W/gh"
+  GH_TOKEN="${GITHUB_TOKEN:-}" gh release download -R NationalSecurityAgency/ghidra -D "$W/gh" -p "ghidra_*_PUBLIC_*.zip" >/dev/null 2>&1 || gagal "unduh ghidra gagal"
+  (cd "$W/gh" && unzip -q -o ./ghidra_*.zip); GD=$(find "$W/gh" -maxdepth 1 -type d -name "ghidra_*" | head -1)
+  chmod +x "$GD"/support/* "$GD"/*.sh 2>/dev/null || true
+  J="${JAVA_HOME_21_X64:-}"; if [ -z "$J" ] || [ ! -x "$J/bin/javac" ]; then sudo apt-get install -y -qq openjdk-21-jdk-headless >/dev/null 2>&1; J=/usr/lib/jvm/java-21-openjdk-amd64; fi
+  export JAVA_HOME="$J" PATH="$J/bin:$PATH"
+  echo "ghidra: $(basename "$GD"); $(java -version 2>&1 | head -1 | cut -c1-60)" | tee -a "$D/ringkas.txt"
+  for BA in 0x80010000 80010000; do
+    rm -rf "$W/gproj"; mkdir -p "$W/gproj"; rm -f "$D/ghidra_stat.txt"
+    "$GD/support/analyzeHeadless" "$W/gproj" naruto -import "$W/exe.bin" -processor "MIPS:LE:32:default" -loader BinaryLoader -loader-baseAddr "$BA" -scriptPath "$R/ci/ghidra" -preScript SeedJal.java "$W/seed.txt" -postScript StatFungsi.java "$D/ghidra_stat.txt" "$W/seed.txt" > "$W/gh.log" 2>&1 || true
+    [ -s "$D/ghidra_stat.txt" ] && break
+  done
+  [ -s "$D/ghidra_stat.txt" ] || { grep -aE "ERROR|Exception|rror" "$W/gh.log" | head -8 | cut -c1-170 | tr -cd "\11\12\40-\176"; gagal "ghidra tak menghasilkan statistik"; }
+  cat "$D/ghidra_stat.txt" | tee -a "$D/ringkas.txt"
+fi
+for l in 4 5 6 7 8 9 10; do has $l && echo "langkah $l belum diimplementasikan di skrip ini" | tee -a "$D/ringkas.txt"; done
 bad=$(find "$D" -type f \( -size +300k -o -not -name "*.txt" \)) || true; [ -z "$bad" ] || gagal "berkas terlarang: $bad"
 git config user.name claude-runner; git config user.email actions@users.noreply.github.com
 git add "$D"; git commit -q -m "hasil analisis statis $ID (langkah $LANGKAH)"

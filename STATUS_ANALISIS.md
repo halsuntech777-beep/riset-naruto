@@ -44,4 +44,6 @@ Aturan pemilik: simpan hasil sebagai teks di out/; kerja per fungsi, jangan dump
 
 ## Status
 - [TERBUKTI] 27 Okt 2026: ci/analisis_statis.sh + ci/analisis-statis.yml (salinan di .github/workflows/) ditulis dan didorong; hanya workflow_dispatch (input langkah, alamat); memakai secret hanya-baca untuk unduh game.bin; hasil angka ke hasil_analisis/l<langkah>_<id>/ringkas.txt. Menyentuh langkah 1-2 saja; Ghidra (langkah 3+) belum dipasang di skrip.
-- [BELUM] Hasil run langkah 1-2 (lihat bagian di bawah bila sudah diisi).
+- [TERBUKTI] Langkah 1-2 (run 40446736859, hasil_analisis/l1_2_40446736859-1/ringkas.txt): disc 7 berkas; exe utama SLPS_035.53 (385024 B); besar: DATA2.BIN 189832704, DATA.BIN 66015232, DUMMY.BIN 50667520 (tanpa header PS-X EXE). Header: muat 0x80010000, entry 0x80011448, ukuran teks 382976 (0x5D800), akhir kode 0x8006D800, sp 0x801FFFF0, gp 0.
+- [TERAMATI] Alamat RAM terbukti (chakra 0x70EB8.., posisi 0x70F28) berada di atas akhir EXE (0x6D800): data/BSS pasca-EXE atau overlay, bukan teks EXE.
+- [BELUM] Langkah 3 (Ghidra headless, BinaryLoader MIPS LE 32 basis 0x80010000, benih = entry + target jal): ci/ghidra/SeedJal.java dan StatFungsi.java; hasil menyusul.
