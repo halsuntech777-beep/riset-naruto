@@ -10,7 +10,7 @@ Aturan kerja ada di PROMPT_RISET.md (kriteria TUNTAS ketat, keyakinan PASTI/MUNG
 |---|---|---|---|
 | 0 alat/workflow | SEBAGIAN | out/versions.txt, out/izin_workflow.txt, ci/versi_pin.txt, uji kosong ok (run 40475745620) | bukti "tak ada rahasia di log" (log tak terbaca dari sandbox); pin versi pip |
 | 1 inventaris disc | TUNTAS | out/inventory.txt (hash, BOOT, status calon overlay), cek repo bebas ISO | - |
-| 2 header PS-X EXE | SEBAGIAN | angka di hasil_analisis/l1_2_40446736859-1/ringkas.txt (muat 0x80010000, entry 0x80011448, teks 0x5D800, sp 0x801FFFF0, gp 0) | tulis out/header.txt + penjelasan selisih 0x800 |
+| 2 header PS-X EXE | TUNTAS | out/header.txt (run 40477280135): entry 0x80011448, muat 0x80010000, teks 0x5D800, GP 0, SP 0x801FFFF0, BSS/data tak dideklarasikan, selisih ukuran 0 | - |
 | 3 Ghidra | SEBAGIAN | impor ok, 1209 fungsi, entry ada (hasil_analisis/l3_*) | ekspor daftar fungsi/string/xref (terenkripsi), bukti xref string->kode, catatan area gagal + GTE |
 | 4 RNG | SEBAGIAN | kandidat 0x80035D78 (konstanta 0x41C64E6D, 48 B), pemanggil langsung di 0x80015ADC, 0x80015B7C, 0x8001A328, 0x80020BF4 (hasil_analisis/l4_*) | (a) state/RAM/seed, (b) uji determinisme, (d) verifikasi dinamis, (e) RNG ganda/non-fungsi, pemanggil tak langsung |
 | 5-10 | belum | ci/ghidra/DekompilFn.java ditulis tetapi BELUM diuji | semua |
@@ -84,3 +84,6 @@ Skala keyakinan sekarang PASTI/MUNGKIN/TEBAKAN (terpisah dari status langkah TUN
 
 ## Langkah 1 (27 Okt 2026, run 40476611966): TUNTAS
 Bukti: out/inventory.txt (7 berkas dengan nama, ukuran, sha256, atribut disc.xml; BOOT dibaca; exe utama dikonfirmasi; status calon overlay + alasan untuk berkas besar). Cek repo: tak ada ISO/BIN cakram di repo (lihat hasil cek di laporan putaran). Temuan kunci: DATA.BIN [MUNGKIN] berisi kode MIPS (calon overlay, tanpa string nama di EXE); DATA2.BIN [MUNGKIN] data/stream (dirujuk EXE); DUMMY.BIN [PASTI] pengisi nol; XASECT.BIN dan license_data.dat bukan kode [MUNGKIN].
+
+## Langkah 2 (27 Okt 2026, run 40477280135): TUNTAS
+Bukti: out/header.txt (dibuat ci/header_exe.py di runner; angka dibaca dari 0x800 byte header, isi kode tidak dicetak). Semua kriteria terpenuhi: PC awal 0x80011448, alamat muat 0x80010000, ukuran teks 382976 (0x5D800), GP 0 (tak diatur), SP 0x801FFFF0 (dasar; offset 0); ukuran berkas 385024 = 0x800 + 0x5D800, selisih 0 (header satu sektor CD, tanpa trailer); entry di dalam rentang teks dan sejajar 4 byte. Catatan: SYSTEM.CNF memuat STACK = 801fff00 (nilai tumpukan untuk BIOS), beda dari SP awal di header (0x801FFFF0): dua hal terpisah, keduanya dicatat. Alat baru: alat/analisis.sh (dispatch + tunggu + ringkasan dalam satu panggilan: `T=<token> bash alat/analisis.sh LANGKAH [DETIK] [ALAMAT]`).
