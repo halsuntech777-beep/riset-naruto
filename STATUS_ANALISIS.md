@@ -43,4 +43,5 @@ Aturan pemilik: simpan hasil sebagai teks di out/; kerja per fungsi, jangan dump
 - Hal yang TIDAK tersedia: gambar shot lama (kunci hilang; teksnya sudah dicatat di atas dan di STATUS_RINGKAS.md).
 
 ## Status
-- Belum ada langkah dikerjakan (27 Okt 2026).
+- [TERBUKTI] 27 Okt 2026: ci/analisis_statis.sh + ci/analisis-statis.yml (salinan di .github/workflows/) ditulis dan didorong; hanya workflow_dispatch (input langkah, alamat); memakai secret hanya-baca untuk unduh game.bin; hasil angka ke hasil_analisis/l<langkah>_<id>/ringkas.txt. Menyentuh langkah 1-2 saja; Ghidra (langkah 3+) belum dipasang di skrip.
+- [BELUM] Hasil run langkah 1-2 (lihat bagian di bawah bila sudah diisi).

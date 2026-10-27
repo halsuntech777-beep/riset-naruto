@@ -1,0 +1,26 @@
+# Salinan sumber; yang dijalankan GitHub ada di .github/workflows/analisis-statis.yml (isi sama).
+# Hanya workflow_dispatch. Secret PRIVATE_REPO/PRIVATE_TOKEN dipakai HANYA-BACA untuk mengunduh game.bin di runner; tanpa upload-artifact; log hanya angka/metadata.
+name: analisis-statis
+on:
+  workflow_dispatch:
+    inputs:
+      langkah: { description: "Nomor langkah dipisah koma (1,2 = bongkar disc + header EXE)", default: "1,2" }
+      alamat:  { description: "Alamat hex (untuk langkah 6), dipisah koma", default: "" }
+concurrency: { group: analisis-statis, cancel-in-progress: false }
+permissions: { contents: read }
+jobs:
+  run:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 30
+    permissions: { contents: write }
+    env:
+      LANGKAH: ${{ inputs.langkah }}
+      ALAMAT: ${{ inputs.alamat }}
+    steps:
+      - uses: actions/checkout@v4
+      - name: Analisis statis
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+          PRIVATE_REPO: ${{ secrets.PRIVATE_REPO }}
+          PRIVATE_TOKEN: ${{ secrets.PRIVATE_TOKEN }}
+        run: bash ci/analisis_statis.sh
