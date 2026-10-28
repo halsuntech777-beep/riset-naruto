@@ -1,0 +1,7 @@
+GHIDRA dump: MIPS:LE:32:default basis=80000000 blok=2097152
+fungsi_total=2283 instruksi=206535
+zona_exe: fungsi=1387 cakupan_byte=270836 >=1000B=38
+zona_atas(>=0x8006D800): fungsi=896 cakupan_byte=530470 >=1000B=126
+fungsi_exe_dikenal 0x80011448: ada ukuran=172
+fungsi_exe_dikenal 0x80035d78: ada ukuran=48
+fungsi_exe_dikenal 0x800172ec: ada ukuran=192

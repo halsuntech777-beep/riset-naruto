@@ -1,0 +1,213 @@
+ANALISIS DUMP: 8 dump: A24500 A26659 A26900 A27500 A28700 B26699 B27000 B27200
+DUMP A24500: halaman_tak_kosong=481/512 wilayah_kode=9 (di zona overlay >=0x8006D000: 8)
+    0x800B5000-0x800C4000 halaman=15 prolog=43 jr_ra=101
+    0x800C7000-0x800D2000 halaman=11 prolog=20 jr_ra=26
+    0x800DF000-0x800E1000 halaman=2 prolog=7 jr_ra=7
+    0x800E3000-0x800E9000 halaman=6 prolog=20 jr_ra=25
+    0x800EB000-0x800EC000 halaman=1 prolog=2 jr_ra=2
+    0x800F2000-0x800F4000 halaman=2 prolog=6 jr_ra=6
+    0x800F6000-0x800FC000 halaman=6 prolog=18 jr_ra=24
+    0x800FF000-0x8013A000 halaman=59 prolog=551 jr_ra=863
+DUMP A26659: halaman_tak_kosong=481/512 wilayah_kode=9 (di zona overlay >=0x8006D000: 8)
+    0x800B5000-0x800C4000 halaman=15 prolog=43 jr_ra=101
+    0x800C7000-0x800D2000 halaman=11 prolog=20 jr_ra=26
+    0x800DF000-0x800E1000 halaman=2 prolog=7 jr_ra=7
+    0x800E3000-0x800E9000 halaman=6 prolog=20 jr_ra=25
+    0x800EB000-0x800EC000 halaman=1 prolog=2 jr_ra=2
+    0x800F2000-0x800F4000 halaman=2 prolog=6 jr_ra=6
+    0x800F6000-0x800FC000 halaman=6 prolog=18 jr_ra=24
+    0x800FF000-0x8013A000 halaman=59 prolog=551 jr_ra=863
+DUMP A26900: halaman_tak_kosong=481/512 wilayah_kode=9 (di zona overlay >=0x8006D000: 8)
+    0x800B5000-0x800C4000 halaman=15 prolog=43 jr_ra=101
+    0x800C7000-0x800D2000 halaman=11 prolog=20 jr_ra=26
+    0x800DF000-0x800E1000 halaman=2 prolog=7 jr_ra=7
+    0x800E3000-0x800E9000 halaman=6 prolog=20 jr_ra=25
+    0x800EB000-0x800EC000 halaman=1 prolog=2 jr_ra=2
+    0x800F2000-0x800F4000 halaman=2 prolog=6 jr_ra=6
+    0x800F6000-0x800FC000 halaman=6 prolog=18 jr_ra=24
+    0x800FF000-0x8013A000 halaman=59 prolog=551 jr_ra=863
+DUMP A27500: halaman_tak_kosong=481/512 wilayah_kode=9 (di zona overlay >=0x8006D000: 8)
+    0x800B5000-0x800C4000 halaman=15 prolog=43 jr_ra=101
+    0x800C7000-0x800D2000 halaman=11 prolog=20 jr_ra=26
+    0x800DF000-0x800E1000 halaman=2 prolog=7 jr_ra=7
+    0x800E3000-0x800E9000 halaman=6 prolog=20 jr_ra=25
+    0x800EB000-0x800EC000 halaman=1 prolog=2 jr_ra=2
+    0x800F2000-0x800F4000 halaman=2 prolog=6 jr_ra=6
+    0x800F6000-0x800FC000 halaman=6 prolog=18 jr_ra=24
+    0x800FF000-0x8013A000 halaman=59 prolog=551 jr_ra=863
+DUMP A28700: halaman_tak_kosong=480/512 wilayah_kode=9 (di zona overlay >=0x8006D000: 8)
+    0x800B5000-0x800C4000 halaman=15 prolog=43 jr_ra=101
+    0x800C7000-0x800D2000 halaman=11 prolog=20 jr_ra=26
+    0x800DF000-0x800E1000 halaman=2 prolog=7 jr_ra=7
+    0x800E3000-0x800E9000 halaman=6 prolog=20 jr_ra=25
+    0x800EB000-0x800EC000 halaman=1 prolog=2 jr_ra=2
+    0x800F2000-0x800F4000 halaman=2 prolog=6 jr_ra=6
+    0x800F6000-0x800FC000 halaman=6 prolog=18 jr_ra=24
+    0x800FF000-0x8013A000 halaman=59 prolog=551 jr_ra=863
+DUMP B26699: halaman_tak_kosong=481/512 wilayah_kode=9 (di zona overlay >=0x8006D000: 8)
+    0x800B5000-0x800C4000 halaman=15 prolog=43 jr_ra=101
+    0x800C7000-0x800D2000 halaman=11 prolog=20 jr_ra=26
+    0x800DF000-0x800E1000 halaman=2 prolog=7 jr_ra=7
+    0x800E3000-0x800E9000 halaman=6 prolog=20 jr_ra=25
+    0x800EB000-0x800EC000 halaman=1 prolog=2 jr_ra=2
+    0x800F2000-0x800F4000 halaman=2 prolog=6 jr_ra=6
+    0x800F6000-0x800FC000 halaman=6 prolog=18 jr_ra=24
+    0x800FF000-0x8013A000 halaman=59 prolog=551 jr_ra=863
+DUMP B27000: halaman_tak_kosong=481/512 wilayah_kode=9 (di zona overlay >=0x8006D000: 8)
+    0x800B5000-0x800C4000 halaman=15 prolog=43 jr_ra=101
+    0x800C7000-0x800D2000 halaman=11 prolog=20 jr_ra=26
+    0x800DF000-0x800E1000 halaman=2 prolog=7 jr_ra=7
+    0x800E3000-0x800E9000 halaman=6 prolog=20 jr_ra=25
+    0x800EB000-0x800EC000 halaman=1 prolog=2 jr_ra=2
+    0x800F2000-0x800F4000 halaman=2 prolog=6 jr_ra=6
+    0x800F6000-0x800FC000 halaman=6 prolog=18 jr_ra=24
+    0x800FF000-0x8013A000 halaman=59 prolog=551 jr_ra=863
+DUMP B27200: halaman_tak_kosong=481/512 wilayah_kode=9 (di zona overlay >=0x8006D000: 8)
+    0x800B5000-0x800C4000 halaman=15 prolog=43 jr_ra=101
+    0x800C7000-0x800D2000 halaman=11 prolog=20 jr_ra=26
+    0x800DF000-0x800E1000 halaman=2 prolog=7 jr_ra=7
+    0x800E3000-0x800E9000 halaman=6 prolog=20 jr_ra=25
+    0x800EB000-0x800EC000 halaman=1 prolog=2 jr_ra=2
+    0x800F2000-0x800F4000 halaman=2 prolog=6 jr_ra=6
+    0x800F6000-0x800FC000 halaman=6 prolog=18 jr_ra=24
+    0x800FF000-0x8013A000 halaman=59 prolog=551 jr_ra=863
+KESELARASAN EXE:
+  exe vs dump @0x80010000: kata sama 95423/95744 (99.66%)
+  per blok 64K (alamat:persen sama): 0x80010000:100% 0x80020000:100% 0x80030000:100% 0x80040000:100% 0x80050000:99% 0x80060000:97%
+PERBEDAAN HALAMAN 4K (zona exe 0x80010000-0x8006D000 | zona atas):
+  A24500 vs A26659: exe=5 atas=47
+  A24500 vs A26900: exe=5 atas=47
+  A24500 vs A27500: exe=5 atas=47
+  A24500 vs A28700: exe=5 atas=100
+  A24500 vs B26699: exe=5 atas=47
+  A24500 vs B27000: exe=5 atas=46
+  A24500 vs B27200: exe=5 atas=44
+  A26659 vs A26900: exe=5 atas=29
+  A26659 vs A27500: exe=5 atas=28
+  A26659 vs A28700: exe=5 atas=95
+  A26659 vs B26699: exe=4 atas=19
+  A26659 vs B27000: exe=4 atas=27
+  A26659 vs B27200: exe=5 atas=43
+  A26900 vs A27500: exe=5 atas=28
+  A26900 vs A28700: exe=5 atas=95
+  A26900 vs B26699: exe=5 atas=29
+  A26900 vs B27000: exe=5 atas=27
+  A26900 vs B27200: exe=5 atas=41
+  A27500 vs A28700: exe=5 atas=95
+  A27500 vs B26699: exe=5 atas=28
+  A27500 vs B27000: exe=5 atas=27
+  A27500 vs B27200: exe=5 atas=44
+  A28700 vs B26699: exe=5 atas=95
+  A28700 vs B27000: exe=5 atas=95
+  A28700 vs B27200: exe=5 atas=97
+  B26699 vs B27000: exe=4 atas=27
+  B26699 vs B27200: exe=5 atas=43
+  B27000 vs B27200: exe=5 atas=41
+  halaman berganti papan->duel (zona atas), 22 rentang; 14 pertama: 0x8006D000-0x8006E000 0x80070000-0x80073000 0x80074000-0x80075000 0x80076000-0x8007C000 0x80082000-0x80084000 0x80087000-0x8008A000 0x800A1000-0x800A4000 0x800A5000-0x800A6000 0x800A9000-0x800AD000 0x80139000-0x80165000 0x8016B000-0x8016C000 0x80176000-0x80177000 0x801C1000-0x801C7000 0x801CA000-0x801CB000
+BERKAS DISC untuk pencocokan: {'XASECT.BIN': 692, 'DATA2.BIN': 189832704, 'DATA.BIN': 66015232}
+PENCOCOKAN OVERLAY A24500: 5 wilayah >=3 halaman
+   jendela@0x800B8000 wilayah=0x800B5000: DATA.BIN+0x10C5BB0(mod2048=944,awal_wilayah=0x10C2BB0)
+   jendela@0x800BB000 wilayah=0x800B5000: DATA.BIN+0x10C8BB0(mod2048=944,awal_wilayah=0x10C2BB0)
+   jendela@0x800BE000 wilayah=0x800B5000: DATA.BIN+0x10CBBB0(mod2048=944,awal_wilayah=0x10C2BB0)
+   jendela@0x800C1000 wilayah=0x800B5000: DATA.BIN+0x10CEBB0(mod2048=944,awal_wilayah=0x10C2BB0)
+   jendela@0x800C9330 wilayah=0x800C7000: DATA.BIN+0x10D6EE0(mod2048=1760,awal_wilayah=0x10D4BB0)
+   jendela@0x800CB660 wilayah=0x800C7000: DATA.BIN+0x10D9210(mod2048=528,awal_wilayah=0x10D4BB0)
+   jendela@0x800CD990 wilayah=0x800C7000: DATA.BIN+0x10DB540(mod2048=1344,awal_wilayah=0x10D4BB0)
+   jendela@0x800CFCC0 wilayah=0x800C7000: DATA.BIN+0x10DD870(mod2048=112,awal_wilayah=0x10D4BB0)
+   jendela@0x800E4330 wilayah=0x800E3000: DATA.BIN+0x10F1EE0(mod2048=1760,awal_wilayah=0x10F0BB0)
+   jendela@0x800E5660 wilayah=0x800E3000: DATA.BIN+0x10F3210(mod2048=528,awal_wilayah=0x10F0BB0)
+   jendela@0x800E6990 wilayah=0x800E3000: DATA.BIN+0x10F4540(mod2048=1344,awal_wilayah=0x10F0BB0)
+   jendela@0x800E7CC0 wilayah=0x800E3000: DATA.BIN+0x10F5870(mod2048=112,awal_wilayah=0x10F0BB0)
+   jendela@0x800F7330 wilayah=0x800F6000: DATA.BIN+0x1104EE0(mod2048=1760,awal_wilayah=0x1103BB0)
+   jendela@0x800F8660 wilayah=0x800F6000: DATA.BIN+0x1106210(mod2048=528,awal_wilayah=0x1103BB0)
+   jendela@0x800F9990 wilayah=0x800F6000: DATA.BIN+0x1107540(mod2048=1344,awal_wilayah=0x1103BB0)
+   jendela@0x800FACC0 wilayah=0x800F6000: DATA.BIN+0x1108870(mod2048=112,awal_wilayah=0x1103BB0)
+   jendela@0x8010ACC0 wilayah=0x800FF000: DATA.BIN+0x1118870(mod2048=112,awal_wilayah=0x110CBB0)
+   jendela@0x80116990 wilayah=0x800FF000: DATA.BIN+0x1124540(mod2048=1344,awal_wilayah=0x110CBB0)
+   jendela@0x80122660 wilayah=0x800FF000: DATA.BIN+0x1130210(mod2048=528,awal_wilayah=0x110CBB0)
+   jendela@0x8012E330 wilayah=0x800FF000: DATA.BIN+0x113BEE0(mod2048=1760,awal_wilayah=0x110CBB0)
+PENCOCOKAN OVERLAY A28700: 5 wilayah >=3 halaman
+   jendela@0x800B8000 wilayah=0x800B5000: DATA.BIN+0x10C5BB0(mod2048=944,awal_wilayah=0x10C2BB0)
+   jendela@0x800BB000 wilayah=0x800B5000: DATA.BIN+0x10C8BB0(mod2048=944,awal_wilayah=0x10C2BB0)
+   jendela@0x800BE000 wilayah=0x800B5000: DATA.BIN+0x10CBBB0(mod2048=944,awal_wilayah=0x10C2BB0)
+   jendela@0x800C1000 wilayah=0x800B5000: DATA.BIN+0x10CEBB0(mod2048=944,awal_wilayah=0x10C2BB0)
+   jendela@0x800C9330 wilayah=0x800C7000: DATA.BIN+0x10D6EE0(mod2048=1760,awal_wilayah=0x10D4BB0)
+   jendela@0x800CB660 wilayah=0x800C7000: DATA.BIN+0x10D9210(mod2048=528,awal_wilayah=0x10D4BB0)
+   jendela@0x800CD990 wilayah=0x800C7000: DATA.BIN+0x10DB540(mod2048=1344,awal_wilayah=0x10D4BB0)
+   jendela@0x800CFCC0 wilayah=0x800C7000: DATA.BIN+0x10DD870(mod2048=112,awal_wilayah=0x10D4BB0)
+   jendela@0x800E4330 wilayah=0x800E3000: DATA.BIN+0x10F1EE0(mod2048=1760,awal_wilayah=0x10F0BB0)
+   jendela@0x800E5660 wilayah=0x800E3000: DATA.BIN+0x10F3210(mod2048=528,awal_wilayah=0x10F0BB0)
+   jendela@0x800E6990 wilayah=0x800E3000: DATA.BIN+0x10F4540(mod2048=1344,awal_wilayah=0x10F0BB0)
+   jendela@0x800E7CC0 wilayah=0x800E3000: DATA.BIN+0x10F5870(mod2048=112,awal_wilayah=0x10F0BB0)
+   jendela@0x800F7330 wilayah=0x800F6000: DATA.BIN+0x1104EE0(mod2048=1760,awal_wilayah=0x1103BB0)
+   jendela@0x800F8660 wilayah=0x800F6000: DATA.BIN+0x1106210(mod2048=528,awal_wilayah=0x1103BB0)
+   jendela@0x800F9990 wilayah=0x800F6000: DATA.BIN+0x1107540(mod2048=1344,awal_wilayah=0x1103BB0)
+   jendela@0x800FACC0 wilayah=0x800F6000: DATA.BIN+0x1108870(mod2048=112,awal_wilayah=0x1103BB0)
+   jendela@0x8010ACC0 wilayah=0x800FF000: DATA.BIN+0x1118870(mod2048=112,awal_wilayah=0x110CBB0)
+   jendela@0x80116990 wilayah=0x800FF000: DATA.BIN+0x1124540(mod2048=1344,awal_wilayah=0x110CBB0)
+   jendela@0x80122660 wilayah=0x800FF000: DATA.BIN+0x1130210(mod2048=528,awal_wilayah=0x110CBB0)
+   jendela@0x8012E330 wilayah=0x800FF000: DATA.BIN+0x113BEE0(mod2048=1760,awal_wilayah=0x110CBB0)
+PENCOCOKAN OVERLAY B27000: 5 wilayah >=3 halaman
+   jendela@0x800B8000 wilayah=0x800B5000: DATA.BIN+0x10C5BB0(mod2048=944,awal_wilayah=0x10C2BB0)
+   jendela@0x800BB000 wilayah=0x800B5000: DATA.BIN+0x10C8BB0(mod2048=944,awal_wilayah=0x10C2BB0)
+   jendela@0x800BE000 wilayah=0x800B5000: DATA.BIN+0x10CBBB0(mod2048=944,awal_wilayah=0x10C2BB0)
+   jendela@0x800C1000 wilayah=0x800B5000: DATA.BIN+0x10CEBB0(mod2048=944,awal_wilayah=0x10C2BB0)
+   jendela@0x800C9330 wilayah=0x800C7000: DATA.BIN+0x10D6EE0(mod2048=1760,awal_wilayah=0x10D4BB0)
+   jendela@0x800CB660 wilayah=0x800C7000: DATA.BIN+0x10D9210(mod2048=528,awal_wilayah=0x10D4BB0)
+   jendela@0x800CD990 wilayah=0x800C7000: DATA.BIN+0x10DB540(mod2048=1344,awal_wilayah=0x10D4BB0)
+   jendela@0x800CFCC0 wilayah=0x800C7000: DATA.BIN+0x10DD870(mod2048=112,awal_wilayah=0x10D4BB0)
+   jendela@0x800E4330 wilayah=0x800E3000: DATA.BIN+0x10F1EE0(mod2048=1760,awal_wilayah=0x10F0BB0)
+   jendela@0x800E5660 wilayah=0x800E3000: DATA.BIN+0x10F3210(mod2048=528,awal_wilayah=0x10F0BB0)
+   jendela@0x800E6990 wilayah=0x800E3000: DATA.BIN+0x10F4540(mod2048=1344,awal_wilayah=0x10F0BB0)
+   jendela@0x800E7CC0 wilayah=0x800E3000: DATA.BIN+0x10F5870(mod2048=112,awal_wilayah=0x10F0BB0)
+   jendela@0x800F7330 wilayah=0x800F6000: DATA.BIN+0x1104EE0(mod2048=1760,awal_wilayah=0x1103BB0)
+   jendela@0x800F8660 wilayah=0x800F6000: DATA.BIN+0x1106210(mod2048=528,awal_wilayah=0x1103BB0)
+   jendela@0x800F9990 wilayah=0x800F6000: DATA.BIN+0x1107540(mod2048=1344,awal_wilayah=0x1103BB0)
+   jendela@0x800FACC0 wilayah=0x800F6000: DATA.BIN+0x1108870(mod2048=112,awal_wilayah=0x1103BB0)
+   jendela@0x8010ACC0 wilayah=0x800FF000: DATA.BIN+0x1118870(mod2048=112,awal_wilayah=0x110CBB0)
+   jendela@0x80116990 wilayah=0x800FF000: DATA.BIN+0x1124540(mod2048=1344,awal_wilayah=0x110CBB0)
+   jendela@0x80122660 wilayah=0x800FF000: DATA.BIN+0x1130210(mod2048=528,awal_wilayah=0x110CBB0)
+   jendela@0x8012E330 wilayah=0x800FF000: DATA.BIN+0x113BEE0(mod2048=1760,awal_wilayah=0x110CBB0)
+GP terdeteksi: 0x8006D67C (instruksi di 0x800114C8)
+POINTER ke 0x80070E00-0x80071200 di RAM (B27000): 6; 24 pertama (alamat->nilai): 80066C38->80071178 80066C44->8007117C 80066C6C->80071178 80066CA8->80071178 80066CB8->80071178 800ABEA0->80071178
+KONSTANTA-LANGSUNG 0xb4 (addiu/ori dari nol): 204; 14 pertama: 80020C78 80023BFC 800321EC 80033DA0 80033E1C 80034000 800341F0 800343B0 80034404 80034800 80034CFC 80034DCC 80034F58 80034FB0
+KONSTANTA-LANGSUNG 0x124 (addiu/ori dari nol): 0; 14 pertama: 
+KONSTANTA-LANGSUNG 0x30 (addiu/ori dari nol): 84; 14 pertama: 8001CA80 8001D320 8001E0C8 8001E314 80020008 80023C8C 80023E24 800258D8 80025C08 80025F2C 80026658 80027210 800272D8 800274EC
+XREF B27000 (konstanta lui/addiu/ori ke alamat; hanya alamat instruksi, bukan isi)
+  T PLAYERS: akses=1 (load=1 store=0) fungsi_unik=1
+    +0x91: L=1 S=0 contoh_S(pc@fn)=
+  T TILES: akses=0 (load=0 store=0) fungsi_unik=0
+  T PRICE: akses=0 (load=0 store=0) fungsi_unik=0
+  T FLAG: akses=48 (load=20 store=28) fungsi_unik=8
+    +0x1: L=3 S=7 contoh_S(pc@fn)=800F2714@800F2490,800F280C@800F2490,800F2850@800F2490,800F28E4@800F2490,800F29DC@800F2490
+    +0x6: L=4 S=5 contoh_S(pc@fn)=800F5400@800F3658,800F5454@800F3658,800F5480@800F3658,800F5C6C@800F3658,800F5DA8@800F3658
+    +0x9: L=3 S=4 contoh_S(pc@fn)=800F6120@800F6078,800F61D4@800F6078,800F6288@800F6078,800F6328@800F6078
+    +0x2: L=3 S=3 contoh_S(pc@fn)=800F2B20@800F2A9C,800F2EF0@800F2A9C,800F2FBC@800F2A9C
+    +0x3: L=2 S=2 contoh_S(pc@fn)=800F3248@800F3100,800F325C@800F3100
+    +0x4: L=2 S=2 contoh_S(pc@fn)=800F3464@800F32B4,800F34B8@800F32B4
+    +0x5: L=2 S=2 contoh_S(pc@fn)=800F35C4@800F34D0,800F3644@800F34D0
+    +0x0: L=0 S=3 contoh_S(pc@fn)=800F13F0@800F1290,800F2270@800F1290,800F2470@800F1290
+    +0x8: L=1 S=0 contoh_S(pc@fn)=
+  T CURSOR: akses=0 (load=0 store=0) fungsi_unik=0
+  T WHEEL: akses=0 (load=0 store=0) fungsi_unik=0
+  pemanggil jal 0x80035D78: 148  80015B14@80015ADC 80015BF0@80015B7C 8001A460@8001A328 80020C24@80020BF4 800BD8E8@800BD82C 800C4458@800C4388 800C765C@800C7574 800C7948@800C7870 800C8810@800C82C4 800C89EC@800C88F0 800C8BE8@800C88F0 800C8E10@800C88F0
+  pemanggil jal 0x800172EC: 1  80011748@800116B8
+XREF A28700 (konstanta lui/addiu/ori ke alamat; hanya alamat instruksi, bukan isi)
+  T PLAYERS: akses=1 (load=1 store=0) fungsi_unik=1
+    +0x91: L=1 S=0 contoh_S(pc@fn)=
+  T TILES: akses=0 (load=0 store=0) fungsi_unik=0
+  T PRICE: akses=0 (load=0 store=0) fungsi_unik=0
+  T FLAG: akses=48 (load=20 store=28) fungsi_unik=8
+    +0x1: L=3 S=7 contoh_S(pc@fn)=800F2714@800F2490,800F280C@800F2490,800F2850@800F2490,800F28E4@800F2490,800F29DC@800F2490
+    +0x6: L=4 S=5 contoh_S(pc@fn)=800F5400@800F3658,800F5454@800F3658,800F5480@800F3658,800F5C6C@800F3658,800F5DA8@800F3658
+    +0x9: L=3 S=4 contoh_S(pc@fn)=800F6120@800F6078,800F61D4@800F6078,800F6288@800F6078,800F6328@800F6078
+    +0x2: L=3 S=3 contoh_S(pc@fn)=800F2B20@800F2A9C,800F2EF0@800F2A9C,800F2FBC@800F2A9C
+    +0x3: L=2 S=2 contoh_S(pc@fn)=800F3248@800F3100,800F325C@800F3100
+    +0x4: L=2 S=2 contoh_S(pc@fn)=800F3464@800F32B4,800F34B8@800F32B4
+    +0x5: L=2 S=2 contoh_S(pc@fn)=800F35C4@800F34D0,800F3644@800F34D0
+    +0x0: L=0 S=3 contoh_S(pc@fn)=800F13F0@800F1290,800F2270@800F1290,800F2470@800F1290
+    +0x8: L=1 S=0 contoh_S(pc@fn)=
+  T CURSOR: akses=0 (load=0 store=0) fungsi_unik=0
+  T WHEEL: akses=0 (load=0 store=0) fungsi_unik=0
+  pemanggil jal 0x80035D78: 148  80015B14@80015ADC 80015BF0@80015B7C 8001A460@8001A328 80020C24@80020BF4 800BD8E8@800BD82C 800C4458@800C4388 800C765C@800C7574 800C7948@800C7870 800C8810@800C82C4 800C89EC@800C88F0 800C8BE8@800C88F0 800C8E10@800C88F0
+  pemanggil jal 0x800172EC: 1  80011748@800116B8
