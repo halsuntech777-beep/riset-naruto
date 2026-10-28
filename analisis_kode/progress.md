@@ -20,7 +20,7 @@ Dibuat 2026-10-28 (chat x14). Alamat ditulis lengkap 0x80xxxxxx (0x70EB8 = 0x800
 - D6: kunci publik ci/shot_pub.pem tidak dipakai; tidak ada bahan mentah yang dikomit.
 
 ## Run dipakai (anggaran: maks 6 emulator + 10 Ghidra per langkah; 50 total)
-- (belum ada)
+- ak1: run 40635403327 (tahap E,P; emulator 6 replay paralel, tanpa Ghidra), dikirim 04:59 UTC (11:59 WIB), perkiraan selesai 05:17 UTC (12:17 WIB), baca aman 05:22 UTC (12:22 WIB). Pemakaian: emulator 1/6, Ghidra 0/10, total 1/50.
 
 ## Rencana berikutnya
 1. Baca hasil ak1 (analisis_kode/hasil/ak1_*/ringkas.txt dan analisis.txt): netral, identik, peta wilayah, pencocokan overlay ke DATA.BIN/DATA2.BIN/XASECT.BIN, xref penulis chakra.
