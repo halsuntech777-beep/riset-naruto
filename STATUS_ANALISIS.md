@@ -1,5 +1,7 @@
 # STATUS ANALISIS STATIS ROM (jalur "logika game dari ROM")
 
+- Jalur KODE otonom (dump RAM, overlay, RNG, rumus): lihat analisis_kode/progress.md (workflow analisis-kode, ci/analisis_kode.sh).
+
 Jalur terpisah dari jalur bot (STATUS_RINGKAS.md). Catat semua kemajuan jalur ini di berkas ini; sebelum dorong jalankan `git pull --rebase` (chat jalur bot mungkin menulis juga).
 
 

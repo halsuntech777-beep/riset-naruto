@@ -1,0 +1,29 @@
+# Workflow BARU (tidak menyentuh emulator-run.yml/analisis-statis.yml). Hanya workflow_dispatch.
+# Secret PRIVATE_REPO/PRIVATE_TOKEN dipakai HANYA-BACA untuk mengunduh game.bin + redux.AppImage dari release aset (sudah disetujui pemilik untuk analisis ROM).
+# Tanpa upload-artifact; dump RAM dan Ghidra hanya di folder sementara runner; log/commit hanya angka dan alamat.
+name: analisis-kode
+on:
+  workflow_dispatch:
+    inputs:
+      tahap: { description: "Tahap dipisah koma: E (replay+dump netral, wajib), P (analisis dump python), G (impor Ghidra)", default: "E,P" }
+      label: { description: "Label hasil", default: "ak" }
+concurrency: { group: "analisis-kode-${{ inputs.label }}", cancel-in-progress: false }
+permissions: { contents: read }
+jobs:
+  run:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 30
+    permissions: { contents: write }
+    env:
+      TAHAP: ${{ inputs.tahap }}
+      LABEL: ${{ inputs.label }}
+    steps:
+      - uses: actions/checkout@v4
+      - name: Paket sistem
+        run: sudo apt-get update -qq && sudo apt-get install -y -qq xvfb libgl1 libegl1 libgl1-mesa-dri libglx-mesa0 libfontconfig1 libxkbcommon0 libasound2t64 unzip
+      - name: Analisis kode
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+          PRIVATE_REPO: ${{ secrets.PRIVATE_REPO }}
+          PRIVATE_TOKEN: ${{ secrets.PRIVATE_TOKEN }}
+        run: bash ci/analisis_kode.sh
