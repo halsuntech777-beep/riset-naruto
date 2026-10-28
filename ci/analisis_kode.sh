@@ -105,11 +105,11 @@ if has G; then
   J="${JAVA_HOME_21_X64:-}"; if [ -z "$J" ] || [ ! -x "$J/bin/javac" ]; then sudo apt-get install -y -qq openjdk-21-jdk-headless >/dev/null 2>&1; J=/usr/lib/jvm/java-21-openjdk-amd64; fi
   export JAVA_HOME="$J" PATH="$J/bin:$PATH"
   say "ghidra: $(basename "$GD"); $(java -version 2>&1 | head -1 | cut -c1-60)"
-  for LB in B27000 A28700; do
+  for LB in ${GLIST:-B27000}; do
     DF="${LB:0:1}"; FR="${LB:1}"; DUMP="$W/o_${DF}_d1/r_$FR.bin"; [ -f "$DUMP" ] || { say "ghidra $LB: dump tak ada"; continue; }
     rm -rf "$W/gproj_$LB"; mkdir -p "$W/gproj_$LB"
-    timeout 1100 "$GD/support/analyzeHeadless" "$W/gproj_$LB" naruto -import "$DUMP" -processor "MIPS:LE:32:default" -loader BinaryLoader -loader-baseAddr 0x80000000 \
-      -analysisTimeoutPerFile 700 -scriptPath "$R/analisis_kode/ghidra" -preScript SeedDump.java "$W/seed_$LB.txt" -postScript OverlayStat.java "$D/ghidra_$LB.txt" > "$W/gh_$LB.log" 2>&1 || true
+    timeout 780 "$GD/support/analyzeHeadless" "$W/gproj_$LB" naruto -import "$DUMP" -processor "MIPS:LE:32:default" -loader BinaryLoader -loader-baseAddr 0x80000000 \
+      -analysisTimeoutPerFile 600 -scriptPath "$R/analisis_kode/ghidra" -preScript SeedDump.java "$W/seed_$LB.txt" -postScript OverlayStat.java "$D/ghidra_$LB.txt" > "$W/gh_$LB.log" 2>&1 || true
     if [ -s "$D/ghidra_$LB.txt" ]; then say "ghidra $LB: ok"; cat "$D/ghidra_$LB.txt" | head -c 3500 | tee -a "$LOG" >/dev/null
     else say "ghidra $LB: tanpa keluaran"; grep -aE "ERROR|Exception|rror" "$W/gh_$LB.log" | head -8 | cut -c1-170 | tr -cd '\11\12\40-\176' | tee -a "$LOG" >/dev/null; fi
   done

@@ -137,9 +137,40 @@ STORES = {0x28: 1, 0x29: 2, 0x2B: 4}
 KEEP = set(range(16, 24)) | {28, 29, 30}
 
 
-def xref(d):
+def find_gp(d):
     w = W(d)
-    const = {}
+    for i in range((0x80011448 - BASE) // 4, (EXE_END - BASE) // 4 - 4):
+        x = w[i]
+        if (x >> 26) == 0x0F and ((x >> 16) & 31) == 28:
+            hi = (x & 0xFFFF) << 16
+            for k in (1, 2, 3):
+                y = w[i + k]
+                op = y >> 26
+                if op in (8, 9, 0x0D) and ((y >> 21) & 31) == 28 and ((y >> 16) & 31) == 28:
+                    imm = y & 0xFFFF
+                    simm = imm - 0x10000 if imm & 0x8000 else imm
+                    return ((hi | imm) if op == 0x0D else (hi + simm)) & 0xFFFFFFFF, BASE + i * 4
+    return None, None
+
+
+def ptr_scan(d, lo=0x80070E00, hi=0x80071200):
+    w = W(d)
+    return [(BASE + i * 4, x) for i, x in enumerate(w) if lo <= x < hi and (x & 3) == 0]
+
+
+def imm_scan(d, vals):
+    w = W(d)
+    res = {v: [] for v in vals}
+    for i in range((LO - BASE) // 4, (HI - BASE) // 4):
+        x = w[i]
+        if (x >> 26) in (9, 0x0D) and ((x >> 21) & 31) == 0 and (x & 0xFFFF) in res:
+            res[x & 0xFFFF].append(BASE + i * 4)
+    return res
+
+
+def xref(d, gp=None):
+    w = W(d)
+    const = {28: gp} if gp is not None else {}
     clear_in = -1
     fn = 0
     hits = {t[0]: [] for t in TARGETS}
@@ -208,6 +239,8 @@ def xref(d):
                         const.pop(r)
             else:
                 const.clear()
+                if gp is not None:
+                    const[28] = gp
             clear_in = -1
     return hits, callers
 
@@ -290,9 +323,17 @@ def main():
             res = match_region(dumps[k], maps, r)
             for addr, hits in res:
                 print('   jendela@0x%08X wilayah=0x%08X: %s' % (addr, BASE + r[0] * 4096, ' '.join('%s+0x%X(mod2048=%d,awal_wilayah=0x%X)' % h for h in hits) if hits else 'tak ketemu'))
+    gk = 'B27000' if 'B27000' in dumps else first
+    gp, gpc = find_gp(dumps[gk])
+    print('GP terdeteksi: %s (instruksi di %s)' % ('0x%08X' % gp if gp is not None else 'tidak ada', '0x%08X' % gpc if gpc else '-'))
+    pt = ptr_scan(dumps[gk])
+    print('POINTER ke 0x80070E00-0x80071200 di RAM (%s): %d; 24 pertama (alamat->nilai): %s' % (gk, len(pt), ' '.join('%X->%X' % q for q in pt[:24])))
+    im = imm_scan(dumps[gk], (0xB4, 0x124, 0x30))
+    for v, l in im.items():
+        print('KONSTANTA-LANGSUNG %#x (addiu/ori dari nol): %d; 14 pertama: %s' % (v, len(l), ' '.join('%X' % a for a in l[:14])))
     for k in xl:
         if k in dumps:
-            h, c = xref(dumps[k])
+            h, c = xref(dumps[k], gp)
             print_xref(k, h, c)
 
 
